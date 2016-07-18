@@ -9,7 +9,7 @@
 import GameplayKit
 import SpriteKit
 
-class PlayingState: GKState {
+class GameOver: GKState {
     
     unowned let scene: GameScene
     

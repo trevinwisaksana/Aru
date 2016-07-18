@@ -9,7 +9,7 @@
 import GameplayKit
 import SpriteKit
 
-class PlayingState: GKState {
+class LevelComplete: GKState {
     
     unowned let scene: GameScene
     
@@ -19,7 +19,14 @@ class PlayingState: GKState {
     
     override func didEnterWithPreviousState(previousState: GKState?) {
         
-        
+        // let missionAccomplished = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.2)
+        let showButtonsAndScore = SKAction.runBlock({
+            // Show the score and the
+            print("We are at the level complete state")
+        })
+        // scene.view?.presentScene(/*gameOverScene*/, transition: missionAccomplished)
+        let sequence = SKAction.sequence([showButtonsAndScore])
+        scene.runAction(sequence)
         
     }
     
