@@ -41,3 +41,7 @@ class LevelCompleteScene: SKScene {
     }
     
 }
+
+// The level is complete and it reveals the LevelCompleteScene 
+    // After that, we want it to transfer to a new scene but with the controls still there
+    

@@ -20,7 +20,6 @@
 		DD686CA91D28F81400054AAB /* BlueCharacter.sks in Resources */ = {isa = PBXBuildFile; fileRef = DD686CA81D28F81400054AAB /* BlueCharacter.sks */; };
 		DDB308E41D28AF6F00FC1FD0 /* clouds.sks in Resources */ = {isa = PBXBuildFile; fileRef = DDB308E31D28AF6F00FC1FD0 /* clouds.sks */; };
 		DDB4DBCD1D3D63E200A113C0 /* IntroLvl1.sks in Resources */ = {isa = PBXBuildFile; fileRef = DDB4DBCC1D3D63E200A113C0 /* IntroLvl1.sks */; };
-		DDB4DBCF1D3D69E500A113C0 /* IntroLvl1.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB4DBCE1D3D69E500A113C0 /* IntroLvl1.swift */; };
 		DDC4792C1D354C9E0036E972 /* PinkCharacter.sks in Resources */ = {isa = PBXBuildFile; fileRef = DDC4792B1D354C9E0036E972 /* PinkCharacter.sks */; };
 		DDC4793A1D3565670036E972 /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC4792E1D3565670036E972 /* CGFloat+Extensions.swift */; };
 		DDC4793B1D3565670036E972 /* CGPoint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC4792F1D3565670036E972 /* CGPoint+Extensions.swift */; };
@@ -76,7 +75,6 @@
 		DD686CA81D28F81400054AAB /* BlueCharacter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BlueCharacter.sks; sourceTree = "<group>"; };
 		DDB308E31D28AF6F00FC1FD0 /* clouds.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = clouds.sks; sourceTree = "<group>"; };
 		DDB4DBCC1D3D63E200A113C0 /* IntroLvl1.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = IntroLvl1.sks; sourceTree = "<group>"; };
-		DDB4DBCE1D3D69E500A113C0 /* IntroLvl1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroLvl1.swift; sourceTree = "<group>"; };
 		DDC4792B1D354C9E0036E972 /* PinkCharacter.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = PinkCharacter.sks; sourceTree = "<group>"; };
 		DDC4792E1D3565670036E972 /* CGFloat+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extensions.swift"; sourceTree = "<group>"; };
 		DDC4792F1D3565670036E972 /* CGPoint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extensions.swift"; sourceTree = "<group>"; };
@@ -135,7 +133,6 @@
 		DD04935F1D22BF8D00B9D551 /* Levels */ = {
 			isa = PBXGroup;
 			children = (
-				DDB4DBCE1D3D69E500A113C0 /* IntroLvl1.swift */,
 				DDB4DBCC1D3D63E200A113C0 /* IntroLvl1.sks */,
 				DD0150D91D277F27006D6AD9 /* IntroLvl2.sks */,
 				DD50C8601D3D570B00E6790B /* IntroLvl3.sks */,
@@ -392,7 +389,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDB4DBCF1D3D69E500A113C0 /* IntroLvl1.swift in Sources */,
 				DDC4793C1D3565670036E972 /* CGVector+Extensions.swift in Sources */,
 				DD0493631D22BFB800B9D551 /* PlayingState.swift in Sources */,
 				DDC479411D3565670036E972 /* SKNode+Extensions.swift in Sources */,

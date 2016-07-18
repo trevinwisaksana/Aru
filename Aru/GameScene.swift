@@ -129,8 +129,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         theCamera = childNodeWithName("//cameraTarget") as! SKCameraNode
         
         // Referencing checkpoint object
-        
-        // checkpoint = childNodeWithName("checkpoint") as! SKSpriteNode
         checkpoint.physicsBody = SKPhysicsBody(circleOfRadius: 11.5)
         checkpoint.position = CGPoint(x: 522, y: 185)
         checkpoint.physicsBody?.affectedByGravity = false
@@ -141,12 +139,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(checkpoint)
         
         // Experimenting with code
-        let scene1 = SKScene(fileNamed: "IntroLvl2")
-        let scene2 = SKScene(fileNamed: "IntroLvl3")
-        
-        level1 = scene1?.childNodeWithName("lvl2Scene")!
-//        level1.removeFromParent()
-        
+        changeLevel("IntroLvl1", Type: "sks")
+        //
     
         //////////////////////////////////////////////////////
         
@@ -234,13 +228,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     ////////////////////
     
     // This funciton is designed to change the level of the game
-    func changeLevel() {
-        // The IntroLvl2 now has a parent of "levels" which has its parent has GameScene. 
-            // When didBeginContact, the IntroLvl2 should be removed from parent 
-            // the "levels" should be a parent of IntroLvl3 by using SKScene(filedNamed: "IntroLvl3") 
-        
-        
-        
+    func changeLevel(Name: String, Type: String) {
+        let changeScene = SKAction.runBlock({
+            let path = NSBundle.mainBundle().pathForResource(Name, ofType: Type)
+            let node = SKReferenceNode (URL: NSURL (fileURLWithPath: path!))
+            self.addChild(node)
+        })
+        self.runAction(changeScene)
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
@@ -284,7 +278,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             if touches.count > 0 {
             }
-//            print(touches.count)
+
             if (CGRectContainsPoint(base.frame, location)) {
                 stickActive = true
             }
