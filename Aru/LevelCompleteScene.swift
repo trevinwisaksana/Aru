@@ -27,9 +27,13 @@ class LevelCompleteScene: SKScene {
         restartButton.selectedHandler = {
             print("RESTART BUTTON TAPPED")
             let reveal = SKTransition.fadeWithColor(SKColor.blackColor(), duration: 0.5)
-            let scene = GameScene(fileNamed:"GameScene")
-            scene!.scaleMode = .AspectFill
-            self.view?.presentScene(scene!, transition: reveal)
+            if let scene = GameScene(fileNamed:"IntroLvl2") {
+                print("Loaded IntroLvl2!")
+                scene.scaleMode = .AspectFill
+                self.view!.presentScene(scene, transition: reveal)
+            } else {
+                print("Could not load IntroLvl2")
+            }
         }
         
         restartButton.state = .Active
@@ -40,8 +44,4 @@ class LevelCompleteScene: SKScene {
         fatalError("init(coder:) has not been implemented")
     }
     
-}
-
-// The level is complete and it reveals the LevelCompleteScene 
-    // After that, we want it to transfer to a new scene but with the controls still there
-    
+}    
