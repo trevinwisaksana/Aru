@@ -12,10 +12,8 @@ import SpriteKit
 class LevelCompleteScene: SKScene {
     
     var restartButton = MSButtonNode(color: SKColor.blueColor(), size: CGSize(width: 100, height: 50))
-    
-    override init(size: CGSize) {
-        
-        super.init(size: size)
+ 
+    override func didMoveToView(view: SKView) {
         backgroundColor = SKColor.whiteColor()
         
         // Button property
@@ -30,7 +28,6 @@ class LevelCompleteScene: SKScene {
             if let scene = GameScene(fileNamed:"IntroLvl2") {
                 scene.scaleMode = .AspectFill
                 self.view!.presentScene(scene, transition: reveal)
-                GameScene.removeFromParent(Level1Parent)
             } else {
                 print("Could not load IntroLvl2")
             }
@@ -38,8 +35,12 @@ class LevelCompleteScene: SKScene {
         restartButton.state = .Active
     }
     
-    required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        
+    }
+    
+    override func update(currentTime: NSTimeInterval) {
+        
     }
     
 }    

@@ -59,9 +59,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(blueCharacter)
         addChild(pinkCharacter)
         
-        // From the Checkpoint class, the checpoint gets its position set and is added to the scene 
+        // From the Checkpoint class, the checkpoint gets its position set and is added to the scene
         target = Checkpoint(checkpointSprite: .Sprite)
-        target.position = CGPoint(x: 200, y: 140)
+        target.position = CGPoint(x: 500, y: 200)
         addChild(target)
         
         // Creates the joystick
@@ -81,12 +81,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         jumpButton.state = .Active
         addChild(switchButton)
         addChild(jumpButton)
-        
-        if alreadyRan == false {
-            // Experimenting with code
-            changeLevel("IntroLvl1", Type: "sks")
-            alreadyRan = true
-        }
 
         activateJumpButton()
         activateSwitchButton()
