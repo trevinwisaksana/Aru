@@ -9,19 +9,19 @@
 import SpriteKit
 import GameplayKit
 
+// The directions is used for the joystick
 enum Direction {
     case Left, Right, None
 }
 
+// These are the physics categories which must be set to allow collisions and contacts between objects
 struct PhysicsCategory {
     static let None: UInt32             = 0         // 00000
-    static let blueCharacter: UInt32    = 0b1       // 00001
-    static let pinkCharacter: UInt32    = 0b10      // 00010
-    static let checkpoint: UInt32       = 0b100     // 00100
+    static let BlueCharacter: UInt32    = 0b1       // 00001
+    static let PinkCharacter: UInt32    = 0b10      // 00010
+    static let Checkpoint: UInt32       = 0b100     // 00100
     static let Platform: UInt32         = 0b1000    // 01000
     static let Edge: UInt32             = 0b10000   // 10000
-    
-    // 000000000000000000000000000000000
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -51,11 +51,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var stickActive: Bool! = false
     
     // Declaring character property
-    var blueCharacter = SKSpriteNode(imageNamed: "blueBall")
-    var pinkCharacter = SKSpriteNode(imageNamed: "pinkBall")
-    
-    // Declaring camera property
-    var theCamera: SKCameraNode!
+    var blueCharacter: Character2!
+    var pinkCharacter: Character2!
     
     // Declaring the switchButton property
     var switchButton: MSButtonNode!
@@ -63,84 +60,47 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var jumpButton: MSButtonNode!
     var alreadyTapped: Bool = true
     
-    // Allows the button to be pressed once every 0.25 seconds
+    // Allows the button to be pressed once every 1 second
     var canJump = true
     
     // Array to contain the links of the joints 
     var links: [SKSpriteNode]!
     
     // Creating the checkpoint object
-    var checkpoint = SKSpriteNode(imageNamed: "checkpoint")
+//    var checkpoint = SKSpriteNode(imageNamed: "checkpoint")
+//    var target: Checkpoint!
     
-    // Levels variables 
+    // Levels variables
     var level1: SKNode!
     var level2: SKNode!
     var level3: SKNode!
     
     override func didMoveToView(view: SKView) {
         
+        // Sets the physics world so that it can detect contact
         self.physicsWorld.contactDelegate = self
         
-        // Making states objects with state classes
-        restartState = RestartState(scene: self)
-        playingState = PlayingState(scene: self)
-        gameOverState = GameOver(scene: self)
-        levelCompleteState = LevelComplete(scene: self)
-        gameSceneState = GKStateMachine(states: [playingState, restartState])
-        gameSceneState.enterState(PlayingState)
-
+        // From the Character class, the characters gets its position set and is added to the scene
+        blueCharacter = Character2(characterColor: .Blue)
+        pinkCharacter = Character2(characterColor: .Pink)
+        blueCharacter.position = CGPoint(x: 70, y: 125)
+        pinkCharacter.position = CGPoint(x: 50, y: 125)
+        addChild(blueCharacter)
+        addChild(pinkCharacter)
+        
         // Referencing base to connect to the scene
         base = childNodeWithName("//base") as! SKSpriteNode
         
         // Referencing joystick to connect to the scene
         joystick = childNodeWithName("//joystick") as! SKSpriteNode
         
-        // Referencing character to connect to the scene
-        blueCharacter.physicsBody = SKPhysicsBody(circleOfRadius: 11.5)
-        blueCharacter.position = CGPoint(x: 70, y: 125)
-        blueCharacter.physicsBody?.mass = 1
-        blueCharacter.size = CGSize(width: 23, height: 23)
-        blueCharacter.physicsBody?.affectedByGravity = true
-        blueCharacter.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        blueCharacter.physicsBody?.categoryBitMask = PhysicsCategory.blueCharacter
-        blueCharacter.physicsBody?.collisionBitMask = PhysicsCategory.pinkCharacter | PhysicsCategory.Platform | PhysicsCategory.Edge | PhysicsCategory.blueCharacter
-        /*This is so that it collides with the platform*/
-        blueCharacter.physicsBody?.contactTestBitMask = PhysicsCategory.checkpoint
-        self.addChild(blueCharacter)
-        //
-        pinkCharacter.position = CGPoint(x: 50, y: 125)
-        pinkCharacter.size = CGSize(width: 23, height: 23)
-        // Declaration of physicsBody must be placed on top before setting the rest of the physics roperties
-        pinkCharacter.physicsBody = SKPhysicsBody(circleOfRadius: 11.5)
-        pinkCharacter.physicsBody!.mass = 1
-        pinkCharacter.physicsBody!.affectedByGravity = true
-        pinkCharacter.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        pinkCharacter.physicsBody!.categoryBitMask = PhysicsCategory.pinkCharacter
-        pinkCharacter.physicsBody?.collisionBitMask = PhysicsCategory.blueCharacter | PhysicsCategory.Platform
-        pinkCharacter.physicsBody?.contactTestBitMask = PhysicsCategory.checkpoint
-        self.addChild(pinkCharacter)
-        //
-        
         // Referencing the switchButton node to the scene
         switchButton = self.childNodeWithName("switchButton") as! MSButtonNode
         jumpButton = self.childNodeWithName("jumpButton") as! MSButtonNode
       
-        // Referencing theCamera to connect to the scene
-        theCamera = childNodeWithName("//cameraTarget") as! SKCameraNode
-        
-        // Referencing checkpoint object
-        checkpoint.physicsBody = SKPhysicsBody(circleOfRadius: 11.5)
-        checkpoint.position = CGPoint(x: 522, y: 185)
-        checkpoint.physicsBody?.affectedByGravity = false
-        checkpoint.zPosition = 10
-        checkpoint.physicsBody?.categoryBitMask = PhysicsCategory.checkpoint
-        checkpoint.physicsBody?.collisionBitMask = PhysicsCategory.None
-        checkpoint.physicsBody?.contactTestBitMask = PhysicsCategory.blueCharacter | PhysicsCategory.pinkCharacter
-        addChild(checkpoint)
-        
         // Experimenting with code
         changeLevel("IntroLvl1", Type: "sks")
-        //
+        
     
         //////////////////////////////////////////////////////
         
@@ -188,7 +148,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
-    ////////////////////
     // Inside here are functions
     func createChain() {
         var positionOne = self.pinkCharacter.position
@@ -225,9 +184,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let pin = SKPhysicsJointPin.jointWithBodyA(blueCharacter.physicsBody!, bodyB: links.last!.physicsBody!, anchor: blueCharacter.position)
         self.physicsWorld.addJoint(pin)
     }
-    ////////////////////
+  
     
-    // This funciton is designed to change the level of the game
+    // This function is designed to change the level of the game
     func changeLevel(Name: String, Type: String) {
         let changeScene = SKAction.runBlock({
             let path = NSBundle.mainBundle().pathForResource(Name, ofType: Type)
@@ -240,15 +199,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func didBeginContact(contact: SKPhysicsContact) {
         
         let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
-        
-        if collision == PhysicsCategory.blueCharacter | PhysicsCategory.checkpoint {
+             
+        if collision == PhysicsCategory.BlueCharacter | PhysicsCategory.Checkpoint {
             // This goes to the LevelCompleteScene after making contact
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 2)
             let scene = LevelCompleteScene(size: self.size)
             scene.scaleMode = .AspectFill
             self.view?.presentScene(scene, transition: reveal)
             print("CONTACT BEGINS")
-        } else if collision == PhysicsCategory.pinkCharacter | PhysicsCategory.checkpoint {
+        } else if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.Checkpoint {
             // This goes to the LevelCompleteScene scene after making contact
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 2)
             let scene = LevelCompleteScene(size: self.size)
@@ -331,8 +290,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     override func update(currentTime: CFTimeInterval) {
         // Called before each frame is rendered
-        
-        gameSceneState.updateWithDeltaTime(currentTime)
         
         if buttonFunctioning == true {
             if stickActive == true {
