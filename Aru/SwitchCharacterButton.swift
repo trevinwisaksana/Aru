@@ -9,7 +9,7 @@
 import SpriteKit
 
 enum SwitchButton: String {
-    case Button = "switchButton"
+    case SwitchButtonName = "switchButton"
 }
 
 class SwitchCharacterButton: MSButtonNode {
@@ -24,6 +24,7 @@ class SwitchCharacterButton: MSButtonNode {
         super.init(texture: texture, color: UIColor.clearColor(), size: texture.size())
         
         // Do not need to declare the position here, but in the GameScene instead
+        zPosition = 100
         
     }
     

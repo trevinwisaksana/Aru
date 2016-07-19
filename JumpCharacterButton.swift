@@ -9,7 +9,7 @@
 import SpriteKit
 
 enum JumpButton: String {
-    case Button = "jumpButton"
+    case JumpButtonName = "jumpButton"
 }
 
 class JumpCharacterButton: MSButtonNode {
@@ -20,10 +20,16 @@ class JumpCharacterButton: MSButtonNode {
         self.jumpButtonNode = jumpButtons
         
         let texture = SKTexture(imageNamed: jumpButtons.rawValue)
-        
+
         super.init(texture: texture, color: UIColor.clearColor(), size: texture.size())
         
         // Do not need to declare the position here, but in the GameScene instead
+        zPosition = 100
+    }
+    
+    
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        print(">>>>>>>>>>>>>>><<<<<<<<<<<<<<<")
         
     }
     

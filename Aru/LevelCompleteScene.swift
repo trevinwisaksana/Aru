@@ -26,18 +26,16 @@ class LevelCompleteScene: SKScene {
         // Restart Button
         restartButton.selectedHandler = {
             print("RESTART BUTTON TAPPED")
-            let reveal = SKTransition.fadeWithColor(SKColor.blackColor(), duration: 0.5)
+            let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
             if let scene = GameScene(fileNamed:"IntroLvl2") {
-                print("Loaded IntroLvl2!")
                 scene.scaleMode = .AspectFill
                 self.view!.presentScene(scene, transition: reveal)
+                GameScene.removeFromParent(Level1Parent)
             } else {
                 print("Could not load IntroLvl2")
             }
         }
-        
         restartButton.state = .Active
-        
     }
     
     required init(coder aDecoder: NSCoder) {

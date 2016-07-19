@@ -18,6 +18,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // This is the direction property
     var direction: Direction = .None
     
+    // This helps make sure that the level is only run once
+    var alreadyRan = false
+    
     // Delcaring joystick property
     var base: Joystick!
     var stick: Joystick!
@@ -58,7 +61,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // From the Checkpoint class, the checpoint gets its position set and is added to the scene 
         target = Checkpoint(checkpointSprite: .Sprite)
-        target.position = CGPoint(x: 522, y: 185)
+        target.position = CGPoint(x: 200, y: 140)
         addChild(target)
         
         // Creates the joystick
@@ -67,16 +70,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(base)
         addChild(stick)
         
-//        // Referencing the switchButton node to the scene
-//        switchButton = self.childNodeWithName("switchButton") as! MSButtonNode
-//        jumpButton = self.childNodeWithName("jumpButton") as! MSButtonNode
-        
         // Creates the jump and switch button 
-        switchButton = SwitchCharacterButton(switchButton: .Button)
-      
-        // Experimenting with code
-        changeLevel("IntroLvl1", Type: "sks")
+        switchButton = MSButtonNode(color: SKColor.blueColor(), size: CGSize(width: 100, height: 50))
+        switchButton.position = CGPoint(x: self.frame.width * 0.6, y: self.frame.height * 0.2)
+        switchButton.zPosition = 101
+        switchButton.state = .Active
+        jumpButton = MSButtonNode(color: SKColor.brownColor(), size: CGSize(width: 100, height: 50))
+        jumpButton.position = CGPoint(x: self.frame.width * 0.8, y: self.frame.height * 0.2)
+        jumpButton.zPosition = 101
+        jumpButton.state = .Active
+        addChild(switchButton)
+        addChild(jumpButton)
         
+        if alreadyRan == false {
+            // Experimenting with code
+            changeLevel("IntroLvl1", Type: "sks")
+            alreadyRan = true
+        }
+
         activateJumpButton()
         activateSwitchButton()
         createChain()
@@ -85,7 +96,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsBody = SKPhysicsBody(edgeLoopFromRect: view.frame)
         physicsBody?.categoryBitMask = PhysicsCategory.Platform
         physicsBody?.collisionBitMask = 1
-       
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
@@ -167,7 +177,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
       }
 
-    
     ///////////////////////////////
     // Inside here are functions //
     ///////////////////////////////
