@@ -174,12 +174,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Called before each frame is rendered
         if buttonFunctioning == true {
             if stickActive == true {
-                let vector = CGVector(dx: 300 * xValue, dy: 0)
+                let vector = CGVector(dx: 400 * xValue, dy: 0)
                 blueCharacter.physicsBody?.applyForce(vector)
             }
         } else {
             if stickActive == true {
-                let vector = CGVector(dx: 300 * xValue, dy: 0)
+                let vector = CGVector(dx: 400 * xValue, dy: 0)
                 pinkCharacter.physicsBody?.applyForce(vector)
             }
         }
@@ -205,10 +205,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var positionOne = self.pinkCharacter.position
         links = [SKSpriteNode]()
         for _ in 0..<10 {
-            let link = SKSpriteNode(color: SKColor.redColor(), size: CGSize(width: 2, height: 2))
+            let link = SKSpriteNode(color: SKColor.whiteColor(), size: CGSize(width: 2, height: 2))
             link.physicsBody = SKPhysicsBody(rectangleOfSize: link.size)
             link.position = pinkCharacter.position
-            link.zPosition = 2
+            link.zPosition = 0
             
             link.physicsBody?.categoryBitMask = 0
             link.physicsBody?.collisionBitMask = 0
@@ -259,7 +259,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if self.buttonFunctioning {
                 if self.canJump {
                     self.canJump = false
-                    self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 403))
+                    self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 405))
                     let reset = SKAction.runBlock({
                         self.canJump = true
                     })
@@ -269,7 +269,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             } else if self.buttonFunctioning == false {
                 if self.canJump {
                     self.canJump = false
-                    self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 403))
+                    self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 405))
                     let reset = SKAction.runBlock({
                         self.canJump = true
                     })
