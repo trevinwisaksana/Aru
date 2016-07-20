@@ -22,10 +22,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var alreadyRan = false
     
     // Delcaring joystick property
-    var base: Joystick!
-    var stick: Joystick!
+    var base: SKSpriteNode!
+    var stick: SKSpriteNode!
     // Declaring stick active property
     var stickActive: Bool! = false
+    var xValue: CGFloat = 0
+    var yValue: CGFloat = 0
     
     // Declaring character property
     var blueCharacter: Character!
@@ -68,19 +70,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(target)
         
         // Creates the joystick
-        base = Joystick(joystick: .Base)
-        stick = Joystick(joystick: .Stick)
+        base = SKSpriteNode(color: SKColor.purpleColor(), size: CGSize(width: 50, height: 50))
+        base.zPosition = 10
+        stick = SKSpriteNode(color: SKColor.blueColor(), size: CGSize(width: 40, height: 40))
+//        base.hidden = true
+        base.alpha = 0.1
         addChild(base)
         base.addChild(stick)
-        print(base.position)
-        print(stick.position)
         
         // Creates the jump and switch button 
-        switchButton = MSButtonNode(color: SKColor.blueColor(), size: CGSize(width: 25, height: 12.5))
+        switchButton = MSButtonNode(color: SKColor.blueColor(), size: CGSize(width: 50, height: 30))
         switchButton.zPosition = 101
         switchButton.state = .Active
-        
-        jumpButton = MSButtonNode(color: SKColor.brownColor(), size: CGSize(width: 25, height: 12.5))
+        jumpButton = MSButtonNode(color: SKColor.brownColor(), size: CGSize(width: 50, height: 30))
 
         print(jumpButton.position)
         jumpButton.zPosition = 101
@@ -115,35 +117,45 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        for touch in touches {
-            let location = touch.locationInNode(self)
-            
-            let cameraLoc = touch.locationInNode(characterCamera)
-            print(cameraLoc, ">>>>>>>>")
-            if touches.count > 0 && cameraLoc.x < 282 {
-                base.hidden = false
-                stick.hidden = false
-                let location = touch.locationInNode(self)
-                stick.position = location
-                base.position = location
-            } else {
-                base.hidden = true
-                stick.hidden  = true
-            }
-            
-            if (CGRectContainsPoint(base.frame, location)) {
-                stickActive = true
-            }
+        let touch = touches.first!
+        let location = touch.locationInNode(self)
+        let cameraLoc = touch.locationInNode(characterCamera)
+        if cameraLoc.x < 282 {
+            base.alpha = 0.5
+            base.position = location
+        } else {
+            base.alpha = 0.1
+        }
+        if (CGRectContainsPoint(base.frame, location)) {
+            stickActive = true
         }
     }
     
     // This is used for detecting when a player moves their finger on the screen
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        for touch in touches {
-            let location = touch.locationInNode(base)
-            TrueStickActive(true, location: location)
-              print(stick.position, "*************")
+        let touch = touches.first!
+        let location = touch.locationInNode(base)
+        
+        // This is for the X axis
+        var x = location.x
+        if x > 30 {
+            x = 30
+        } else if x < -30 {
+            x = -30
         }
+        
+        // This is for the Y axis
+        var y = location.y
+        if y > 30 {
+            y = 30
+        } else if y < -30 {
+            y = -30
+        }
+        
+        xValue = x / 30
+        yValue = y / 30
+        
+        stick.position = CGPoint(x: x, y: y)
     }
 
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -152,50 +164,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let move = SKAction.moveTo(CGPoint(x: 0, y: 0), duration: 0.1)
             move.timingMode = .EaseOut
             stick.runAction(move)
+            base.alpha = 0.1
         }
+        xValue = 0
+        yValue = 0
     }
 
     override func update(currentTime: CFTimeInterval) {
         // Called before each frame is rendered
         if buttonFunctioning == true {
             if stickActive == true {
-                switch direction {
-                case .Left:
-                    blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 4, dy: 0))
-                    //print(">>>>>>>>>>>>>")
-                case .Right:
-                    blueCharacter.physicsBody?.applyImpulse(CGVector(dx: -4, dy: 0))
-                    //print("<<<<<<<<<<<<<")
-                case .None:
-                    print("")
-                }
+                let vector = CGVector(dx: 300 * xValue, dy: 0)
+                blueCharacter.physicsBody?.applyForce(vector)
             }
         } else {
             if stickActive == true {
-                switch direction {
-                case .Left:
-                    pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 4, dy: 0))
-                    //print(">>>>>>>>>>>>>")
-                case .Right:
-                    pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: -4, dy: 0))
-                    //print("<<<<<<<<<<<<<")
-                case .None:
-                    print("")
-                }
+                let vector = CGVector(dx: 300 * xValue, dy: 0)
+                pinkCharacter.physicsBody?.applyForce(vector)
             }
         }
-        
         if buttonFunctioning {
             characterCamera.position = blueCharacter.position
-            // buttonFunctioning = false
         } else if buttonFunctioning == false {
             characterCamera.position = pinkCharacter.position
-            // buttonFunctioning = true
         }
-        
-        jumpButton.position = CGPoint(x: characterCamera.position.x + 50, y: characterCamera.position.y - 25)
-        switchButton.position = CGPoint(x: characterCamera.position.x + 15, y: characterCamera.position.y - 25)
-        base.position = CGPoint(x: characterCamera.position.x - 50, y: characterCamera.position.y - 25)
+        jumpButton.position = CGPoint(x: characterCamera.position.x + 70, y: characterCamera.position.y - 40)
+        switchButton.position = CGPoint(x: characterCamera.position.x + 15, y: characterCamera.position.y - 40)
+        base.position = CGPoint(x: characterCamera.position.x - 70, y: characterCamera.position.y - 25)
       }
 
     ///////////////////////////////
@@ -209,7 +204,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func createChain() {
         var positionOne = self.pinkCharacter.position
         links = [SKSpriteNode]()
-        
         for _ in 0..<10 {
             let link = SKSpriteNode(color: SKColor.redColor(), size: CGSize(width: 2, height: 2))
             link.physicsBody = SKPhysicsBody(rectangleOfSize: link.size)
@@ -226,7 +220,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             link.position = positionOne
             links.append(link)
         }
-        
         for i in 0..<links.count {
             if i == 0 {
                 let pin = SKPhysicsJointPin.jointWithBodyA(pinkCharacter.physicsBody!,bodyB: links[i].physicsBody!, anchor: self.pinkCharacter.position)
@@ -255,36 +248,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         })
         self.runAction(changeScene)
     }
-    
-    ////////////////////////////
-    // Makes Joystick Active ///
-    ////////////////////////////
-    
-    // This function is used to activate the joystick
-    func TrueStickActive(active: Bool, location: CGPoint) {
-        
-        if stickActive == active {
-            // This tracks the difference in distance between the finger's position on the screen and the distance of the base
-            let vector = CGVector(dx: location.x - base.position.x, dy: location.y - base.position.y)
-            let angle = atan2(vector.dy, vector.dx)
-            let length : CGFloat = base.frame.size.height / 2
-            let xDistance : CGFloat = sin(angle - 1.57079633) * length
-            let yDistance : CGFloat = cos(angle - 1.57079633) * length
-            if(xDistance > 0){
-                direction = .Right
-            } else if(xDistance < 0){
-                direction = .Left
-            }
-            if (CGRectContainsPoint(base.frame, location)) {
-                stick.position = location
-            } else {
-                stick.position = CGPoint(x: base.position.x - xDistance, y: base.position.y + yDistance)
-                
-            }
-            
-        }
-    }
-    
+
     ////////////////////////////
     // Activates Jump Button ///
     ////////////////////////////
