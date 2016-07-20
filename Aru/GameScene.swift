@@ -46,6 +46,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Creating the checkpoint object
     var target: Checkpoint!
     
+    // Create camera 
+    var characterCamera = SKCameraNode()
+    
     override func didMoveToView(view: SKView) {
         
         // Sets the physics world so that it can detect contact
@@ -67,20 +70,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Creates the joystick
         base = Joystick(joystick: .Base)
         stick = Joystick(joystick: .Stick)
-        addChild(base)
-        addChild(stick)
+        characterCamera.addChild(base)
+        characterCamera.addChild(stick)
         
         // Creates the jump and switch button 
-        switchButton = MSButtonNode(color: SKColor.blueColor(), size: CGSize(width: 100, height: 50))
-        switchButton.position = CGPoint(x: self.frame.width * 0.6, y: self.frame.height * 0.2)
+        switchButton = MSButtonNode(color: SKColor.blueColor(), size: CGSize(width: 25, height: 12.5))
         switchButton.zPosition = 101
         switchButton.state = .Active
-        jumpButton = MSButtonNode(color: SKColor.brownColor(), size: CGSize(width: 100, height: 50))
-        jumpButton.position = CGPoint(x: self.frame.width * 0.8, y: self.frame.height * 0.2)
+        
+        jumpButton = MSButtonNode(color: SKColor.brownColor(), size: CGSize(width: 25, height: 12.5))
+
+        print(jumpButton.position)
         jumpButton.zPosition = 101
         jumpButton.state = .Active
         addChild(switchButton)
         addChild(jumpButton)
+        
+        //Assuring that the target of the camera is the character's position 
+        self.camera = characterCamera
+        characterCamera.xScale = 0.25
+        characterCamera.yScale = 0.25
 
         activateJumpButton()
         activateSwitchButton()
@@ -105,18 +114,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch in touches {
-            let location = touch.locationInNode(self)
-            // Make the base and joystick hidden
-            if touches.count > 0 && location.x < size.width / 2 {
+             let location = touch.locationInNode(self)
+            
+            let cameraLoc = touch.locationInNode(characterCamera)
+            print(cameraLoc)
+            if cameraLoc.x < 282 {
                 base.hidden = false
                 stick.hidden = false
                 let location = touch.locationInNode(self)
                 stick.position = location
                 base.position = location
             } else {
-                base.hidden = true 
+                base.hidden = true
                 stick.hidden  = true
             }
+            
             if (CGRectContainsPoint(base.frame, location)) {
                 stickActive = true
             }
@@ -169,6 +181,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
             }
         }
+        
+        if buttonFunctioning {
+            characterCamera.position = blueCharacter.position
+            // buttonFunctioning = false
+        } else if buttonFunctioning == false {
+            characterCamera.position = pinkCharacter.position
+            // buttonFunctioning = true
+        }
+        
+        jumpButton.position = CGPoint(x: characterCamera.position.x + 50, y: characterCamera.position.y - 25)
+        switchButton.position = CGPoint(x: characterCamera.position.x + 15, y: characterCamera.position.y - 25)
       }
 
     ///////////////////////////////
@@ -297,8 +320,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Switch button allows the player to switch between characters
         switchButton.selectedHandler = {
             if self.buttonFunctioning {
+                // Switch to the pinkCharacter
                 self.buttonFunctioning = false
             } else if self.buttonFunctioning == false {
+                // Switch to the blueCharacter
                 self.buttonFunctioning = true
             }
         }
