@@ -70,8 +70,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Creates the joystick
         base = Joystick(joystick: .Base)
         stick = Joystick(joystick: .Stick)
-        characterCamera.addChild(base)
-        characterCamera.addChild(stick)
+        addChild(base)
+        base.addChild(stick)
+        print(base.position)
+        print(stick.position)
         
         // Creates the jump and switch button 
         switchButton = MSButtonNode(color: SKColor.blueColor(), size: CGSize(width: 25, height: 12.5))
@@ -88,8 +90,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         //Assuring that the target of the camera is the character's position 
         self.camera = characterCamera
-        characterCamera.xScale = 0.25
-        characterCamera.yScale = 0.25
+        characterCamera.xScale = 0.4
+        characterCamera.yScale = 0.4
 
         activateJumpButton()
         activateSwitchButton()
@@ -114,11 +116,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch in touches {
-             let location = touch.locationInNode(self)
+            let location = touch.locationInNode(self)
             
             let cameraLoc = touch.locationInNode(characterCamera)
-            print(cameraLoc)
-            if cameraLoc.x < 282 {
+            print(cameraLoc, ">>>>>>>>")
+            if touches.count > 0 && cameraLoc.x < 282 {
                 base.hidden = false
                 stick.hidden = false
                 let location = touch.locationInNode(self)
@@ -138,15 +140,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // This is used for detecting when a player moves their finger on the screen
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         for touch in touches {
-            let location = touch.locationInNode(self)
+            let location = touch.locationInNode(base)
             TrueStickActive(true, location: location)
+              print(stick.position, "*************")
         }
     }
 
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if stickActive == true {
             direction = .None
-            let move = SKAction.moveTo(base.position, duration: 0.1)
+            let move = SKAction.moveTo(CGPoint(x: 0, y: 0), duration: 0.1)
             move.timingMode = .EaseOut
             stick.runAction(move)
         }
@@ -192,6 +195,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         jumpButton.position = CGPoint(x: characterCamera.position.x + 50, y: characterCamera.position.y - 25)
         switchButton.position = CGPoint(x: characterCamera.position.x + 15, y: characterCamera.position.y - 25)
+        base.position = CGPoint(x: characterCamera.position.x - 50, y: characterCamera.position.y - 25)
       }
 
     ///////////////////////////////

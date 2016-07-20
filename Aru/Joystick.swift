@@ -25,7 +25,7 @@ class Joystick: SKSpriteNode {
         super.init(texture: texture, color: UIColor.clearColor(), size: texture.size())
         
         // Do not need to declare the position here, but in the GameScene instead
-        
+        zPosition = 100
         
     }
     
