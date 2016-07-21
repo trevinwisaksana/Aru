@@ -13,6 +13,8 @@ enum Direction {
     case Left, Right, None
 }
 
+///////////////////////////////////////////////////////
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // This is the direction property
@@ -65,32 +67,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(pinkCharacter)
         
         // From the Checkpoint class, the checkpoint gets its position set and is added to the scene
-        target = Checkpoint(checkpointSprite: .Sprite)
-        target.position = CGPoint(x: 500, y: 200)
-        addChild(target)
+        target = childNodeWithName("//checkpoint") as! Checkpoint
+        target.setup()
+        
         
         // Creates the joystick
-        base = SKSpriteNode(color: SKColor.purpleColor(), size: CGSize(width: 50, height: 50))
+        base = SKSpriteNode(color: SKColor.purpleColor(), size: CGSize(width: 100, height: 100))
         base.zPosition = 10
-        stick = SKSpriteNode(color: SKColor.blueColor(), size: CGSize(width: 40, height: 40))
-//        base.hidden = true
+        base.position.x = -200
+        base.position.y = -90
+        stick = SKSpriteNode(color: SKColor.blueColor(), size: CGSize(width: 80, height: 80))
         base.alpha = 0.1
-        addChild(base)
+        base.hidden = true
         base.addChild(stick)
         
         // Creates the jump and switch button 
-        switchButton = MSButtonNode(color: SKColor.blueColor(), size: CGSize(width: 50, height: 30))
+        switchButton = MSButtonNode(color: SKColor.blueColor(), size: CGSize(width: 100, height: 50))
         switchButton.zPosition = 101
         switchButton.state = .Active
-        jumpButton = MSButtonNode(color: SKColor.brownColor(), size: CGSize(width: 50, height: 30))
-
-        print(jumpButton.position)
+        jumpButton = MSButtonNode(color: SKColor.brownColor(), size: CGSize(width: 100, height: 50))
+        switchButton.position.x = 110
+        switchButton.position.y = -125
+        jumpButton.position.x = 220
+        jumpButton.position.y = -125
+        
         jumpButton.zPosition = 101
         jumpButton.state = .Active
-        addChild(switchButton)
-        addChild(jumpButton)
+        characterCamera.addChild(switchButton)
+        characterCamera.addChild(jumpButton)
+        characterCamera.addChild(base)
         
         //Assuring that the target of the camera is the character's position 
+        addChild(characterCamera)
         self.camera = characterCamera
         characterCamera.xScale = 0.4
         characterCamera.yScale = 0.4
@@ -116,17 +124,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    // Note: When the screen is tapped on, this code runs
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch = touches.first!
-        let location = touch.locationInNode(self)
-        let cameraLoc = touch.locationInNode(characterCamera)
-        if cameraLoc.x < 282 {
+        // The cameraLocation means that the touch will be relative to the characterCamera's position
+        let cameraLocation = touch.locationInNode(characterCamera)
+        if cameraLocation.x < 0 {
             base.alpha = 0.5
-            base.position = location
+            base.hidden = false
+            base.position = cameraLocation
         } else {
-            base.alpha = 0.1
+            // If the other half of the screen is tapped, this will run
         }
-        if (CGRectContainsPoint(base.frame, location)) {
+        if (CGRectContainsPoint(base.frame, cameraLocation)) {
             stickActive = true
         }
     }
@@ -135,6 +145,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch = touches.first!
         let location = touch.locationInNode(base)
+        // The cameraLocation means that the touch will be relative to the characterCamera's position
+        let cameraLocation = touch.locationInNode(characterCamera)
         
         // This is for the X axis
         var x = location.x
@@ -155,7 +167,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         xValue = x / 30
         yValue = y / 30
         
-        stick.position = CGPoint(x: x, y: y)
+        if cameraLocation.x < 0 {
+            stick.position = CGPoint(x: x, y: y)
+        }
     }
 
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -164,7 +178,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let move = SKAction.moveTo(CGPoint(x: 0, y: 0), duration: 0.1)
             move.timingMode = .EaseOut
             stick.runAction(move)
-            base.alpha = 0.1
+            base.hidden = true
         }
         xValue = 0
         yValue = 0
@@ -188,10 +202,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else if buttonFunctioning == false {
             characterCamera.position = pinkCharacter.position
         }
-        jumpButton.position = CGPoint(x: characterCamera.position.x + 70, y: characterCamera.position.y - 40)
-        switchButton.position = CGPoint(x: characterCamera.position.x + 15, y: characterCamera.position.y - 40)
-        base.position = CGPoint(x: characterCamera.position.x - 70, y: characterCamera.position.y - 25)
+        // This prevents the camera from going beyond the frame
+        characterCamera.position.x.clamp(115, 455)
       }
+    
+    ///////////////////////////////////////////////////////
+    
+    
+    
+    
 
     ///////////////////////////////
     // Inside here are functions //
@@ -202,28 +221,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     ///////////////////////////////
     
     func createChain() {
-        var positionOne = self.pinkCharacter.position
+        var positionOne = pinkCharacter.position
         links = [SKSpriteNode]()
-        for _ in 0..<10 {
-            let link = SKSpriteNode(color: SKColor.whiteColor(), size: CGSize(width: 2, height: 2))
+        for _ in 0..<100 {
+            let link = SKSpriteNode(imageNamed: "link")
+            link.size = CGSize(width: 0.5, height: 0.5)
             link.physicsBody = SKPhysicsBody(rectangleOfSize: link.size)
+            link.physicsBody?.affectedByGravity = true
             link.position = pinkCharacter.position
-            link.zPosition = 0
-            
+            link.zPosition = 1
             link.physicsBody?.categoryBitMask = 0
             link.physicsBody?.collisionBitMask = 0
             link.physicsBody?.contactTestBitMask = 1
             
             addChild(link)
             // Distance between each chain
-            positionOne.x += 2
+            positionOne.x += 0.2
             link.position = positionOne
             links.append(link)
         }
         for i in 0..<links.count {
             if i == 0 {
-                let pin = SKPhysicsJointPin.jointWithBodyA(pinkCharacter.physicsBody!,bodyB: links[i].physicsBody!, anchor: self.pinkCharacter.position)
-                physicsWorld.addJoint(pin)
+                // This pins the joint to the pinkCharacter
+                let pin = SKPhysicsJointPin.jointWithBodyA(pinkCharacter.physicsBody!,bodyB: links.first!.physicsBody! /*links[i].physicsBody!*/, anchor: pinkCharacter.position)
+                self.physicsWorld.addJoint(pin)
             } else {
                 var anchor = links[i].position
                 anchor.x -= 0
@@ -231,6 +252,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.physicsWorld.addJoint(pin)
             }
         }
+        // This pins the joint to the blueCharacter
         let pin = SKPhysicsJointPin.jointWithBodyA(blueCharacter.physicsBody!, bodyB: links.last!.physicsBody!, anchor: blueCharacter.position)
         self.physicsWorld.addJoint(pin)
     }

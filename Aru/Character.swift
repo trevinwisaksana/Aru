@@ -27,7 +27,7 @@ class Character: SKSpriteNode {
         
         // Do not need to declare the position here, but in the GameScene instead
         physicsBody = SKPhysicsBody(circleOfRadius: 11.5)
-        physicsBody?.mass = 1
+        physicsBody?.mass = 0.989
         size = CGSize(width: 23, height: 23)
         physicsBody?.affectedByGravity = true
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
