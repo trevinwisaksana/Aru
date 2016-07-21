@@ -223,9 +223,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func createChain() {
         var positionOne = pinkCharacter.position
         links = [SKSpriteNode]()
-        for _ in 0..<100 {
+        for _ in 0..<10 {
             let link = SKSpriteNode(imageNamed: "link")
-            link.size = CGSize(width: 0.5, height: 0.5)
+            link.size = CGSize(width: 2, height: 2)
             link.physicsBody = SKPhysicsBody(rectangleOfSize: link.size)
             link.physicsBody?.affectedByGravity = true
             link.position = pinkCharacter.position
@@ -236,9 +236,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             addChild(link)
             // Distance between each chain
-            positionOne.x += 0.2
+            positionOne.x += 2
             link.position = positionOne
             links.append(link)
+            
         }
         for i in 0..<links.count {
             if i == 0 {
@@ -251,10 +252,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 let pin = SKPhysicsJointPin.jointWithBodyA(links[i - 1].physicsBody!,bodyB: links[i].physicsBody!, anchor: anchor)
                 self.physicsWorld.addJoint(pin)
             }
+           
         }
         // This pins the joint to the blueCharacter
         let pin = SKPhysicsJointPin.jointWithBodyA(blueCharacter.physicsBody!, bodyB: links.last!.physicsBody!, anchor: blueCharacter.position)
-        self.physicsWorld.addJoint(pin)
+               self.physicsWorld.addJoint(pin)
     }
     
     ////////////////////////////
@@ -328,6 +330,5 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let scene = LevelCompleteScene(size: self.size)
         scene.scaleMode = .AspectFill
         self.view?.presentScene(scene, transition: reveal)
-        print("CONTACT BEGINS")
     }
 }
