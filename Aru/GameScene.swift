@@ -234,6 +234,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             link.physicsBody?.collisionBitMask = 0
             link.physicsBody?.contactTestBitMask = 1
             
+            
             addChild(link)
             // Distance between each chain
             positionOne.x += 2
@@ -244,7 +245,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for i in 0..<links.count {
             if i == 0 {
                 // This pins the joint to the pinkCharacter
-                let pin = SKPhysicsJointPin.jointWithBodyA(pinkCharacter.physicsBody!,bodyB: links.first!.physicsBody! /*links[i].physicsBody!*/, anchor: pinkCharacter.position)
+                let pin = SKPhysicsJointPin.jointWithBodyA(pinkCharacter.physicsBody!,bodyB: links.first!.physicsBody!, anchor: pinkCharacter.position)
                 self.physicsWorld.addJoint(pin)
             } else {
                 var anchor = links[i].position
