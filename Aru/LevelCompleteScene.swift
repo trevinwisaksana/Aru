@@ -33,6 +33,7 @@ class LevelCompleteScene: SKScene {
             }
         }
         restartButton.state = .Active
+        
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {

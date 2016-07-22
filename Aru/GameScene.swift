@@ -9,6 +9,18 @@
 import SpriteKit
 
 ///////////////////////////////////////////////////////
+let arrayOfLevels: Array = ["IntroLvl1", // 0
+                            "IntroLvl2", // 1
+                            "IntroLvl3", // 2
+                            "Level1",    // 3
+                            "Level2",    // 4
+                            "Level3",    // 5
+                            "Level4",    // 6
+                            "Level5",    // 7
+                            "Level7",    // 8
+                            "Level8",    // 9
+                            "Level9",    // 10
+                            "Level10"]   // 11
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
@@ -104,16 +116,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsBody = SKPhysicsBody(edgeLoopFromRect: view.frame)
         physicsBody?.categoryBitMask = PhysicsCategory.Platform
         physicsBody?.collisionBitMask = 1
+        
     }
     
     func didBeginContact(contact: SKPhysicsContact) {
         let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
         if collision == PhysicsCategory.BlueCharacter | PhysicsCategory.Checkpoint {
             // This goes to the LevelCompleteScene after making contact
-         changeScene()
+            levelChanger += 1
+            changeScene()
         } else if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.Checkpoint {
             // This goes to the LevelCompleteScene scene after making contact
-         changeScene()
+            levelChanger += 1
+            changeScene()
         }
     }
     
@@ -126,9 +141,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             base.alpha = 0.5
             base.hidden = false
             base.position = cameraLocation
-        } else {
-            // If the other half of the screen is tapped, this will run
         }
+        
+        // MARK: To do: Fix the two touches problem
+        // The problem is that there are two touches began. This means that two different touches will run the touchesBegan twice!
+        // touches.count == 2 needs two fingers on the screen at the same time which is not correct
+    
+        // If the other half of the screen is tapped, this will run
         if (CGRectContainsPoint(base.frame, cameraLocation)) {
             stickActive = true
         }
@@ -318,9 +337,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     ////////////////////////////////////////////////////////
     
     func changeScene() {
+        // Check for max levels because the this will always increase
         let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 2)
-        let scene = LevelCompleteScene(size: self.size)
-        scene.scaleMode = .AspectFill
-        self.view?.presentScene(scene, transition: reveal)
+        let scene = GameScene(fileNamed: arrayOfLevels[levelChanger])
+        scene!.scaleMode = .AspectFill
+        self.view?.presentScene(scene!, transition: reveal)
+        print(levelChanger)
     }
 }

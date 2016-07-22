@@ -9,8 +9,11 @@
 import UIKit
 import SpriteKit
 
-class GameViewController: UIViewController {
+// Used to change the level by changing the indexs
+var levelChanger = 0
 
+class GameViewController: UIViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
