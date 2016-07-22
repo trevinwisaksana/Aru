@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "switchButton .png",
+      "filename" : "jumpButton.png",
       "scale" : "1x"
     },
     {

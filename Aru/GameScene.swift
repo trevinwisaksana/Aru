@@ -8,17 +8,9 @@
 
 import SpriteKit
 
-// The directions is used for the joystick
-enum Direction {
-    case Left, Right, None
-}
-
 ///////////////////////////////////////////////////////
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
-    
-    // This is the direction property
-    var direction: Direction = .None
     
     // This helps make sure that the level is only run once
     var alreadyRan = false
@@ -70,7 +62,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         target = childNodeWithName("//checkpoint") as! Checkpoint
         target.setup()
         
-        
         // Creates the joystick
         base = SKSpriteNode(color: SKColor.purpleColor(), size: CGSize(width: 100, height: 100))
         base.zPosition = 10
@@ -81,15 +72,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         base.hidden = true
         base.addChild(stick)
         
-        // Creates the jump and switch button 
-        switchButton = MSButtonNode(color: SKColor.blueColor(), size: CGSize(width: 100, height: 50))
+        // Creates the jump and switch button
+        switchButton = MSButtonNode(imageNamed: "blueSwitchButton")
+        jumpButton = MSButtonNode(imageNamed: "blueJumpButton")
+        switchButton.size = CGSize(width: switchButton.size.width / 7, height: switchButton.size.height / 7)
         switchButton.zPosition = 101
         switchButton.state = .Active
-        jumpButton = MSButtonNode(color: SKColor.brownColor(), size: CGSize(width: 100, height: 50))
-        switchButton.position.x = 110
-        switchButton.position.y = -125
+        jumpButton.size = CGSize(width: jumpButton.size.width / 13, height: jumpButton.size.height / 13)
+        switchButton.position.x = 90
+        switchButton.position.y = -110
         jumpButton.position.x = 220
-        jumpButton.position.y = -125
+        jumpButton.position.y = -110
         
         jumpButton.zPosition = 101
         jumpButton.state = .Active
@@ -97,7 +90,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         characterCamera.addChild(jumpButton)
         characterCamera.addChild(base)
         
-        //Assuring that the target of the camera is the character's position 
+        // Assuring that the target of the camera is the character's position
         addChild(characterCamera)
         self.camera = characterCamera
         characterCamera.xScale = 0.4
@@ -163,7 +156,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else if y < -30 {
             y = -30
         }
-        
         xValue = x / 30
         yValue = y / 30
         
@@ -174,7 +166,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if stickActive == true {
-            direction = .None
             let move = SKAction.moveTo(CGPoint(x: 0, y: 0), duration: 0.1)
             move.timingMode = .EaseOut
             stick.runAction(move)
@@ -208,9 +199,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     ///////////////////////////////////////////////////////
     
-    
-    
-    
 
     ///////////////////////////////
     // Inside here are functions //
@@ -233,14 +221,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             link.physicsBody?.categoryBitMask = 0
             link.physicsBody?.collisionBitMask = 0
             link.physicsBody?.contactTestBitMask = 1
-            
-            
             addChild(link)
             // Distance between each chain
             positionOne.x += 2
             link.position = positionOne
             links.append(link)
-            
         }
         for i in 0..<links.count {
             if i == 0 {
@@ -315,9 +300,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if self.buttonFunctioning {
                 // Switch to the pinkCharacter
                 self.buttonFunctioning = false
+                // This is used to change the color of the buttons from blue to pink
+                self.jumpButton.texture = SKTexture(imageNamed: "pinkJumpButton")
+                self.switchButton.texture = SKTexture(imageNamed: "pinkSwitchButton")
             } else if self.buttonFunctioning == false {
                 // Switch to the blueCharacter
                 self.buttonFunctioning = true
+                // This is used to change the color of the buttons from pink to blue
+                self.jumpButton.texture = SKTexture(imageNamed: "blueJumpButton")
+                self.switchButton.texture = SKTexture(imageNamed: "blueSwitchButton")
             }
         }
     }

@@ -17,7 +17,7 @@ class LoadingScene: SKScene {
         backgroundColor = SKColor.whiteColor()
         
         let logoPresent = SKAction.runBlock({
-            let logoAppear = SKAction.fadeInWithDuration(5)
+            let _ = SKAction.fadeInWithDuration(5)
             self.logo = SKSpriteNode(imageNamed: "logo")
             self.logo.position = CGPoint(x: self.frame.size.width / 2, y: self.frame.size.height / 2)
             self.logo.size = CGSize(width: self.logo.size.width / 6, height: self.logo.size.height / 6)

@@ -33,7 +33,7 @@ class MenuScene: SKScene {
     
     func playButtonActivate() {
         playButton.selectedHandler = {
-            let reveal = SKTransition.fadeWithColor(UIColor.blueColor(), duration: 0.5)
+            let reveal = SKTransition.fadeWithColor(UIColor.whiteColor(), duration: 0.5)
             let scene = GameScene(fileNamed: "IntroLvl1")
             scene?.scaleMode = .AspectFill
             self.view!.presentScene(scene!, transition: reveal)

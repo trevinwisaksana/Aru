@@ -29,6 +29,7 @@ class Character: SKSpriteNode {
         physicsBody = SKPhysicsBody(circleOfRadius: 11.5)
         physicsBody?.mass = 0.989
         size = CGSize(width: 23, height: 23)
+        zPosition = 10
         physicsBody?.affectedByGravity = true
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
         physicsBody?.categoryBitMask = PhysicsCategory.BlueCharacter
