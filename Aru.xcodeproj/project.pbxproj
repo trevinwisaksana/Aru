@@ -144,9 +144,9 @@
 			isa = PBXGroup;
 			children = (
 				DD3AACBB1D41B6C700EB609C /* LoadingScene */,
+				DD8BBA1E1D3E8987006BEF76 /* MenuScene */,
 				DD8BBA281D3E9B25006BEF76 /* ChooseCharacterScene */,
 				DD8BBA1F1D3E898E006BEF76 /* GameScene */,
-				DD8BBA1E1D3E8987006BEF76 /* MenuScene */,
 				DD8BBA1D1D3E897D006BEF76 /* LevelCompleteScene */,
 			);
 			name = Scenes;

@@ -23,13 +23,13 @@ class LoadingScene: SKScene {
             self.logo.size = CGSize(width: self.logo.size.width / 6, height: self.logo.size.height / 6)
             self.addChild(self.logo)
         })
-        let logoDisappear = SKAction.fadeOutWithDuration(1)
+        let logoDisappear = SKAction.fadeOutWithDuration(0.5)
         let wait = SKAction.waitForDuration(2)
         let changeScene = SKAction.runBlock({
             let transition = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 1)
-            let scene = MenuScene(size: view.frame.size)
-            scene.scaleMode = .AspectFill
-            self.view!.presentScene(scene, transition: transition)
+            let scene = MenuScene(fileNamed: "MenuScene")
+            scene!.scaleMode = .AspectFill
+            self.view!.presentScene(scene!, transition: transition)
         })
         self.runAction(SKAction.sequence([logoPresent, wait, logoDisappear, changeScene]))
     }
