@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "joystick.png",
+      "filename" : "stick.png",
       "scale" : "1x"
     },
     {

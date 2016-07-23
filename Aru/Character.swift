@@ -30,12 +30,13 @@ class Character: SKSpriteNode {
         physicsBody?.mass = 0.989
         size = CGSize(width: 23, height: 23)
         zPosition = 10
+        physicsBody?.friction = 0.5
         physicsBody?.affectedByGravity = true
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
         physicsBody?.categoryBitMask = PhysicsCategory.BlueCharacter
         physicsBody?.collisionBitMask = PhysicsCategory.PinkCharacter | PhysicsCategory.Platform | PhysicsCategory.Edge | PhysicsCategory.BlueCharacter
         // This is so that it collides with the platform
-        physicsBody?.contactTestBitMask = PhysicsCategory.Checkpoint
+        physicsBody?.contactTestBitMask = PhysicsCategory.Checkpoint | PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
     }
     
     required init?(coder aDecoder: NSCoder) {

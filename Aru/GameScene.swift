@@ -57,6 +57,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Create camera 
     var characterCamera = SKCameraNode()
     
+    // Distance between each character
+    var distanceOfCharacterDifference: CGFloat!
+    
+    // Separate Button
+    var separateButton: MSButtonNode!
+    
+    // Separate button executed 
+    var separationExecuted: Bool = true
+    
+    // Two characters made contact 
+    var madeContact: Bool = false
+    
     override func didMoveToView(view: SKView) {
         
         // Sets the physics world so that it can detect contact
@@ -75,11 +87,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         target.setup()
         
         // Creates the joystick
-        base = SKSpriteNode(color: SKColor.purpleColor(), size: CGSize(width: 100, height: 100))
+        base = SKSpriteNode(imageNamed: "base")
+        base.size = CGSize(width: 100, height: 100)
         base.zPosition = 10
         base.position.x = -200
         base.position.y = -90
-        stick = SKSpriteNode(color: SKColor.blueColor(), size: CGSize(width: 80, height: 80))
+        stick = SKSpriteNode(imageNamed: "stick")
+        stick.size = CGSize(width: 80, height: 80)
         base.alpha = 0.1
         base.hidden = true
         base.addChild(stick)
@@ -90,17 +104,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         switchButton.size = CGSize(width: switchButton.size.width / 7, height: switchButton.size.height / 7)
         switchButton.zPosition = 101
         switchButton.state = .Active
-        jumpButton.size = CGSize(width: jumpButton.size.width / 13, height: jumpButton.size.height / 13)
-        switchButton.position.x = 90
+        jumpButton.size = CGSize(width: jumpButton.size.width / 7, height: jumpButton.size.height / 7)
+        switchButton.position.x = 110
         switchButton.position.y = -110
-        jumpButton.position.x = 220
-        jumpButton.position.y = -110
+        jumpButton.position.x = 210
+        jumpButton.position.y = -90
+        separateButton = MSButtonNode(imageNamed: "separateBlueButton")
+        separateButton.size = CGSize(width: separateButton.size.width / 16, height: separateButton.size.height / 16)
+        separateButton.zPosition = 101
+        separateButton.position = CGPoint(x: 20, y: -110)
+        separateButton.state = .Active
         
         jumpButton.zPosition = 101
         jumpButton.state = .Active
         characterCamera.addChild(switchButton)
         characterCamera.addChild(jumpButton)
         characterCamera.addChild(base)
+        characterCamera.addChild(separateButton)
         
         // Assuring that the target of the camera is the character's position
         addChild(characterCamera)
@@ -111,6 +131,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         activateJumpButton()
         activateSwitchButton()
         createChain()
+        activateSeparateButton()
         
         // Creating a physical boundary to the edge of the scene
         physicsBody = SKPhysicsBody(edgeLoopFromRect: view.frame)
@@ -122,13 +143,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func didBeginContact(contact: SKPhysicsContact) {
         let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
         if collision == PhysicsCategory.BlueCharacter | PhysicsCategory.Checkpoint {
-            // This goes to the LevelCompleteScene after making contact
-            levelChanger += 1
-            changeScene()
+            // This goes to the LevelCompleteScene after making contact and the distance between the two objects is less than 50 pixels
+            if distanceOfCharacterDifference < 60 && distanceOfCharacterDifference > -60 {
+                levelChanger += 1
+                changeScene()
+            }
         } else if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.Checkpoint {
-            // This goes to the LevelCompleteScene scene after making contact
-            levelChanger += 1
-            changeScene()
+            // This goes to the LevelCompleteScene scene after making contact and the distance between the two objects is less than 50 pixels
+            if distanceOfCharacterDifference < 60 && distanceOfCharacterDifference > -60 {
+                levelChanger += 1
+                changeScene()
+            }
         }
     }
     
@@ -214,6 +239,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         // This prevents the camera from going beyond the frame
         characterCamera.position.x.clamp(115, 455)
+        
+        // Calculates the difference between the two characters
+        distanceOfCharacterDifference = blueCharacter.position.x - pinkCharacter.position.x
+        print(distanceOfCharacterDifference)
       }
     
     ///////////////////////////////////////////////////////
@@ -230,7 +259,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func createChain() {
         var positionOne = pinkCharacter.position
         links = [SKSpriteNode]()
-        for _ in 0..<10 {
+        for _ in 0..<8 {
             let link = SKSpriteNode(imageNamed: "link")
             link.size = CGSize(width: 2, height: 2)
             link.physicsBody = SKPhysicsBody(rectangleOfSize: link.size)
@@ -246,6 +275,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             link.position = positionOne
             links.append(link)
         }
+        
         for i in 0..<links.count {
             if i == 0 {
                 // This pins the joint to the pinkCharacter
@@ -343,5 +373,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scene!.scaleMode = .AspectFill
         self.view?.presentScene(scene!, transition: reveal)
         print(levelChanger)
+    }
+    
+    //////////////////////
+    // Separate button ///
+    //////////////////////
+    
+    func activateSeparateButton() {
+        separateButton.selectedHandler = {
+            if self.separationExecuted {
+                self.physicsWorld.removeAllJoints()
+                self.separationExecuted = false
+            } else if self.separationExecuted == false && self.distanceOfCharacterDifference <= 23 && self.distanceOfCharacterDifference >= -23 {
+                self.createChain()
+                self.separationExecuted = true
+            }
+        }
     }
 }
