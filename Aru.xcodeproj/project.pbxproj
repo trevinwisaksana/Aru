@@ -27,6 +27,7 @@
 		DD3AACBA1D41B69200EB609C /* LoadingScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3AACB91D41B69200EB609C /* LoadingScene.swift */; };
 		DD3AACBD1D41CC5C00EB609C /* Level1.sks in Resources */ = {isa = PBXBuildFile; fileRef = DD3AACBC1D41CC5C00EB609C /* Level1.sks */; };
 		DD50C8611D3D570B00E6790B /* IntroLvl3.sks in Resources */ = {isa = PBXBuildFile; fileRef = DD50C8601D3D570B00E6790B /* IntroLvl3.sks */; };
+		DD5651B21D43D681000E1820 /* Variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5651B11D43D681000E1820 /* Variables.swift */; };
 		DD8BBA1C1D3E8976006BEF76 /* LevelCompleteScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = DD8BBA1B1D3E8976006BEF76 /* LevelCompleteScene.sks */; };
 		DD8BBA251D3E9B09006BEF76 /* ChooseCharacterScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD8BBA241D3E9B09006BEF76 /* ChooseCharacterScene.swift */; };
 		DD8BBA271D3E9B18006BEF76 /* ChooseCharacterScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = DD8BBA261D3E9B18006BEF76 /* ChooseCharacterScene.sks */; };
@@ -92,6 +93,7 @@
 		DD3AACB91D41B69200EB609C /* LoadingScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingScene.swift; sourceTree = "<group>"; };
 		DD3AACBC1D41CC5C00EB609C /* Level1.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level1.sks; sourceTree = "<group>"; };
 		DD50C8601D3D570B00E6790B /* IntroLvl3.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = IntroLvl3.sks; path = ../IntroLvl3.sks; sourceTree = "<group>"; };
+		DD5651B11D43D681000E1820 /* Variables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Variables.swift; sourceTree = "<group>"; };
 		DD8BBA1B1D3E8976006BEF76 /* LevelCompleteScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LevelCompleteScene.sks; sourceTree = "<group>"; };
 		DD8BBA241D3E9B09006BEF76 /* ChooseCharacterScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseCharacterScene.swift; sourceTree = "<group>"; };
 		DD8BBA261D3E9B18006BEF76 /* ChooseCharacterScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ChooseCharacterScene.sks; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 			isa = PBXGroup;
 			children = (
 				DD8BBA2E1D3EA1AE006BEF76 /* Constants.swift */,
+				DD5651B11D43D681000E1820 /* Variables.swift */,
 			);
 			name = Constants;
 			path = ..;
@@ -519,6 +522,7 @@
 				DD131A0B1D39586E00BD7203 /* LevelCompleteScene.swift in Sources */,
 				DDC4793D1D3565670036E972 /* Int+Extensions.swift in Sources */,
 				DDF7E3601D206566005F9A49 /* AppDelegate.swift in Sources */,
+				DD5651B21D43D681000E1820 /* Variables.swift in Sources */,
 				DDC479421D3565670036E972 /* SKTAudio.swift in Sources */,
 				DDC4793A1D3565670036E972 /* CGFloat+Extensions.swift in Sources */,
 				DDC479431D3565670036E972 /* SKTEffects.swift in Sources */,

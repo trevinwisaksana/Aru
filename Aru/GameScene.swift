@@ -24,51 +24,6 @@ let arrayOfLevels: Array = ["IntroLvl1", // 0
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
-    // This helps make sure that the level is only run once
-    var alreadyRan = false
-    
-    // Delcaring joystick property
-    var base: SKSpriteNode!
-    var stick: SKSpriteNode!
-    // Declaring stick active property
-    var stickActive: Bool! = false
-    var xValue: CGFloat = 0
-    var yValue: CGFloat = 0
-    
-    // Declaring character property
-    var blueCharacter: Character!
-    var pinkCharacter: Character!
-    
-    // Declaring the switchButton property
-    var switchButton: MSButtonNode!
-    var buttonFunctioning: Bool = true
-    var jumpButton: MSButtonNode!
-    var alreadyTapped: Bool = true
-    
-    // Allows the button to be pressed once every 1 second
-    var canJump = true
-    
-    // Array to contain the links of the joints 
-    var links: [SKSpriteNode]!
-    
-    // Creating the checkpoint object
-    var target: Checkpoint!
-    
-    // Create camera 
-    var characterCamera = SKCameraNode()
-    
-    // Distance between each character
-    var distanceOfCharacterDifference: CGFloat!
-    
-    // Separate Button
-    var separateButton: MSButtonNode!
-    
-    // Separate button executed 
-    var separationExecuted: Bool = true
-    
-    // Two characters made contact 
-    var madeContact: Bool = false
-    
     override func didMoveToView(view: SKView) {
         
         // Sets the physics world so that it can detect contact
@@ -130,7 +85,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         activateJumpButton()
         activateSwitchButton()
-        createChain()
+        createChain(characterBack: pinkCharacter, characterFront: blueCharacter)
         activateSeparateButton()
         
         // Creating a physical boundary to the edge of the scene
@@ -246,7 +201,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
       }
     
     ///////////////////////////////////////////////////////
-    
 
     ///////////////////////////////
     // Inside here are functions //
@@ -256,8 +210,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Function to create Chain ///
     ///////////////////////////////
     
-    func createChain() {
-        var positionOne = pinkCharacter.position
+    // The characterBack and characterFront specifices which character has a negative position to each other
+    func createChain(characterBack characterBack: SKSpriteNode, characterFront: SKSpriteNode) {
+        var positionOne = characterBack.position
         links = [SKSpriteNode]()
         for _ in 0..<8 {
             let link = SKSpriteNode(imageNamed: "link")
@@ -279,7 +234,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for i in 0..<links.count {
             if i == 0 {
                 // This pins the joint to the pinkCharacter
-                let pin = SKPhysicsJointPin.jointWithBodyA(pinkCharacter.physicsBody!,bodyB: links.first!.physicsBody!, anchor: pinkCharacter.position)
+                let pin = SKPhysicsJointPin.jointWithBodyA(characterBack.physicsBody!,bodyB: links.first!.physicsBody!, anchor: characterBack.position)
                 self.physicsWorld.addJoint(pin)
             } else {
                 var anchor = links[i].position
@@ -290,7 +245,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
            
         }
         // This pins the joint to the blueCharacter
-        let pin = SKPhysicsJointPin.jointWithBodyA(blueCharacter.physicsBody!, bodyB: links.last!.physicsBody!, anchor: blueCharacter.position)
+        let pin = SKPhysicsJointPin.jointWithBodyA(characterFront.physicsBody!, bodyB: links.last!.physicsBody!, anchor: characterFront.position)
                self.physicsWorld.addJoint(pin)
     }
     
@@ -315,22 +270,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func activateJumpButton() {
         // Jump button allows the character to jump
         jumpButton.selectedHandler = {
-            if self.buttonFunctioning {
-                if self.canJump {
-                    self.canJump = false
-                    self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 405))
+            if buttonFunctioning {
+                if canJump {
+                    canJump = false
+                    blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 405))
                     let reset = SKAction.runBlock({
-                        self.canJump = true
+                        canJump = true
                     })
                     let wait = SKAction.waitForDuration(1)
                     self.runAction(SKAction.sequence([wait, reset]))
                 }
-            } else if self.buttonFunctioning == false {
-                if self.canJump {
-                    self.canJump = false
-                    self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 405))
+            } else if buttonFunctioning == false {
+                if canJump {
+                    canJump = false
+                    pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 405))
                     let reset = SKAction.runBlock({
-                        self.canJump = true
+                        canJump = true
                     })
                     let wait = SKAction.waitForDuration(0.8)
                     self.runAction(SKAction.sequence([wait, reset]))
@@ -346,18 +301,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func activateSwitchButton() {
         // Switch button allows the player to switch between characters
         switchButton.selectedHandler = {
-            if self.buttonFunctioning {
+            if buttonFunctioning {
                 // Switch to the pinkCharacter
-                self.buttonFunctioning = false
+                buttonFunctioning = false
                 // This is used to change the color of the buttons from blue to pink
-                self.jumpButton.texture = SKTexture(imageNamed: "pinkJumpButton")
-                self.switchButton.texture = SKTexture(imageNamed: "pinkSwitchButton")
-            } else if self.buttonFunctioning == false {
+                jumpButton.texture = SKTexture(imageNamed: "pinkJumpButton")
+                switchButton.texture = SKTexture(imageNamed: "pinkSwitchButton")
+            } else if buttonFunctioning == false {
                 // Switch to the blueCharacter
-                self.buttonFunctioning = true
+                buttonFunctioning = true
                 // This is used to change the color of the buttons from pink to blue
-                self.jumpButton.texture = SKTexture(imageNamed: "blueJumpButton")
-                self.switchButton.texture = SKTexture(imageNamed: "blueSwitchButton")
+                jumpButton.texture = SKTexture(imageNamed: "blueJumpButton")
+                switchButton.texture = SKTexture(imageNamed: "blueSwitchButton")
             }
         }
     }
@@ -381,12 +336,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func activateSeparateButton() {
         separateButton.selectedHandler = {
-            if self.separationExecuted {
+            if separationExecuted {
                 self.physicsWorld.removeAllJoints()
-                self.separationExecuted = false
-            } else if self.separationExecuted == false && self.distanceOfCharacterDifference <= 23 && self.distanceOfCharacterDifference >= -23 {
-                self.createChain()
-                self.separationExecuted = true
+                separationExecuted = false
+            } else if separationExecuted == false && distanceOfCharacterDifference <= 23 && distanceOfCharacterDifference >= -23 {
+                // The use of this is so that the links do not spawn backwards because the two characters have a negative difference in distance to each other.
+                if distanceOfCharacterDifference < 0 {
+                    self.createChain(characterBack: blueCharacter, characterFront: pinkCharacter)
+                    separationExecuted = true
+                } else if distanceOfCharacterDifference > 0 {
+                    self.createChain(characterBack: pinkCharacter, characterFront: blueCharacter)
+                   separationExecuted = true
+                }
             }
         }
     }
