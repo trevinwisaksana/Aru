@@ -9,6 +9,7 @@
 
 import SpriteKit
 
+// The arrayOfLevels is used so that we can call the index number of the level string when changing levels.
 ///////////////////////////////////////////////////////
 let arrayOfLevels: Array = ["IntroLvl1", // 0
                             "IntroLvl2", // 1
@@ -22,6 +23,7 @@ let arrayOfLevels: Array = ["IntroLvl1", // 0
                             "Level8",    // 9
                             "Level9",    // 10
                             "Level10"]   // 11
+//////////////////////////////////////////////////////
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
@@ -127,9 +129,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         target = childNodeWithName("//checkpoint") as! Checkpoint
         target.setup()
         
-        ////////////////////////
-        /// Creating Trigger ///
-        ////////////////////////
+        /////////////////////////////////////
+        /// Creating Trigger and Blocakde ///
+        /////////////////////////////////////
         
         // Creating Trigger that will cause the blockade to drop
         trigger = childNodeWithName("//trigger") as? SKSpriteNode
@@ -236,21 +238,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func didBeginContact(contact: SKPhysicsContact) {
         let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+        
+        //////////////////////////////////////////////////////////////////
+        // This is the contact between the character and the checkpoint //
+        //////////////////////////////////////////////////////////////////
+        
         if collision == PhysicsCategory.BlueCharacter | PhysicsCategory.Checkpoint {
             // This goes to the LevelCompleteScene after making contact and the distance between the two objects is less than 50 pixels
+            // The < 60 or > - 60 helps assure that only if the distance of the two characters is less than 60 pixels away, the checkpoint will work
             if distanceOfCharacterDifferenceX < 60 && distanceOfCharacterDifferenceX > -60 && separationExecuted == true {
                 levelChanger += 1
                 changeScene()
             }
         } else if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.Checkpoint {
-            // This goes to the LevelCompleteScene scene after making contact and the distance between the two objects is less than 50 pixels
+            // This goes to the LevelCompleteScene scene after making contact and the distance between the two objects is less than 60 pixels
             if distanceOfCharacterDifferenceX < 60 && distanceOfCharacterDifferenceX > -60 && separationExecuted == true {
                 levelChanger += 1
                 changeScene()
             }
+            
+            ////////////////////////////////////////////////////
+            // This is the contact between the two characters //
+            ////////////////////////////////////////////////////
+            
         } else if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.BlueCharacter {
             twoBodiesMadeContact = true
             // print("DID BEGIN CONTACT")
+            
+            ////////////////////////////////////////////////////////////////
+            // These two allows the contact to allow the blockade to fall //
+            ////////////////////////////////////////////////////////////////
+            
         } else if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.Trigger {
             blockade?.physicsBody?.affectedByGravity = true
             print("THIS IS RUNNING")
@@ -260,6 +278,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
     }
+    
+    ///////////////////////////////////////////////
+    // when two objects are no longer in contact //
+    ///////////////////////////////////////////////
     
     func didEndContact(contact: SKPhysicsContact) {
         twoBodiesMadeContact = false
