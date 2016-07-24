@@ -335,8 +335,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func createChain(characterBack characterBack: SKSpriteNode, characterFront: SKSpriteNode) {
         var pos = characterBack.position
         // This changes the position of the joint. If we don't use this, the joints will all be at the characterBack.position.
-        pos.x += 2
-        pos.y -= ((characterBack.position.y - characterFront.position.y) / 23) * 2.875 // characterBack.position.y - characterFront.position.y
+        pos.x += ((characterBack.position.x - characterFront.position.x) / 23) * 2.875 // 2
+        pos.y -= ((characterBack.position.y - characterFront.position.y) / 23) * 2.875
         links = [SKSpriteNode]()
         for _ in 0..<9 {
             let link = SKSpriteNode(imageNamed: "link")
@@ -351,7 +351,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             addChild(link)
             
             link.position = pos
-            pos.x += 2
+            pos.x -= ((characterBack.position.x - characterFront.position.x) / 23) * 2.875 // 2
             // This assures that regardless of the Y position of the two characters, the link would be targeted to the center of the character
             pos.y -= ((characterBack.position.y - characterFront.position.y) / 23) * 2.875
             links.append(link)
