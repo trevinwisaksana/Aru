@@ -85,7 +85,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // From the Character class, the characters gets its position set and is added to the scene
         blueCharacter = Character(characterColor: .Blue)
         pinkCharacter = Character(characterColor: .Pink)
-        blueCharacter.position = CGPoint(x: 70, y: 125)
+        blueCharacter.position = CGPoint(x: 65, y: 125)
         pinkCharacter.position = CGPoint(x: 50, y: 125)
         addChild(blueCharacter)
         addChild(pinkCharacter)
@@ -293,10 +293,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             link.physicsBody?.categoryBitMask = PhysicsCategory.None
             link.physicsBody?.collisionBitMask = 0
             link.physicsBody?.contactTestBitMask = PhysicsCategory.None
+            
             addChild(link)
             
             link.position = pos
             pos.x += 2
+            // This assures that regardless of the Y position of the two characters, the link would be targeted to the center of the character
             pos.y -= ((characterBack.position.y - characterFront.position.y) / 23) * 2.875
             links.append(link)
         }
@@ -305,6 +307,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if i == 0 {
                 // This pins the joint to the pinkCharacter
                 let pin = SKPhysicsJointPin.jointWithBodyA(characterBack.physicsBody!,bodyB: links.first!.physicsBody!, anchor: characterBack.position)
+               
                 self.physicsWorld.addJoint(pin)
                 
             } else {
@@ -312,6 +315,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 anchorPosition.x -= 1
                 // anchorPosition.y += characterBack.position.y - characterFront.position.y
                 let pin = SKPhysicsJointPin.jointWithBodyA(links[i - 1].physicsBody!,bodyB: links[i].physicsBody!, anchor: anchorPosition)
+             
                 self.physicsWorld.addJoint(pin)
             }
             
@@ -415,7 +419,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if self.separationExecuted {
                 self.physicsWorld.removeAllJoints()
                 self.separationExecuted = false
-            } else if self.separationExecuted == false && self.twoBodiesMadeContact == true /*self.distanceOfCharacterDifferenceX <= 23 && self.distanceOfCharacterDifferenceX >= -23  && self.distanceOfCharacterDifferenceY <= 23 && self.distanceOfCharacterDifferenceY >= -23*/ {
+            } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && self.distanceOfCharacterDifferenceX <= 23 && self.distanceOfCharacterDifferenceX >= -23 {
                 // The use of this is so that the links do not spawn backwards because the two characters have a negative difference in distance to each other.
                 print("CODE GETS THIS FAR")
                 // THE PROBLEM IS THAT X < 0 BUT Y > THAN 0
