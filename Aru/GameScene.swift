@@ -4,9 +4,8 @@
 //
 //  Created by Trevin Wisaksana on 6/26/16.
 //  Copyright (c) 2016 Trevin Wisaksana. All rights reserved.
-//  In GameScene, only place the Gaming properties and attributes. Place different chapters in different scenes or different states as a state machine is set up.
+//  In GameScene, only place the Gaming properties and attributes. Place different levels in different scenes or different states as a state machine is set up.
 
-// MARK: TO DO -- ASSURE THAT THE LINKS SPAWN AT VARIOUS Y POSITION BECAUSE THE pinkCharacter and blueCharacter's positions have a fixed Y value
 
 import SpriteKit
 
@@ -77,10 +76,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Create camera
     var characterCamera = SKCameraNode()
     
+    // Move instruction 
+    var moveInstruction: SKSpriteNode?
+    
+    // Healthbar objects
+    var healthBar = SKSpriteNode(color: SKColor.redColor(), size: CGSize(width: 250, height: 20))
+    var currentHealth: CGFloat = 100
+    var maxHealth: CGFloat = 100
+    
     override func didMoveToView(view: SKView) {
         
         // Sets the physics world so that it can detect contact
         self.physicsWorld.contactDelegate = self
+        
+        ////////////////////////////
+        /// Character attributes ///
+        ////////////////////////////
         
         // From the Character class, the characters gets its position set and is added to the scene
         blueCharacter = Character(characterColor: .Blue)
@@ -90,9 +101,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(blueCharacter)
         addChild(pinkCharacter)
         
+        ///////////////////////////
+        /// Creating Checkpoint ///
+        ///////////////////////////
+        
         // From the Checkpoint class, the checkpoint gets its position set and is added to the scene
         target = childNodeWithName("//checkpoint") as! Checkpoint
         target.setup()
+        
+        ///////////////////////////
+        /// Creating Health Bar ///
+        ///////////////////////////
+        healthBar.position = CGPoint(x: -270, y: 140)
+        healthBar.zPosition = 4
+        healthBar.anchorPoint.x = 0
+        print(healthBar.position)
+        
+        ///////////////////////////
+        /// Joystick properties ///
+        ///////////////////////////
         
         // Creates the joystick
         base = SKSpriteNode(imageNamed: "base")
@@ -100,41 +127,65 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         base.zPosition = 10
         base.position.x = -200
         base.position.y = -90
-        stick = SKSpriteNode(imageNamed: "stick")
-        stick.size = CGSize(width: 80, height: 80)
         base.alpha = 0.1
         base.hidden = true
+        
+        stick = SKSpriteNode(imageNamed: "stick")
+        stick.size = CGSize(width: 80, height: 80)
         base.addChild(stick)
+        
+        ////////////////////////////////////
+        /// These are buttons properties ///
+        ////////////////////////////////////
         
         // Creates the jump and switch button
         switchButton = MSButtonNode(imageNamed: "blueSwitchButton")
-        jumpButton = MSButtonNode(imageNamed: "blueJumpButton")
         switchButton.size = CGSize(width: switchButton.size.width / 7, height: switchButton.size.height / 7)
         switchButton.zPosition = 101
-        switchButton.state = .Active
-        jumpButton.size = CGSize(width: jumpButton.size.width / 7, height: jumpButton.size.height / 7)
         switchButton.position.x = 110
         switchButton.position.y = -110
+        
+        jumpButton = MSButtonNode(imageNamed: "blueJumpButton")
+        jumpButton.size = CGSize(width: jumpButton.size.width / 7, height: jumpButton.size.height / 7)
         jumpButton.position.x = 210
         jumpButton.position.y = -90
+        jumpButton.zPosition = 101
+        
         separateButton = MSButtonNode(imageNamed: "separateBlueButton")
         separateButton.size = CGSize(width: separateButton.size.width / 16, height: separateButton.size.height / 16)
         separateButton.zPosition = 101
         separateButton.position = CGPoint(x: 20, y: -110)
-        separateButton.state = .Active
         
-        jumpButton.zPosition = 101
+        // Button States
+        switchButton.state = .Active
+        separateButton.state = .Active
         jumpButton.state = .Active
+        
+        // Adding the camera as the button's parent so that it follows its position
         characterCamera.addChild(switchButton)
         characterCamera.addChild(jumpButton)
         characterCamera.addChild(base)
         characterCamera.addChild(separateButton)
+        characterCamera.addChild(healthBar)
+        
+        
+        /////////////////////////
+        /// Camera attributes ///
+        /////////////////////////
         
         // Assuring that the target of the camera is the character's position
         addChild(characterCamera)
         self.camera = characterCamera
         characterCamera.xScale = 0.4
         characterCamera.yScale = 0.4
+        
+        // Move instruction 
+        moveInstruction = childNodeWithName("//moveInstruction") as? SKSpriteNode
+        moveInstruction?.zPosition = 200
+        
+        /////////////////////////
+        /// Calling functions ///
+        /////////////////////////
 
         activateJumpButton()
         activateSwitchButton()
@@ -193,6 +244,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if (CGRectContainsPoint(base.frame, cameraLocation)) {
             stickActive = true
         }
+        
+        // Makes the instruction disappear
+        moveInstruction?.hidden = true
     }
     
     // This is used for detecting when a player moves their finger on the screen
@@ -419,6 +473,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if self.separationExecuted {
                 self.physicsWorld.removeAllJoints()
                 self.separationExecuted = false
+                self.reduceHealthBar()
             } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && self.distanceOfCharacterDifferenceX <= 23 && self.distanceOfCharacterDifferenceX >= -23 {
                 // The use of this is so that the links do not spawn backwards because the two characters have a negative difference in distance to each other.
                 print("CODE GETS THIS FAR")
@@ -437,6 +492,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                 }
             }
+        }
+    }
+    
+    ///////////////////////////////////
+    // Function to reduce healthBar ///
+    ///////////////////////////////////
+    
+    func reduceHealthBar(){
+        if currentHealth > 0 {
+            currentHealth -= 25
+            let healthBarReduce = SKAction.scaleXTo(currentHealth / maxHealth, duration: 0.5)
+            healthBar.runAction(healthBarReduce)
+        } else if currentHealth == 0 {
+            
+            currentHealth = 0
+            runAction(SKAction.sequence([
+                SKAction.waitForDuration(0),
+                SKAction.runBlock() {
+                    // 5
+                    let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 1)
+                    let scene = GameOverScene(size: self.size)
+                    scene.scaleMode = .AspectFill
+                    self.view?.presentScene(scene, transition:reveal)
+                }
+                ]))
         }
     }
 }

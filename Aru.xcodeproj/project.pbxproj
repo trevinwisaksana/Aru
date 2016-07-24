@@ -21,6 +21,8 @@
 		DD10020A1D22CE1A00715CA0 /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1002091D22CE1A00715CA0 /* MenuScene.swift */; };
 		DD10020C1D22CE2C00715CA0 /* MenuScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = DD10020B1D22CE2C00715CA0 /* MenuScene.sks */; };
 		DD131A0B1D39586E00BD7203 /* LevelCompleteScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD131A0A1D39586E00BD7203 /* LevelCompleteScene.swift */; };
+		DD181C361D45442C0085C1D8 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD181C351D45442C0085C1D8 /* GameOverScene.swift */; };
+		DD181C381D45443F0085C1D8 /* GameOverScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = DD181C371D45443F0085C1D8 /* GameOverScene.sks */; };
 		DD1901E31D3D9A810081F6BD /* Checkpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1901E21D3D9A810081F6BD /* Checkpoint.swift */; };
 		DD1901E51D3D9E5B0081F6BD /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1901E41D3D9E5B0081F6BD /* Character.swift */; };
 		DD2A702F1D22F7860058FC41 /* MSButtonNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2A702E1D22F7860058FC41 /* MSButtonNode.swift */; };
@@ -86,6 +88,8 @@
 		DD1002091D22CE1A00715CA0 /* MenuScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
 		DD10020B1D22CE2C00715CA0 /* MenuScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MenuScene.sks; sourceTree = "<group>"; };
 		DD131A0A1D39586E00BD7203 /* LevelCompleteScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelCompleteScene.swift; sourceTree = "<group>"; };
+		DD181C351D45442C0085C1D8 /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
+		DD181C371D45443F0085C1D8 /* GameOverScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameOverScene.sks; sourceTree = "<group>"; };
 		DD1901E21D3D9A810081F6BD /* Checkpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Checkpoint.swift; sourceTree = "<group>"; };
 		DD1901E41D3D9E5B0081F6BD /* Character.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Character.swift; sourceTree = "<group>"; };
 		DD2A702E1D22F7860058FC41 /* MSButtonNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MSButtonNode.swift; sourceTree = "<group>"; };
@@ -162,6 +166,7 @@
 		DD10020D1D22CECB00715CA0 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				DD181C391D4544490085C1D8 /* GameOverScene */,
 				DD3AACBB1D41B6C700EB609C /* LoadingScene */,
 				DD8BBA1E1D3E8987006BEF76 /* MenuScene */,
 				DD8BBA281D3E9B25006BEF76 /* ChooseCharacterScene */,
@@ -169,6 +174,15 @@
 				DD8BBA1D1D3E897D006BEF76 /* LevelCompleteScene */,
 			);
 			name = Scenes;
+			sourceTree = "<group>";
+		};
+		DD181C391D4544490085C1D8 /* GameOverScene */ = {
+			isa = PBXGroup;
+			children = (
+				DD181C351D45442C0085C1D8 /* GameOverScene.swift */,
+				DD181C371D45443F0085C1D8 /* GameOverScene.sks */,
+			);
+			name = GameOverScene;
 			sourceTree = "<group>";
 		};
 		DD1901D61D3D90DF0081F6BD /* Controls */ = {
@@ -465,6 +479,7 @@
 				DD0150DA1D277F27006D6AD9 /* IntroLvl2.sks in Resources */,
 				DD07EFD41D429D62000C0541 /* Level9.sks in Resources */,
 				DD07EFCA1D429D3A000C0541 /* Level4.sks in Resources */,
+				DD181C381D45443F0085C1D8 /* GameOverScene.sks in Resources */,
 				DD07EFC61D429D0C000C0541 /* Level2.sks in Resources */,
 				DD07EFD21D429D5B000C0541 /* Level8.sks in Resources */,
 				DD07EFD01D429D54000C0541 /* Level7.sks in Resources */,
@@ -510,6 +525,7 @@
 				DD2A702F1D22F7860058FC41 /* MSButtonNode.swift in Sources */,
 				DDC4793B1D3565670036E972 /* CGPoint+Extensions.swift in Sources */,
 				DD1901E31D3D9A810081F6BD /* Checkpoint.swift in Sources */,
+				DD181C361D45442C0085C1D8 /* GameOverScene.swift in Sources */,
 				DDC4793F1D3565670036E972 /* SKAction+SpecialEffects.swift in Sources */,
 				DD10020A1D22CE1A00715CA0 /* MenuScene.swift in Sources */,
 				DD1901E51D3D9E5B0081F6BD /* Character.swift in Sources */,
