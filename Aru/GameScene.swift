@@ -96,8 +96,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // From the Character class, the characters gets its position set and is added to the scene
         blueCharacter = Character(characterColor: .Blue)
         pinkCharacter = Character(characterColor: .Pink)
-        blueCharacter.position = CGPoint(x: 65, y: 125)
-        pinkCharacter.position = CGPoint(x: 50, y: 125)
+        if levelChanger == 0 || levelChanger == 1 {
+            blueCharacter.position = CGPoint(x: 65, y: 125)
+            pinkCharacter.position = CGPoint(x: 50, y: 125)
+            print("THIS IS WORKING")
+        } else if levelChanger == 2 {
+            blueCharacter.position = CGPoint(x: 65, y: 175)
+            pinkCharacter.position = CGPoint(x: 50, y: 175)
+            print("THIS IS WORKING")
+        } else {
+            // TEMPORARY POSITION: SOON TO BE EDITTED
+            blueCharacter.position = CGPoint(x: 65, y: 125)
+            pinkCharacter.position = CGPoint(x: 50, y: 125)
+        }
+        
         addChild(blueCharacter)
         addChild(pinkCharacter)
         
@@ -499,7 +511,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Function to reduce healthBar ///
     ///////////////////////////////////
     
-    func reduceHealthBar(){
+    func reduceHealthBar() {
         if currentHealth > 0 {
             currentHealth -= 25
             let healthBarReduce = SKAction.scaleXTo(currentHealth / maxHealth, duration: 0.5)
