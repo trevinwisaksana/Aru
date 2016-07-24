@@ -10,10 +10,11 @@ import UIKit
 
 // These are the physics categories which must be set to allow collisions and contacts between objects
 struct PhysicsCategory {
-    static let None: UInt32             = 0         // 00000
-    static let BlueCharacter: UInt32    = 0b1       // 00001
-    static let PinkCharacter: UInt32    = 0b10      // 00010
-    static let Checkpoint: UInt32       = 0b100     // 00100
-    static let Platform: UInt32         = 0b1000    // 01000
-    static let Edge: UInt32             = 0b10000   // 10000
+    static let None: UInt32             = 0         // 000000
+    static let BlueCharacter: UInt32    = 0b1       // 000001
+    static let PinkCharacter: UInt32    = 0b10      // 000010
+    static let Checkpoint: UInt32       = 0b100     // 000100
+    static let Platform: UInt32         = 0b1000    // 001000
+    static let Edge: UInt32             = 0b10000   // 010000
+    static let Trigger: UInt32          = 0b100000  // 100000
 }

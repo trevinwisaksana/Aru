@@ -84,6 +84,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var currentHealth: CGFloat = 100
     var maxHealth: CGFloat = 100
     
+    // Creating trigger object
+    var trigger: SKSpriteNode?
+    
+    // Create a blockadge object that will be triggered by the trigger
+    var blockade: SKSpriteNode?
+    
     override func didMoveToView(view: SKView) {
         
         // Sets the physics world so that it can detect contact
@@ -99,11 +105,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if levelChanger == 0 || levelChanger == 1 {
             blueCharacter.position = CGPoint(x: 65, y: 125)
             pinkCharacter.position = CGPoint(x: 50, y: 125)
-            print("THIS IS WORKING")
+            // print("THIS IS WORKING")
         } else if levelChanger == 2 {
             blueCharacter.position = CGPoint(x: 65, y: 175)
             pinkCharacter.position = CGPoint(x: 50, y: 175)
-            print("THIS IS WORKING")
+            // print("THIS IS WORKING")
         } else {
             // TEMPORARY POSITION: SOON TO BE EDITTED
             blueCharacter.position = CGPoint(x: 65, y: 125)
@@ -120,6 +126,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // From the Checkpoint class, the checkpoint gets its position set and is added to the scene
         target = childNodeWithName("//checkpoint") as! Checkpoint
         target.setup()
+        
+        ////////////////////////
+        /// Creating Trigger ///
+        ////////////////////////
+        
+        // Creating Trigger that will cause the blockade to drop
+        trigger = childNodeWithName("//trigger") as? SKSpriteNode
+        trigger?.physicsBody = SKPhysicsBody(rectangleOfSize: (trigger?.size)!)
+        trigger?.physicsBody?.categoryBitMask = PhysicsCategory.Trigger
+        trigger?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+        trigger?.physicsBody?.collisionBitMask = PhysicsCategory.None
+        trigger?.physicsBody?.affectedByGravity = false
+        
+        // Blockade drops when the character makes contact with the trigger
+        blockade = childNodeWithName("//blockade") as? SKSpriteNode
+        blockade?.physicsBody?.affectedByGravity = false
+        blockade?.physicsBody?.allowsRotation = false
         
         ///////////////////////////
         /// Creating Health Bar ///
@@ -227,14 +250,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         } else if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.BlueCharacter {
             twoBodiesMadeContact = true
-            print("DID BEGIN CONTACT")
+            // print("DID BEGIN CONTACT")
+        } else if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.Trigger {
+            blockade?.physicsBody?.affectedByGravity = true
+            print("THIS IS RUNNING")
+        } else if collision == PhysicsCategory.BlueCharacter | PhysicsCategory.Trigger {
+            blockade?.physicsBody?.affectedByGravity = true
+            print("THIS IS RUNNING")
         }
         
     }
     
     func didEndContact(contact: SKPhysicsContact) {
         twoBodiesMadeContact = false
-        print("NO LONGER IN CONTACT")
+        // print("NO LONGER IN CONTACT")
     }
     
     // Note: When the screen is tapped on, this code runs
@@ -471,7 +500,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let scene = GameScene(fileNamed: arrayOfLevels[levelChanger])
         scene!.scaleMode = .AspectFill
         self.view?.presentScene(scene!, transition: reveal)
-        print(levelChanger)
+        // print(levelChanger)
     }
     
     //////////////////////
@@ -488,19 +517,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.reduceHealthBar()
             } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && self.distanceOfCharacterDifferenceX <= 23 && self.distanceOfCharacterDifferenceX >= -23 {
                 // The use of this is so that the links do not spawn backwards because the two characters have a negative difference in distance to each other.
-                print("CODE GETS THIS FAR")
+                // print("CODE GETS THIS FAR")
                 // THE PROBLEM IS THAT X < 0 BUT Y > THAN 0
                 if self.distanceOfCharacterDifferenceX < 0 {
                     // If the blueChracter is behind the pinkCharacter
                     self.createChain(characterBack: self.blueCharacter, characterFront: self.pinkCharacter)
                     self.separationExecuted = true
-                    print("CODE CREATES CHAIN 1")
+                    // print("CODE CREATES CHAIN 1")
                     
                 } else if self.distanceOfCharacterDifferenceX > 0 {
                     // If the pinkCharacter is behind the blueCharacter
                     self.createChain(characterBack: self.pinkCharacter, characterFront: self.blueCharacter)
                     self.separationExecuted = true
-                    print("CODE CREATES CHAIN 2")
+                    // print("CODE CREATES CHAIN 2")
                     
                 }
             }

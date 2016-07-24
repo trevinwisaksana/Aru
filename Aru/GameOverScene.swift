@@ -25,7 +25,7 @@ class GameOverScene: SKScene {
         restartButton.selectedHandler = {
             print("RESTART BUTTON TAPPED")
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
-            if let scene = GameScene(fileNamed:"IntroLvl2") {
+            if let scene = GameScene(fileNamed: arrayOfLevels[levelChanger]) {
                 scene.scaleMode = .AspectFill
                 self.view!.presentScene(scene, transition: reveal)
             } else {
