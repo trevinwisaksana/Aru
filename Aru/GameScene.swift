@@ -92,6 +92,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Create a blockadge object that will be triggered by the trigger
     var blockade: SKSpriteNode?
     
+    // Create a blooshot effect 
+    var bloodshot: SKSpriteNode!
+    var bloodshotShouldRun: Bool = false
+    
     override func didMoveToView(view: SKView) {
         
         // Sets the physics world so that it can detect contact
@@ -128,6 +132,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // From the Checkpoint class, the checkpoint gets its position set and is added to the scene
         target = childNodeWithName("//checkpoint") as! Checkpoint
         target.setup()
+        
+        // Bloodshot
+        bloodshot = childNodeWithName("//bloodshot") as! SKSpriteNode
+        bloodshot.hidden = true
+        bloodshot.zPosition = 100
         
         /////////////////////////////////////
         /// Creating Trigger and Blocakde ///
@@ -223,12 +232,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /////////////////////////
         /// Calling functions ///
         /////////////////////////
-
+        
+        // autoSeparate()
         activateJumpButton()
         activateSwitchButton()
         createChain(characterBack: pinkCharacter, characterFront: blueCharacter)
         activateSeparateButton()
-        // autoSeparate()
+        bloodshotEffect()
         
         // Creating a physical boundary to the edge of the scene
         physicsBody = SKPhysicsBody(edgeLoopFromRect: view.frame)
@@ -381,10 +391,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Calculates the Y difference between the two characters
         distanceOfCharacterDifferenceY = blueCharacter.position.y - pinkCharacter.position.y
-        print("y", distanceOfCharacterDifferenceY)
+        // print("y", distanceOfCharacterDifferenceY)
         
+        // The trigger of this is if the separationExecuted == false which is found in the autoSeparate function
         if separationExecuted == false {
             reduceHealthBar()
+            self.physicsWorld.removeAllJoints()
         } else if separationExecuted {
             restoreHealth()
         }
@@ -546,6 +558,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.physicsWorld.removeAllJoints()
                 self.separationExecuted = false
                 self.reduceHealthBar()
+                // This shows the bloodshot effect
+                self.bloodshotShouldRun = true
+                self.bloodshotEffect()
+                print("-----------------------")
             } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && self.distanceOfCharacterDifferenceX <= 24 && self.distanceOfCharacterDifferenceX >= -24 {
                 // The use of this is so that the links do not spawn backwards because the two characters have a negative difference in distance to each other.
                 // print("CODE GETS THIS FAR")
@@ -556,7 +572,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.separationExecuted = true
                     self.restoreHealth()
                     // print("CODE CREATES CHAIN 1")
-                    
                 } else if self.distanceOfCharacterDifferenceX > 0 {
                     // If the pinkCharacter is behind the blueCharacter
                     self.createChain(characterBack: self.pinkCharacter, characterFront: self.blueCharacter)
@@ -578,19 +593,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             currentHealth -= 0.1
             let healthBarReduce = SKAction.scaleXTo(currentHealth / maxHealth, duration: 0.5)
             healthBar.runAction(healthBarReduce)
-        } else if currentHealth == 0 {
+            // print(currentHealth)
+        } else if currentHealth < 0 {
             // When the health bar reaches 0
             currentHealth = 0
             runAction(SKAction.sequence([
                 SKAction.waitForDuration(0),
                 SKAction.runBlock() {
-                    // 5
+                    print("CHANGING SCENE")
                     let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 1)
                     let scene = GameOverScene(size: self.size)
                     scene.scaleMode = .AspectFill
                     self.view?.presentScene(scene, transition:reveal)
                 }
                 ]))
+        } else if currentHealth == 100 {
+            self.removeBloodshotEffect()
         }
     }
     
@@ -603,8 +621,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             currentHealth += 0.1
             let healthBarIncrease = SKAction.scaleXTo(currentHealth / maxHealth, duration: 0.5)
             healthBar.runAction(healthBarIncrease)
+            self.removeBloodshotEffect()
         } else if currentHealth == 100 {
-            
+            self.removeBloodshotEffect()
         }
     }
     
@@ -616,7 +635,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if distanceOfCharacterDifferenceX > 200 || distanceOfCharacterDifferenceY > 100 {
             self.physicsWorld.removeAllJoints()
             self.separationExecuted = false
+            self.bloodshotShouldRun = true
+            self.bloodshotEffect()
             print("CHARACTERS ARE TOO FAR APART")
         }
+    }
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    // If the character is losing health, this helps show this. It stops running when healthRestore ///
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    func bloodshotEffect() {
+        // MARK: TO DO: FIX THE STIFF ANIMATION OF BLOODSHOT ENTERING THE SCENE
+        if bloodshotShouldRun == true {
+            self.bloodshot.hidden = false
+            let flashIn = SKAction.fadeInWithDuration(1)
+            let flashOut = SKAction.fadeOutWithDuration(1)
+            let sequence = SKAction.sequence([flashIn, flashOut])
+            self.bloodshot.runAction(SKAction.repeatActionForever(sequence))
+            print("THIS IS BEING CALLED")
+        }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    // This removes the bloodshot effect when the character is connected or restoring health ///
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    
+    func removeBloodshotEffect() {
+        let fadeOut = SKAction.fadeOutWithDuration(1)
+        self.bloodshot.runAction(SKAction.sequence([fadeOut]))
     }
 }
