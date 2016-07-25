@@ -78,8 +78,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Create camera
     var characterCamera = SKCameraNode()
     
-    // Move instruction 
+    // Instructions
     var moveInstruction: SKSpriteNode?
+    var tapToJump: SKSpriteNode?
     
     // Healthbar objects
     var healthBar = SKSpriteNode(color: SKColor.redColor(), size: CGSize(width: 250, height: 20))
@@ -241,9 +242,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         characterCamera.xScale = 0.4
         characterCamera.yScale = 0.4
         
+        ////////////////////
+        /// Instructions ///
+        ////////////////////
         // Move instruction 
         moveInstruction = childNodeWithName("//moveInstruction") as? SKSpriteNode
         moveInstruction?.zPosition = 200
+        // TapToJump Instruction 
+        tapToJump = childNodeWithName("//tapToJump") as? SKSpriteNode
+        tapToJump?.zPosition = 200
         
         /////////////////////////
         /// Calling functions ///
@@ -300,10 +307,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         } else if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.Trigger {
             blockade?.physicsBody?.affectedByGravity = true
-            print("THIS IS RUNNING")
+            // print("THIS IS RUNNING")
         } else if collision == PhysicsCategory.BlueCharacter | PhysicsCategory.Trigger {
             blockade?.physicsBody?.affectedByGravity = true
-            print("THIS IS RUNNING")
+            // print("THIS IS RUNNING")
         }
         
     }
@@ -327,10 +334,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             base.hidden = false
             base.position = cameraLocation
         }
-        
-        // MARK: To do: Fix the two touches problem
-        // The problem is that there are two touches began. This means that two different touches will run the touchesBegan twice!
-        // touches.count == 2 needs two fingers on the screen at the same time which is not correct
     
         // If the other half of the screen is tapped, this will run
         if (CGRectContainsPoint(base.frame, cameraLocation)) {
@@ -339,6 +342,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Makes the instruction disappear
         moveInstruction?.hidden = true
+        tapToJump?.hidden = true
     }
     
     // This is used for detecting when a player moves their finger on the screen
