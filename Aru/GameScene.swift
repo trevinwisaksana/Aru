@@ -228,6 +228,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         activateSwitchButton()
         createChain(characterBack: pinkCharacter, characterFront: blueCharacter)
         activateSeparateButton()
+        // autoSeparate()
         
         // Creating a physical boundary to the edge of the scene
         physicsBody = SKPhysicsBody(edgeLoopFromRect: view.frame)
@@ -380,7 +381,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Calculates the Y difference between the two characters
         distanceOfCharacterDifferenceY = blueCharacter.position.y - pinkCharacter.position.y
-        // print("y", distanceOfCharacterDifferenceY)
+        print("y", distanceOfCharacterDifferenceY)
+        
+        if separationExecuted == false {
+            reduceHealthBar()
+        } else if separationExecuted {
+            restoreHealth()
+        }
+        
+        autoSeparate()
         
       }
     
@@ -537,7 +546,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.physicsWorld.removeAllJoints()
                 self.separationExecuted = false
                 self.reduceHealthBar()
-            } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && self.distanceOfCharacterDifferenceX <= 23 && self.distanceOfCharacterDifferenceX >= -23 {
+            } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && self.distanceOfCharacterDifferenceX <= 24 && self.distanceOfCharacterDifferenceX >= -24 {
                 // The use of this is so that the links do not spawn backwards because the two characters have a negative difference in distance to each other.
                 // print("CODE GETS THIS FAR")
                 // THE PROBLEM IS THAT X < 0 BUT Y > THAN 0
@@ -545,12 +554,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     // If the blueChracter is behind the pinkCharacter
                     self.createChain(characterBack: self.blueCharacter, characterFront: self.pinkCharacter)
                     self.separationExecuted = true
+                    self.restoreHealth()
                     // print("CODE CREATES CHAIN 1")
                     
                 } else if self.distanceOfCharacterDifferenceX > 0 {
                     // If the pinkCharacter is behind the blueCharacter
                     self.createChain(characterBack: self.pinkCharacter, characterFront: self.blueCharacter)
                     self.separationExecuted = true
+                    self.restoreHealth()
                     // print("CODE CREATES CHAIN 2")
                     
                 }
@@ -564,11 +575,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func reduceHealthBar() {
         if currentHealth > 0 {
-            currentHealth -= 25
+            currentHealth -= 0.1
             let healthBarReduce = SKAction.scaleXTo(currentHealth / maxHealth, duration: 0.5)
             healthBar.runAction(healthBarReduce)
         } else if currentHealth == 0 {
-            
+            // When the health bar reaches 0
             currentHealth = 0
             runAction(SKAction.sequence([
                 SKAction.waitForDuration(0),
@@ -580,6 +591,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.view?.presentScene(scene, transition:reveal)
                 }
                 ]))
+        }
+    }
+    
+    ////////////////////////////////////
+    // Function to restore healthBar ///
+    ////////////////////////////////////
+    
+    func restoreHealth() {
+        if currentHealth < 100 {
+            currentHealth += 0.1
+            let healthBarIncrease = SKAction.scaleXTo(currentHealth / maxHealth, duration: 0.5)
+            healthBar.runAction(healthBarIncrease)
+        } else if currentHealth == 100 {
+            
+        }
+    }
+    
+    ///////////////////////////////////////////////////////////////////////////////
+    // If the distance between the characters are too far, it removes the joint ///
+    ///////////////////////////////////////////////////////////////////////////////
+    
+    func autoSeparate() {
+        if distanceOfCharacterDifferenceX > 200 || distanceOfCharacterDifferenceY > 100 {
+            self.physicsWorld.removeAllJoints()
+            self.separationExecuted = false
+            print("CHARACTERS ARE TOO FAR APART")
         }
     }
 }
