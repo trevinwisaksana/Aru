@@ -94,7 +94,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // Create a blooshot effect 
     var bloodshot: SKSpriteNode!
-    var bloodshotShouldRun: Bool = false
+    var bloodshotShouldRun: Bool = false {
+        didSet {
+            if bloodshotShouldRun == true {
+                // This starts the effect
+                bloodshotEffect()
+                // print("***************** bloodshotShouldRun TRUE!")
+            } else {
+                // This removes the effect
+                removeBloodshotEffect()
+                // print("+++++++++++++++++ bloodshotShouldRun FALSE")
+            }
+        }
+    }
     
     override func didMoveToView(view: SKView) {
         
@@ -132,6 +144,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // From the Checkpoint class, the checkpoint gets its position set and is added to the scene
         target = childNodeWithName("//checkpoint") as! Checkpoint
         target.setup()
+        
+        //////////////////////////
+        /// Creating Bloodshot ///
+        //////////////////////////
         
         // Bloodshot
         bloodshot = childNodeWithName("//bloodshot") as! SKSpriteNode
@@ -234,11 +250,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /////////////////////////
         
         // autoSeparate()
+        // bloodshotEffect()
+        
         activateJumpButton()
         activateSwitchButton()
         createChain(characterBack: pinkCharacter, characterFront: blueCharacter)
         activateSeparateButton()
-        bloodshotEffect()
+       
         
         // Creating a physical boundary to the edge of the scene
         physicsBody = SKPhysicsBody(edgeLoopFromRect: view.frame)
@@ -363,6 +381,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         xValue = 0
         yValue = 0
     }
+    
+    ////////////////////
+    // UPDATE METHOD ///
+    ////////////////////
 
     override func update(currentTime: CFTimeInterval) {
         // Called before each frame is rendered
@@ -396,7 +418,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // The trigger of this is if the separationExecuted == false which is found in the autoSeparate function
         if separationExecuted == false {
             reduceHealthBar()
-            self.physicsWorld.removeAllJoints()
+            // bloodshotShouldRun = true
         } else if separationExecuted {
             restoreHealth()
         }
@@ -557,12 +579,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if self.separationExecuted {
                 self.physicsWorld.removeAllJoints()
                 self.separationExecuted = false
-                self.reduceHealthBar()
-                // This shows the bloodshot effect
                 self.bloodshotShouldRun = true
-                self.bloodshotEffect()
+                // This shows the bloodshot effect
+                // self.bloodshotEffect()
                 print("-----------------------")
-            } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && self.distanceOfCharacterDifferenceX <= 24 && self.distanceOfCharacterDifferenceX >= -24 {
+            } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && self.distanceOfCharacterDifferenceX <= 25 && self.distanceOfCharacterDifferenceX >= -25 {
                 // The use of this is so that the links do not spawn backwards because the two characters have a negative difference in distance to each other.
                 // print("CODE GETS THIS FAR")
                 // THE PROBLEM IS THAT X < 0 BUT Y > THAN 0
@@ -632,13 +653,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     ///////////////////////////////////////////////////////////////////////////////
     
     func autoSeparate() {
-        if distanceOfCharacterDifferenceX > 200 || distanceOfCharacterDifferenceY > 100 {
-            self.physicsWorld.removeAllJoints()
-            self.separationExecuted = false
-            self.bloodshotShouldRun = true
-            self.bloodshotEffect()
-            print("CHARACTERS ARE TOO FAR APART")
+        // MARK: DEBUG: ALLOW THE BLOODSHOT TO HAPPEN BEYOND 200 BY 100 PIXELS
+        if bloodshotShouldRun == true {
+            // If true no need to do the rest of this code
+            return
         }
+        
+        if abs(distanceOfCharacterDifferenceX) > 200 || abs(distanceOfCharacterDifferenceY) > 100 {
+            self.physicsWorld.removeAllJoints()
+            // SeparationExecuted is set to false because it will trigger the reduceHealth in the update moethod
+            self.separationExecuted = false
+            // This is set to true so that it triggers the bloodshot effect
+            self.bloodshotShouldRun = true
+        }
+   
     }
     
     ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -646,15 +674,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     ///////////////////////////////////////////////////////////////////////////////////////////////////
     
     func bloodshotEffect() {
-        // MARK: TO DO: FIX THE STIFF ANIMATION OF BLOODSHOT ENTERING THE SCENE
-        if bloodshotShouldRun == true {
-            self.bloodshot.hidden = false
-            let flashIn = SKAction.fadeInWithDuration(1)
-            let flashOut = SKAction.fadeOutWithDuration(1)
-            let sequence = SKAction.sequence([flashIn, flashOut])
-            self.bloodshot.runAction(SKAction.repeatActionForever(sequence))
-            print("THIS IS BEING CALLED")
-        }
+        self.bloodshot.hidden = false
+        // separationExecuted = true
+        // let firstDisappear = SKAction.fadeOutWithDuration(0.1)
+        let flashIn = SKAction.fadeInWithDuration(1)
+        let flashOut = SKAction.fadeOutWithDuration(1)
+        let sequence = SKAction.sequence([flashIn, flashOut])
+        self.bloodshot.runAction(SKAction.repeatActionForever(sequence))
+        print("THE BLOODSHOT EFFECT IS BEING CALLED")
     }
     
     ////////////////////////////////////////////////////////////////////////////////////////////
