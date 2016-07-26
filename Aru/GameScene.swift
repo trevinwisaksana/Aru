@@ -129,10 +129,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.position = CGPoint(x: 65, y: 175)
             pinkCharacter.position = CGPoint(x: 50, y: 175)
             // print("THIS IS WORKING")
-        } else {
+        } else if levelChanger == 3 {
             // TEMPORARY POSITION: SOON TO BE EDITTED
-            blueCharacter.position = CGPoint(x: 65, y: 125)
-            pinkCharacter.position = CGPoint(x: 50, y: 125)
+            blueCharacter.position = CGPoint(x: 65, y: 210)
+            pinkCharacter.position = CGPoint(x: 50, y: 210)
         }
         
         addChild(blueCharacter)
@@ -410,6 +410,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         // This prevents the camera from going beyond the frame
         characterCamera.position.x.clamp(115, 455)
+        characterCamera.position.y.clamp(200, -100)
         
         // Calculates X the difference between the two characters
         distanceOfCharacterDifferenceX = blueCharacter.position.x - pinkCharacter.position.x
@@ -657,7 +658,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     ///////////////////////////////////////////////////////////////////////////////
     
     func autoSeparate() {
-        // MARK: DEBUG: ALLOW THE BLOODSHOT TO HAPPEN BEYOND 200 BY 100 PIXELS
         if bloodshotShouldRun == true {
             // If true no need to do the rest of this code
             return
