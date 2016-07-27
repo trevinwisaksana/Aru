@@ -137,6 +137,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // This is Level 1
             blueCharacter.position = CGPoint(x: 520, y: 260)
             pinkCharacter.position = CGPoint(x: 50, y: 260)
+            blueCharacter.physicsBody?.linearDamping = 1
+            pinkCharacter.physicsBody?.linearDamping = 1
             // print("LEVEL CHANGER == 3")
         } else if levelChanger == 4 {
             // This is Level 2
@@ -146,6 +148,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // This is Level 3
             blueCharacter.position = CGPoint(x: 65, y: 260)
             pinkCharacter.position = CGPoint(x: 50, y: 260)
+        } else if levelChanger == 6 {
+            // This is Level 4
+            blueCharacter.position = CGPoint(x: 65, y: 270)
+            pinkCharacter.position = CGPoint(x: 50, y: 270)
         }
         
         addChild(blueCharacter)
@@ -348,9 +354,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             print("GAMEOVER")
         }
         
-        
-    
-        
     }
     
     ///////////////////////////////////////////////
@@ -433,13 +436,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Called before each frame is rendered
         if buttonFunctioning == true {
             if stickActive == true {
-                let vector = CGVector(dx: 200 * xValue, dy: 0)
-                blueCharacter.physicsBody?.applyForce(vector)
+                if levelChanger == 3 {
+                    let vector = CGVector(dx: 50 * xValue, dy: 0)
+                    blueCharacter.physicsBody?.applyForce(vector)
+                } else {
+                    let vector = CGVector(dx: 200 * xValue, dy: 0)
+                    blueCharacter.physicsBody?.applyForce(vector)
+                }
             }
         } else {
             if stickActive == true {
-                let vector = CGVector(dx: 200 * xValue, dy: 0)
-                pinkCharacter.physicsBody?.applyForce(vector)
+                if levelChanger == 3 {
+                    let vector = CGVector(dx: 50 * xValue, dy: 0)
+                    pinkCharacter.physicsBody?.applyForce(vector)
+                } else {
+                    let vector = CGVector(dx: 200 * xValue, dy: 0)
+                    pinkCharacter.physicsBody?.applyForce(vector)
+                }
             }
         }
         if buttonFunctioning {
@@ -566,7 +579,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if self.buttonFunctioning {
                 if self.canJump {
                     self.canJump = false
-                    self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 330))
+                    if levelChanger == 3 {
+                        self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 50))
+                    } else {
+                        self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 330))
+                    }
+            
                     let reset = SKAction.runBlock({
                         self.canJump = true
                     })
@@ -576,7 +594,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             } else if self.buttonFunctioning == false {
                 if self.canJump {
                     self.canJump = false
-                    self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 330))
+                    if levelChanger == 3 {
+                        self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 50))
+                    } else {
+                        self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 330))
+                    }
+                    
                     let reset = SKAction.runBlock({
                         self.canJump = true
                     })

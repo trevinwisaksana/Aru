@@ -11,6 +11,8 @@ import XCTest
 
 class AruTests: XCTestCase {
     
+    let calculator = Calculator()
+    
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -20,6 +22,17 @@ class AruTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
+    
+    
+    
+    func test_calculator() {
+        let expected = 10
+        let result = calculator.sum(3, b: 7)
+        
+       // XCTAssertTrue(<#T##expression: BooleanType##BooleanType#>, <#T##message: String##String#>)
+    }
+    
+    
     
     func testExample() {
         // This is an example of a functional test case.
