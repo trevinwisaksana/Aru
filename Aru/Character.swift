@@ -26,9 +26,9 @@ class Character: SKSpriteNode {
         super.init(texture: texture, color: UIColor.clearColor(), size: texture.size())
         
         // Do not need to declare the position here, but in the GameScene instead
-        physicsBody = SKPhysicsBody(circleOfRadius: 2.5)
+        physicsBody = SKPhysicsBody(circleOfRadius: 8)
         physicsBody?.mass = 0.989
-        size = CGSize(width: 5, height: 5)
+        size = CGSize(width: 16, height: 16)
         zPosition = 10
         physicsBody?.friction = 0.5
         physicsBody?.affectedByGravity = true

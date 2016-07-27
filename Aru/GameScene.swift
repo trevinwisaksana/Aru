@@ -257,8 +257,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Assuring that the target of the camera is the character's position
         addChild(characterCamera)
         self.camera = characterCamera
-        characterCamera.xScale = 0.1
-        characterCamera.yScale = 0.1
+        characterCamera.xScale = 0.3
+        characterCamera.yScale = 0.3
         
         ////////////////////
         /// Instructions ///
@@ -329,10 +329,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blockade?.physicsBody?.affectedByGravity = true
             // print("THIS IS RUNNING")
         }
-        
             /////////////////////////////////////////////////////////////////
             // These two initiates the gameOverScene when the player falls //
             /////////////////////////////////////////////////////////////////
+            
             
         if collision == PhysicsCategory.BlueCharacter | PhysicsCategory.Trigger {
             if levelChanger == 5 {
@@ -433,12 +433,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Called before each frame is rendered
         if buttonFunctioning == true {
             if stickActive == true {
-                let vector = CGVector(dx: 50 * xValue, dy: 0)
+                let vector = CGVector(dx: 200 * xValue, dy: 0)
                 blueCharacter.physicsBody?.applyForce(vector)
             }
         } else {
             if stickActive == true {
-                let vector = CGVector(dx: 50 * xValue, dy: 0)
+                let vector = CGVector(dx: 200 * xValue, dy: 0)
                 pinkCharacter.physicsBody?.applyForce(vector)
             }
         }
@@ -453,11 +453,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Calculates X the difference between the two characters
         distanceOfCharacterDifferenceX = blueCharacter.position.x - pinkCharacter.position.x
-        print("x", distanceOfCharacterDifferenceX)
+        // print("x", distanceOfCharacterDifferenceX)
         
         // Calculates the Y difference between the two characters
         distanceOfCharacterDifferenceY = blueCharacter.position.y - pinkCharacter.position.y
-        print("y", distanceOfCharacterDifferenceY)
+        // print("y", distanceOfCharacterDifferenceY)
         
         // The trigger of this is if the separationExecuted == false which is found in the autoSeparate function
         if separationExecuted == false {
@@ -486,15 +486,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func createChain(characterBack characterBack: SKSpriteNode, characterFront: SKSpriteNode) {
         var pos = characterBack.position
         // This changes the position of the joint. If we don't use this, the joints will all be at the characterBack.position.
-        pos.x += ((characterBack.position.x - characterFront.position.x) / 6) * 0.56 // 2
-        pos.y -= ((characterBack.position.y - characterFront.position.y) / 6) * 0.56
+        pos.x += ((characterBack.position.x - characterFront.position.x) / 16) * 1.78 // 2
+        pos.y -= ((characterBack.position.y - characterFront.position.y) / 16) * 1.78
         links = [SKSpriteNode]()
-        for _ in 0..<8 {
+        for _ in 0..<9 {
             let link = SKSpriteNode(imageNamed: "link")
-            link.size = CGSize(width: 0.5, height: 0.5)
+            link.size = CGSize(width: 2, height: 2)
             link.physicsBody = SKPhysicsBody(rectangleOfSize: link.size)
             link.physicsBody?.affectedByGravity = true
-            link.physicsBody?.mass = 0.005
             link.zPosition = 1
             link.physicsBody?.categoryBitMask = PhysicsCategory.None
             link.physicsBody?.collisionBitMask = 0
@@ -513,9 +512,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             addChild(link)
             
             link.position = pos
-            pos.x -= ((characterBack.position.x - characterFront.position.x) / 5) * 0.56 // 2
+            pos.x -= ((characterBack.position.x - characterFront.position.x) / 16) * 1.78 // 2
             // This assures that regardless of the Y position of the two characters, the link would be targeted to the center of the character
-            pos.y -= ((characterBack.position.y - characterFront.position.y) / 5) * 0.56
+            pos.y -= ((characterBack.position.y - characterFront.position.y) / 16) * 1.78
             links.append(link)
         }
         
@@ -528,7 +527,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
             } else {
                 var anchorPosition = links[i].position
-                anchorPosition.x -= 0.1
+                anchorPosition.x -= 1
                 // anchorPosition.y += characterBack.position.y - characterFront.position.y
                 let pin = SKPhysicsJointPin.jointWithBodyA(links[i - 1].physicsBody!,bodyB: links[i].physicsBody!, anchor: anchorPosition)
              
@@ -567,7 +566,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if self.buttonFunctioning {
                 if self.canJump {
                     self.canJump = false
-                    self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 200))
+                    self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 330))
                     let reset = SKAction.runBlock({
                         self.canJump = true
                     })
@@ -577,7 +576,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             } else if self.buttonFunctioning == false {
                 if self.canJump {
                     self.canJump = false
-                    self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 200))
+                    self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 330))
                     let reset = SKAction.runBlock({
                         self.canJump = true
                     })
@@ -640,7 +639,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 // This shows the bloodshot effect
                 // self.bloodshotEffect()
                 print("-----------------------")
-            } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && self.distanceOfCharacterDifferenceX <= 6 && self.distanceOfCharacterDifferenceX >= -6 {
+            } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && self.distanceOfCharacterDifferenceX <= 17 && self.distanceOfCharacterDifferenceX >= -17 {
                 // The use of this is so that the links do not spawn backwards because the two characters have a negative difference in distance to each other.
                 // print("CODE GETS THIS FAR")
                 // THE PROBLEM IS THAT X < 0 BUT Y > THAN 0
@@ -709,7 +708,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
         
-        if abs(distanceOfCharacterDifferenceX) > 60 || abs(distanceOfCharacterDifferenceY) > 80 {
+        if abs(distanceOfCharacterDifferenceX) > 130 || abs(distanceOfCharacterDifferenceY) > 100 {
             self.physicsWorld.removeAllJoints()
             // SeparationExecuted is set to false because it will trigger the reduceHealth in the update moethod
             self.separationExecuted = false
