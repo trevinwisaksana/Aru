@@ -75,6 +75,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Two characters made contact
     var madeContact: Bool = false
     
+    // Creating the seesaw 
+    var seesaw: SKSpriteNode?
+    
     // Create camera
     var characterCamera = SKCameraNode()
     
@@ -86,6 +89,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var healthBar = SKSpriteNode(color: SKColor.redColor(), size: CGSize(width: 250, height: 20))
     var currentHealth: CGFloat = 100
     var maxHealth: CGFloat = 100
+    var healthShouldReduce: Bool = false
     
     // Creating trigger object
     var trigger: SKSpriteNode?
@@ -130,13 +134,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             pinkCharacter.position = CGPoint(x: 50, y: 175)
             // print("THIS IS WORKING")
         } else if levelChanger == 3 {
-            // TEMPORARY POSITION: SOON TO BE EDITTED
-            blueCharacter.position = CGPoint(x: 65, y: 210)
-            pinkCharacter.position = CGPoint(x: 50, y: 210)
+            // This is Level 1
+            blueCharacter.position = CGPoint(x: 520, y: 260)
+            pinkCharacter.position = CGPoint(x: 50, y: 260)
+            // print("LEVEL CHANGER == 3")
+        } else if levelChanger == 4 {
+            // This is Level 2
+            blueCharacter.position = CGPoint(x: 50, y: 100)
+            pinkCharacter.position = CGPoint(x: 30, y: 100)
+        } else if levelChanger == 5 {
+            // This is Level 3
+            blueCharacter.position = CGPoint(x: 65, y: 260)
+            pinkCharacter.position = CGPoint(x: 50, y: 260)
         }
         
         addChild(blueCharacter)
         addChild(pinkCharacter)
+        
+        // seesaw = childNodeWithName("//seesaw") as? SKSpriteNode
+        // seesaw?.physicsBody = SKPhysicsBody()
+        // seesaw?.physicsBody?.angularDamping = 1
+        // seesaw?.physicsBody?.mass = 2
         
         ///////////////////////////
         /// Creating Checkpoint ///
@@ -239,8 +257,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Assuring that the target of the camera is the character's position
         addChild(characterCamera)
         self.camera = characterCamera
-        characterCamera.xScale = 0.4
-        characterCamera.yScale = 0.4
+        characterCamera.xScale = 0.3
+        characterCamera.yScale = 0.3
         
         ////////////////////
         /// Instructions ///
@@ -264,7 +282,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         createChain(characterBack: pinkCharacter, characterFront: blueCharacter)
         activateSeparateButton()
        
-        
         // Creating a physical boundary to the edge of the scene
         physicsBody = SKPhysicsBody(edgeLoopFromRect: view.frame)
         physicsBody?.categoryBitMask = PhysicsCategory.Platform
@@ -313,6 +330,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // print("THIS IS RUNNING")
         }
         
+            /////////////////////////////////////////////////////////////////
+            // These two initiates the gameOverScene when the player falls //
+            /////////////////////////////////////////////////////////////////
+            
+        if collision == PhysicsCategory.BlueCharacter | PhysicsCategory.Trigger {
+            if levelChanger == 5 {
+                changeToGameOverScene()
+            }
+            print("GAMEOVER")
+        }
+            
+        if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.Trigger {
+            if levelChanger == 5 {
+                changeToGameOverScene()
+            }
+            print("GAMEOVER")
+        }
+        
+        
+    
+        
     }
     
     ///////////////////////////////////////////////
@@ -329,11 +367,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let touch = touches.first!
         // The cameraLocation means that the touch will be relative to the characterCamera's position
         let cameraLocation = touch.locationInNode(characterCamera)
-        if cameraLocation.x < 0 {
-            base.alpha = 0.5
-            base.hidden = false
-            base.position = cameraLocation
-        }
+        // if cameraLocation.x < 0 {
+        base.alpha = 0.5
+        base.hidden = false
+        base.position = cameraLocation
+        //}
     
         // If the other half of the screen is tapped, this will run
         if (CGRectContainsPoint(base.frame, cameraLocation)) {
@@ -351,28 +389,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let location = touch.locationInNode(base)
         // The cameraLocation means that the touch will be relative to the characterCamera's position
         let cameraLocation = touch.locationInNode(characterCamera)
+        let moveValue: CGFloat = 30
         
         // This is for the X axis
         var x = location.x
-        if x > 30 {
-            x = 30
-        } else if x < -30 {
-            x = -30
+        if x > moveValue {
+            x = moveValue
+        } else if x < -moveValue {
+            x = -moveValue
         }
         
         // This is for the Y axis
         var y = location.y
-        if y > 30 {
-            y = 30
-        } else if y < -30 {
-            y = -30
+        if y > moveValue {
+            y = moveValue
+        } else if y < -moveValue {
+            y = -moveValue
         }
-        xValue = x / 30
-        yValue = y / 30
+        xValue = x / moveValue
+        yValue = y / moveValue
         
-        if cameraLocation.x < 0 {
+        // if cameraLocation.x < 0 {
             stick.position = CGPoint(x: x, y: y)
-        }
+        // }
     }
 
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -394,12 +433,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Called before each frame is rendered
         if buttonFunctioning == true {
             if stickActive == true {
-                let vector = CGVector(dx: 400 * xValue, dy: 0)
+                let vector = CGVector(dx: 200 * xValue, dy: 0)
                 blueCharacter.physicsBody?.applyForce(vector)
             }
         } else {
             if stickActive == true {
-                let vector = CGVector(dx: 400 * xValue, dy: 0)
+                let vector = CGVector(dx: 200 * xValue, dy: 0)
                 pinkCharacter.physicsBody?.applyForce(vector)
             }
         }
@@ -409,8 +448,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             characterCamera.position = pinkCharacter.position
         }
         // This prevents the camera from going beyond the frame
-        characterCamera.position.x.clamp(115, 455)
-        characterCamera.position.y.clamp(200, -100)
+        characterCamera.position.x.clamp(85, 483)
+        characterCamera.position.y.clamp(250, -80)
         
         // Calculates X the difference between the two characters
         distanceOfCharacterDifferenceX = blueCharacter.position.x - pinkCharacter.position.x
@@ -429,6 +468,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         autoSeparate()
+        // print(healthShouldReduce)
         
       }
     
@@ -446,8 +486,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func createChain(characterBack characterBack: SKSpriteNode, characterFront: SKSpriteNode) {
         var pos = characterBack.position
         // This changes the position of the joint. If we don't use this, the joints will all be at the characterBack.position.
-        pos.x += ((characterBack.position.x - characterFront.position.x) / 23) * 2.875 // 2
-        pos.y -= ((characterBack.position.y - characterFront.position.y) / 23) * 2.875
+        pos.x += ((characterBack.position.x - characterFront.position.x) / 16) * 1.78 // 2
+        pos.y -= ((characterBack.position.y - characterFront.position.y) / 16) * 1.78
         links = [SKSpriteNode]()
         for _ in 0..<9 {
             let link = SKSpriteNode(imageNamed: "link")
@@ -459,12 +499,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             link.physicsBody?.collisionBitMask = 0
             link.physicsBody?.contactTestBitMask = PhysicsCategory.None
             
+            // In this code, the links are hidden in Level 1 because it prevents the player from seeing the links falling down when the scene spawns.
+            if levelChanger == 3 {
+                link.hidden = true
+            }
+            // This code allows the links to be visible after it's hidden because it helps the player to see that it's linked together after they press the join button
+            if separationExecuted == false && levelChanger == 3 {
+                link.hidden = false
+                print("LINK HIDDEN == FALSE")
+            }
+            
             addChild(link)
             
             link.position = pos
-            pos.x -= ((characterBack.position.x - characterFront.position.x) / 23) * 2.875 // 2
+            pos.x -= ((characterBack.position.x - characterFront.position.x) / 16) * 1.78 // 2
             // This assures that regardless of the Y position of the two characters, the link would be targeted to the center of the character
-            pos.y -= ((characterBack.position.y - characterFront.position.y) / 23) * 2.875
+            pos.y -= ((characterBack.position.y - characterFront.position.y) / 16) * 1.78
             links.append(link)
         }
         
@@ -516,7 +566,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if self.buttonFunctioning {
                 if self.canJump {
                     self.canJump = false
-                    self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 405))
+                    self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 330))
                     let reset = SKAction.runBlock({
                         self.canJump = true
                     })
@@ -526,7 +576,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             } else if self.buttonFunctioning == false {
                 if self.canJump {
                     self.canJump = false
-                    self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 405))
+                    self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 330))
                     let reset = SKAction.runBlock({
                         self.canJump = true
                     })
@@ -585,10 +635,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.physicsWorld.removeAllJoints()
                 self.separationExecuted = false
                 self.bloodshotShouldRun = true
+                self.healthShouldReduce = true
                 // This shows the bloodshot effect
                 // self.bloodshotEffect()
                 print("-----------------------")
-            } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && self.distanceOfCharacterDifferenceX <= 25 && self.distanceOfCharacterDifferenceX >= -25 {
+            } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && self.distanceOfCharacterDifferenceX <= 17 && self.distanceOfCharacterDifferenceX >= -17 {
                 // The use of this is so that the links do not spawn backwards because the two characters have a negative difference in distance to each other.
                 // print("CODE GETS THIS FAR")
                 // THE PROBLEM IS THAT X < 0 BUT Y > THAN 0
@@ -597,12 +648,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.createChain(characterBack: self.blueCharacter, characterFront: self.pinkCharacter)
                     self.separationExecuted = true
                     self.restoreHealth()
+                    self.healthShouldReduce = false
+                    
                     // print("CODE CREATES CHAIN 1")
                 } else if self.distanceOfCharacterDifferenceX > 0 {
                     // If the pinkCharacter is behind the blueCharacter
                     self.createChain(characterBack: self.pinkCharacter, characterFront: self.blueCharacter)
                     self.separationExecuted = true
                     self.restoreHealth()
+                    self.healthShouldReduce = false
                     // print("CODE CREATES CHAIN 2")
                     
                 }
@@ -615,7 +669,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     ///////////////////////////////////
     
     func reduceHealthBar() {
-        if currentHealth > 0 {
+        if currentHealth > 0 && healthShouldReduce == true {
             currentHealth -= 0.1
             let healthBarReduce = SKAction.scaleXTo(currentHealth / maxHealth, duration: 0.5)
             healthBar.runAction(healthBarReduce)
@@ -623,16 +677,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else if currentHealth < 0 {
             // When the health bar reaches 0
             currentHealth = 0
-            runAction(SKAction.sequence([
-                SKAction.waitForDuration(0),
-                SKAction.runBlock() {
-                    print("CHANGING SCENE")
-                    let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 1)
-                    let scene = GameOverScene(size: self.size)
-                    scene.scaleMode = .AspectFill
-                    self.view?.presentScene(scene, transition:reveal)
-                }
-                ]))
+            changeToGameOverScene()
         } else if currentHealth == 100 {
             self.removeBloodshotEffect()
         }
@@ -663,12 +708,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
         
-        if abs(distanceOfCharacterDifferenceX) > 200 || abs(distanceOfCharacterDifferenceY) > 100 {
+        if abs(distanceOfCharacterDifferenceX) > 130 || abs(distanceOfCharacterDifferenceY) > 100 {
             self.physicsWorld.removeAllJoints()
             // SeparationExecuted is set to false because it will trigger the reduceHealth in the update moethod
             self.separationExecuted = false
             // This is set to true so that it triggers the bloodshot effect
-            self.bloodshotShouldRun = true
+            if levelChanger == 3 {
+                self.bloodshotShouldRun = false
+                self.healthShouldReduce = false
+            } else {
+                self.bloodshotShouldRun = true
+                self.healthShouldReduce = true
+            }
+            
         }
    
     }
@@ -695,5 +747,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func removeBloodshotEffect() {
         let fadeOut = SKAction.fadeOutWithDuration(1)
         self.bloodshot.runAction(SKAction.sequence([fadeOut]))
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////
+    // The game switches to gameOverScene when the character fails to hit the checkpoint ///
+    ////////////////////////////////////////////////////////////////////////////////////////
+    
+    func changeToGameOverScene() {
+        runAction(SKAction.sequence([
+            SKAction.waitForDuration(0),
+            SKAction.runBlock() {
+                print("CHANGING SCENE")
+                let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 1)
+                let scene = GameOverScene(size: self.size)
+                scene.scaleMode = .AspectFill
+                self.view?.presentScene(scene, transition:reveal)
+            }
+            ]))
     }
 }
