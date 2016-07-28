@@ -382,14 +382,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             
         if collision == PhysicsCategory.BlueCharacter | PhysicsCategory.Trigger {
-            if levelChanger == 5 {
+            if levelChanger != 2 {
                 changeToGameOverScene()
             }
             print("GAMEOVER")
         }
             
         if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.Trigger {
-            if levelChanger == 5 {
+            if levelChanger != 2 {
                 changeToGameOverScene()
             }
             print("GAMEOVER")
