@@ -21,8 +21,8 @@ let arrayOfLevels: Array = ["IntroLvl1", // 0
                             "Level5",    // 7
                             "Level7",    // 8
                             "Level8",    // 9
-                            "Level9",    // 10
-                            "Level10"]   // 11
+                            //"Level9",    // 10
+                            /*"Level10"*/]   // 11
 //////////////////////////////////////////////////////
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -53,6 +53,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // Array to contain the links of the joints
     var links: [SKSpriteNode]!
+    var pinLinkCharacterFront: SKPhysicsJointPin!
+    var pinLinkCharacterBack: SKPhysicsJointPin!
+    var pinLink: SKPhysicsJointPin!
     
     // Creating the checkpoint object
     var target: Checkpoint!
@@ -78,8 +81,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Creating the seesaw 
     var seesaw: SKSpriteNode?
     
+    // Creating the bridge
+    var bridge: SKSpriteNode?
+    var pivot: SKSpriteNode?
+    var bridgePin: SKPhysicsJointPin!
+    
     // Create camera
     var characterCamera = SKCameraNode()
+    
+    // Create character indicator 
+    var indicator: SKSpriteNode!
     
     // Instructions
     var moveInstruction: SKSpriteNode?
@@ -142,16 +153,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // print("LEVEL CHANGER == 3")
         } else if levelChanger == 4 {
             // This is Level 2
-            blueCharacter.position = CGPoint(x: 50, y: 100)
-            pinkCharacter.position = CGPoint(x: 30, y: 100)
+            blueCharacter.position = CGPoint(x: 70, y: 175)
+            pinkCharacter.position = CGPoint(x: 40, y: 175)
         } else if levelChanger == 5 {
             // This is Level 3
-            blueCharacter.position = CGPoint(x: 65, y: 260)
-            pinkCharacter.position = CGPoint(x: 50, y: 260)
+            blueCharacter.position = CGPoint(x: 50, y: 100)
+            pinkCharacter.position = CGPoint(x: 30, y: 100)
         } else if levelChanger == 6 {
             // This is Level 4
-            blueCharacter.position = CGPoint(x: 65, y: 270)
-            pinkCharacter.position = CGPoint(x: 50, y: 270)
+            blueCharacter.position = CGPoint(x: 65, y: 260)
+            pinkCharacter.position = CGPoint(x: 50, y: 260)
+        } else if levelChanger == 0 {
+            self.separateButton.state = .Inactive
         }
         
         addChild(blueCharacter)
@@ -161,6 +174,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // seesaw?.physicsBody = SKPhysicsBody()
         // seesaw?.physicsBody?.angularDamping = 1
         // seesaw?.physicsBody?.mass = 2
+        
+        // Creating bridge
+        if levelChanger == 4 {
+            pivot = childNodeWithName("pivot") as! SKSpriteNode
+            bridge = childNodeWithName("bridge") as! SKSpriteNode
+
+            bridgePin = SKPhysicsJointPin.jointWithBodyA(bridge!.physicsBody!,
+                                                         bodyB: pivot!.physicsBody!,
+                                                         anchor: pivot!.position)
+            self.physicsWorld.addJoint(bridgePin)
+        }
         
         ///////////////////////////
         /// Creating Checkpoint ///
@@ -202,7 +226,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         healthBar.position = CGPoint(x: -270, y: 140)
         healthBar.zPosition = 4
         healthBar.anchorPoint.x = 0
-        print(healthBar.position)
+        //print(healthBar.position)
+        
+        
+        ///////////////////////////
+        /// Creating indicator  ///
+        ///////////////////////////
+        indicator = SKSpriteNode(imageNamed: "indicator")
+        indicator.size = CGSize(width: self.size.width / 50, height: self.size.height / 50)
+        indicator.zPosition = 100
+        indicator.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        addChild(indicator)
         
         ///////////////////////////
         /// Joystick properties ///
@@ -244,8 +278,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         separateButton.position = CGPoint(x: 20, y: -110)
         
         // Button States
+        if levelChanger == 0 {
+            separateButton.state = .Inactive
+        } else {
+            separateButton.state = .Active
+        }
         switchButton.state = .Active
-        separateButton.state = .Active
         jumpButton.state = .Active
         
         // Adding the camera as the button's parent so that it follows its position
@@ -254,6 +292,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         characterCamera.addChild(base)
         characterCamera.addChild(separateButton)
         characterCamera.addChild(healthBar)
+        // characterCamera.addChild(indicator)
         
         
         /////////////////////////
@@ -287,6 +326,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         activateSwitchButton()
         createChain(characterBack: pinkCharacter, characterFront: blueCharacter)
         activateSeparateButton()
+    
        
         // Creating a physical boundary to the edge of the scene
         physicsBody = SKPhysicsBody(edgeLoopFromRect: view.frame)
@@ -309,6 +349,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 levelChanger += 1
                 changeScene()
             }
+            
         } else if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.Checkpoint {
             // This goes to the LevelCompleteScene scene after making contact and the distance between the two objects is less than 60 pixels
             if distanceOfCharacterDifferenceX < 60 && distanceOfCharacterDifferenceX > -60 && separationExecuted == true {
@@ -467,6 +508,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Calculates X the difference between the two characters
         distanceOfCharacterDifferenceX = blueCharacter.position.x - pinkCharacter.position.x
         // print("x", distanceOfCharacterDifferenceX)
+        // print("BlueCharacter:", blueCharacter.position)
+        // print("PinkCharacter:", pinkCharacter.position)
         
         // Calculates the Y difference between the two characters
         distanceOfCharacterDifferenceY = blueCharacter.position.y - pinkCharacter.position.y
@@ -480,8 +523,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             restoreHealth()
         }
         
+        if buttonFunctioning {
+            // This is when the camera follows the blueCharacter
+            indicator.position = CGPoint(x: blueCharacter.position.x, y: blueCharacter.position.y + 20)
+            // print("Indicator:", indicator.position)
+        } else {
+            // This is when the camear folllows the pinkCharacter
+            indicator.position = CGPoint(x: pinkCharacter.position.x, y: pinkCharacter.position.y + 20)
+            // print("Indicator:", indicator.position)
+        }
+        
         autoSeparate()
         // print(healthShouldReduce)
+        print("Position of Bridge:",bridge?.position)
         
       }
     
@@ -534,22 +588,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for i in 0..<links.count {
             if i == 0 {
                 // This pins the joint to the pinkCharacter
-                let pin = SKPhysicsJointPin.jointWithBodyA(characterBack.physicsBody!,bodyB: links.first!.physicsBody!, anchor: characterBack.position)
+                pinLinkCharacterBack = SKPhysicsJointPin.jointWithBodyA(characterBack.physicsBody!,bodyB: links.first!.physicsBody!, anchor: characterBack.position)
                
-                self.physicsWorld.addJoint(pin)
+                self.physicsWorld.addJoint(pinLinkCharacterBack)
                 
             } else {
                 var anchorPosition = links[i].position
                 anchorPosition.x -= 1
                 // anchorPosition.y += characterBack.position.y - characterFront.position.y
-                let pin = SKPhysicsJointPin.jointWithBodyA(links[i - 1].physicsBody!,bodyB: links[i].physicsBody!, anchor: anchorPosition)
+                pinLink = SKPhysicsJointPin.jointWithBodyA(links[i - 1].physicsBody!,bodyB: links[i].physicsBody!, anchor: anchorPosition)
              
-                self.physicsWorld.addJoint(pin)
+                self.physicsWorld.addJoint(pinLink)
             }
             
             // This pins the joint to the blueCharacter
-            let pin = SKPhysicsJointPin.jointWithBodyA(characterFront.physicsBody!, bodyB: links.last!.physicsBody!, anchor: characterFront.position)
-            self.physicsWorld.addJoint(pin)
+            pinLinkCharacterFront = SKPhysicsJointPin.jointWithBodyA(characterFront.physicsBody!, bodyB: links.last!.physicsBody!, anchor: characterFront.position)
+            self.physicsWorld.addJoint(pinLinkCharacterFront)
            
         }
         
@@ -652,16 +706,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func activateSeparateButton() {
         separateButton.selectedHandler = {
-            // print("DIFFERENCE X:", self.distanceOfCharacterDifferenceX)
-            // print("DIFFERENCE Y:", self.distanceOfCharacterDifferenceY)
             if self.separationExecuted {
-                self.physicsWorld.removeAllJoints()
+                self.removeSomeJoints()
                 self.separationExecuted = false
                 self.bloodshotShouldRun = true
-                self.healthShouldReduce = true
-                // This shows the bloodshot effect
-                // self.bloodshotEffect()
-                print("-----------------------")
+                // This disables damage in IntroLvl1 so that it doesn't intimidate the players
+                if levelChanger == 0 {
+                    self.healthShouldReduce = false
+                } else if levelChanger > 0 {
+                   self.healthShouldReduce = true
+                }
             } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && self.distanceOfCharacterDifferenceX <= 17 && self.distanceOfCharacterDifferenceX >= -17 {
                 // The use of this is so that the links do not spawn backwards because the two characters have a negative difference in distance to each other.
                 // print("CODE GETS THIS FAR")
@@ -731,20 +785,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             return
         }
         
-        if abs(distanceOfCharacterDifferenceX) > 130 || abs(distanceOfCharacterDifferenceY) > 100 {
-            self.physicsWorld.removeAllJoints()
+        if levelChanger == 0 {
+            
+        } else if abs(distanceOfCharacterDifferenceX) > 130 || abs(distanceOfCharacterDifferenceY) > 100 {
+            self.removeSomeJoints()
             // SeparationExecuted is set to false because it will trigger the reduceHealth in the update moethod
             self.separationExecuted = false
             // This is set to true so that it triggers the bloodshot effect
-            if levelChanger == 3 {
-                self.bloodshotShouldRun = false
-                self.healthShouldReduce = false
-            } else {
-                self.bloodshotShouldRun = true
-                self.healthShouldReduce = true
-            }
-            
         }
+        
+        // This is in Level 1
+        if levelChanger == 3 {
+            self.bloodshotShouldRun = false
+            self.healthShouldReduce = false
+            // print("THE PROBLEM IS HERE")
+        } else if levelChanger == 0 {
+            self.bloodshotShouldRun = false
+            self.healthShouldReduce = false
+        }
+        
+        if separationExecuted == false && levelChanger != 3 {
+            self.bloodshotShouldRun = true
+            self.healthShouldReduce = true
+            // print("THIS IS BEING CALLED")
+            // print(bloodshotShouldRun)
+        }
+            
+        
    
     }
     
@@ -787,5 +854,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.view?.presentScene(scene, transition:reveal)
             }
             ]))
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // This function removes three joints so that when the button is pressed, only these will be removed ///
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    func removeSomeJoints() {
+        self.physicsWorld.removeJoint(self.pinLinkCharacterFront)
+        self.physicsWorld.removeJoint(self.pinLinkCharacterBack)
+        self.physicsWorld.removeJoint(self.pinLink)
     }
 }

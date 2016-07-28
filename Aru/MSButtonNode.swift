@@ -9,7 +9,7 @@
 import SpriteKit
 
 enum MSButtonNodeState {
-    case Active, Selected, Hidden
+    case Active, Selected, Hidden, Inactive
 }
 
 class MSButtonNode: SKSpriteNode {
@@ -31,6 +31,12 @@ class MSButtonNode: SKSpriteNode {
             case .Selected:
                 /* Semi transparent */
                 self.alpha = 0.7
+                break
+            case .Inactive:
+                // Semi transparent and non functional
+                self.alpha = 0.05
+                // Disable touch
+                self.userInteractionEnabled = false
                 break
             case .Hidden:
                 /* Disable touch */

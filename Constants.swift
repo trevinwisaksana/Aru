@@ -17,4 +17,5 @@ struct PhysicsCategory {
     static let Platform: UInt32         = 0b1000    // 001000
     static let Edge: UInt32             = 0b10000   // 010000
     static let Trigger: UInt32          = 0b100000  // 100000
+    static let BridgeNode: UInt32       = 0b1000000 
 }

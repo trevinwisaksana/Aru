@@ -23,7 +23,6 @@
 		DD181C381D45443F0085C1D8 /* GameOverScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = DD181C371D45443F0085C1D8 /* GameOverScene.sks */; };
 		DD1901E31D3D9A810081F6BD /* Checkpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1901E21D3D9A810081F6BD /* Checkpoint.swift */; };
 		DD1901E51D3D9E5B0081F6BD /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1901E41D3D9E5B0081F6BD /* Character.swift */; };
-		DD22F9B11D495D1F00139D33 /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD22F9B01D495D1F00139D33 /* Calculator.swift */; };
 		DD2A702F1D22F7860058FC41 /* MSButtonNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2A702E1D22F7860058FC41 /* MSButtonNode.swift */; };
 		DD3AACBA1D41B69200EB609C /* LoadingScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3AACB91D41B69200EB609C /* LoadingScene.swift */; };
 		DD3AACBD1D41CC5C00EB609C /* Level1.sks in Resources */ = {isa = PBXBuildFile; fileRef = DD3AACBC1D41CC5C00EB609C /* Level1.sks */; };
@@ -89,7 +88,6 @@
 		DD181C371D45443F0085C1D8 /* GameOverScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameOverScene.sks; sourceTree = "<group>"; };
 		DD1901E21D3D9A810081F6BD /* Checkpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Checkpoint.swift; sourceTree = "<group>"; };
 		DD1901E41D3D9E5B0081F6BD /* Character.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Character.swift; sourceTree = "<group>"; };
-		DD22F9B01D495D1F00139D33 /* Calculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Calculator.swift; path = AruTests/Calculator.swift; sourceTree = "<group>"; };
 		DD2A702E1D22F7860058FC41 /* MSButtonNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MSButtonNode.swift; sourceTree = "<group>"; };
 		DD3AACB91D41B69200EB609C /* LoadingScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingScene.swift; sourceTree = "<group>"; };
 		DD3AACBC1D41CC5C00EB609C /* Level1.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Level1.sks; sourceTree = "<group>"; };
@@ -306,7 +304,6 @@
 		DDF7E3531D206566005F9A49 = {
 			isa = PBXGroup;
 			children = (
-				DD22F9B01D495D1F00139D33 /* Calculator.swift */,
 				DDF7E35E1D206566005F9A49 /* Aru */,
 				DDF7E3771D206566005F9A49 /* AruTests */,
 				DDF7E3821D206566005F9A49 /* AruUITests */,
@@ -543,7 +540,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DDF7E3791D206566005F9A49 /* AruTests.swift in Sources */,
-				DD22F9B11D495D1F00139D33 /* Calculator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
