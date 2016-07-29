@@ -86,9 +86,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var pivot: SKSpriteNode?
     var bridgePin: SKPhysicsJointPin!
     
-    // Creating moving platform
-    var movingPlatform: SKSpriteNode!
-    
     // Create camera
     var characterCamera = SKCameraNode()
     
@@ -110,6 +107,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // Create a blockadge object that will be triggered by the trigger
     var blockade: SKSpriteNode?
+    
+    // Creating moving platform
+    var movingPlatform: SKSpriteNode!
     
     // Create a blooshot effect 
     var bloodshot: SKSpriteNode!
@@ -171,12 +171,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.position = CGPoint(x: 60, y: 260)
             pinkCharacter.position = CGPoint(x: 50, y: 260)
             movingPlatform = childNodeWithName("//movingPlatform") as! SKSpriteNode
-            let platformMove = SKAction.runBlock({
-                let moveLeft = SKAction.moveToX(100, duration: 4)
-                let moveRight = SKAction.moveToX(192, duration: 4)
-                let sequence = SKAction.sequence([moveLeft, moveRight])
-                self.movingPlatform.runAction(SKAction.repeatActionForever(sequence))
-            })
+            let moveLeft = SKAction.moveToX(100, duration: 4)
+            let moveRight = SKAction.moveToX(192, duration: 4)
+            self.movingPlatform.runAction(SKAction.repeatActionForever(SKAction.sequence([moveLeft, moveRight])))
         } else if levelChanger == 8 {
             // This is Level 6 
             blueCharacter.position = CGPoint(x: 60, y: 300)
