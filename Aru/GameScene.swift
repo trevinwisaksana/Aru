@@ -86,6 +86,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var pivot: SKSpriteNode?
     var bridgePin: SKPhysicsJointPin!
     
+    // Creating moving platform
+    var movingPlatform: SKSpriteNode!
+    
     // Create camera
     var characterCamera = SKCameraNode()
     
@@ -161,8 +164,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             pinkCharacter.position = CGPoint(x: 30, y: 100)
         } else if levelChanger == 6 {
             // This is Level 4
-            blueCharacter.position = CGPoint(x: 65, y: 260)
+            blueCharacter.position = CGPoint(x: 280, y: 274)
+            pinkCharacter.position = CGPoint(x: 265, y: 274)
+        } else if levelChanger == 7 {
+            // This is Level 5 
+            blueCharacter.position = CGPoint(x: 60, y: 260)
             pinkCharacter.position = CGPoint(x: 50, y: 260)
+            movingPlatform = childNodeWithName("//movingPlatform") as! SKSpriteNode
+            let platformMove = SKAction.runBlock({
+                let moveLeft = SKAction.moveToX(100, duration: 4)
+                let moveRight = SKAction.moveToX(192, duration: 4)
+                let sequence = SKAction.sequence([moveLeft, moveRight])
+                self.movingPlatform.runAction(SKAction.repeatActionForever(sequence))
+            })
+        } else if levelChanger == 8 {
+            // This is Level 6 
+            blueCharacter.position = CGPoint(x: 60, y: 300)
+            pinkCharacter.position = CGPoint(x: 50, y: 300)
         } else if levelChanger == 0 {
             self.separateButton.state = .Inactive
         }
@@ -170,21 +188,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(blueCharacter)
         addChild(pinkCharacter)
         
-        // seesaw = childNodeWithName("//seesaw") as? SKSpriteNode
-        // seesaw?.physicsBody = SKPhysicsBody()
-        // seesaw?.physicsBody?.angularDamping = 1
-        // seesaw?.physicsBody?.mass = 2
-        
-        // Creating bridge
-        if levelChanger == 4 {
-            pivot = childNodeWithName("pivot") as! SKSpriteNode
-            bridge = childNodeWithName("bridge") as! SKSpriteNode
+        ////////////////////////
+        /// Creating bridges ///
+        ////////////////////////
+        // Creating a bridge for Level 2 and 5
+        if levelChanger == 4 || levelChanger == 7 {
+            pivot = childNodeWithName("pivot") as? SKSpriteNode
+            bridge = childNodeWithName("bridge") as? SKSpriteNode
 
             bridgePin = SKPhysicsJointPin.jointWithBodyA(bridge!.physicsBody!,
                                                          bodyB: pivot!.physicsBody!,
                                                          anchor: pivot!.position)
             self.physicsWorld.addJoint(bridgePin)
         }
+        
         
         ///////////////////////////
         /// Creating Checkpoint ///
@@ -302,8 +319,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Assuring that the target of the camera is the character's position
         addChild(characterCamera)
         self.camera = characterCamera
-        characterCamera.xScale = 0.3
-        characterCamera.yScale = 0.3
+        characterCamera.xScale = 0.32
+        characterCamera.yScale = 0.32
         
         ////////////////////
         /// Instructions ///
@@ -535,7 +552,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         autoSeparate()
         // print(healthShouldReduce)
-        print("Position of Bridge:",bridge?.position)
+        // print("Position of Bridge:",bridge?.position)
         
       }
     
