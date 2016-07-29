@@ -19,8 +19,9 @@ let arrayOfLevels: Array = ["IntroLvl1", // 0
                             "Level3",    // 5
                             "Level4",    // 6
                             "Level5",    // 7
-                            "Level7",    // 8
-                            "Level8",    // 9
+                            "Level6",    // 8
+                            "Level7",    // 9
+                            "Level8",    // 10
                             //"Level9",    // 10
                             /*"Level10"*/]   // 11
 //////////////////////////////////////////////////////
