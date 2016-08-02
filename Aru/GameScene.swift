@@ -11,6 +11,7 @@ import SpriteKit
 
 // The arrayOfLevels is used so that we can call the index number of the level string when changing levels.
 ///////////////////////////////////////////////////////
+// MARK: - Array of Levels
 let arrayOfLevels: Array = ["IntroLvl1", // 0
                             "IntroLvl2", // 1
                             "IntroLvl3", // 2
@@ -20,11 +21,10 @@ let arrayOfLevels: Array = ["IntroLvl1", // 0
                             "Level4",    // 6
                             "Level5",    // 7
                             "Level6",    // 8
-                            "Level7",    // 9
-                            "Level8",    // 10
-                            //"Level9",    // 10
-                            /*"Level10"*/]   // 11
+                            "Level7"]    // 9
 //////////////////////////////////////////////////////
+
+// MARK: GameScene Class
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
@@ -42,6 +42,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Declaring character property
     var blueCharacter: Character!
     var pinkCharacter: Character!
+    var connectIndicatorBlue: SKSpriteNode!
+    var connectIndicatorPink: SKSpriteNode!
     
     // Declaring the switchButton property
     var switchButton: MSButtonNode!
@@ -111,6 +113,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // Creating moving platform
     var movingPlatform: SKSpriteNode!
+    var fallingPlatform: SKSpriteNode?
+    var platformFall: Bool = false
+    
+    // Translating Platform Objects 
+    var platformOne: SKSpriteNode?
+    var platformTwo: SKSpriteNode?
+    var platformThree: SKSpriteNode?
+    var platformFour: SKSpriteNode?
+    var platformTranslate: Bool = false
     
     // Create a blooshot effect 
     var bloodshot: SKSpriteNode!
@@ -140,6 +151,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // From the Character class, the characters gets its position set and is added to the scene
         blueCharacter = Character(characterColor: .Blue)
         pinkCharacter = Character(characterColor: .Pink)
+        //
+        connectIndicatorBlue = SKSpriteNode(imageNamed: "connectIndicatorTwo")
+        connectIndicatorBlue.zPosition = 9
+        connectIndicatorBlue.alpha = 0
+        connectIndicatorBlue.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        connectIndicatorBlue.size = CGSize(width: 20, height: 20)
+        addChild(connectIndicatorBlue)
+        //
+        connectIndicatorPink = SKSpriteNode(imageNamed: "connectIndicatorTwo")
+        connectIndicatorPink.zPosition = 9
+        connectIndicatorPink.alpha = 0
+        connectIndicatorPink.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        connectIndicatorPink.size = CGSize(width: 20, height: 20)
+        addChild(connectIndicatorPink)
+        
         if levelChanger == 0 || levelChanger == 1 {
             blueCharacter.position = CGPoint(x: 65, y: 125)
             pinkCharacter.position = CGPoint(x: 50, y: 125)
@@ -179,6 +205,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // This is Level 6 
             blueCharacter.position = CGPoint(x: 60, y: 300)
             pinkCharacter.position = CGPoint(x: 50, y: 300)
+        } else if levelChanger == 9 {
+            // This is Level 7 
+            blueCharacter.position = CGPoint(x: 60, y: 150)
+            pinkCharacter.position = CGPoint(x: 50, y: 150)
+            platformOne = childNodeWithName("1") as? SKSpriteNode
+            platformTwo = childNodeWithName("2") as? SKSpriteNode
+            platformThree = childNodeWithName("3") as? SKSpriteNode
+            platformFour = childNodeWithName("4") as? SKSpriteNode
         } else if levelChanger == 0 {
             self.separateButton.state = .Inactive
         }
@@ -200,6 +234,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.physicsWorld.addJoint(bridgePin)
         }
         
+        // Creating fallingPlatform
+        fallingPlatform = childNodeWithName("//fallingPlatform") as? SKSpriteNode
+        fallingPlatform?.physicsBody?.categoryBitMask = PhysicsCategory.FallingPlatform | PhysicsCategory.BlueCharacter
+        fallingPlatform?.physicsBody?.collisionBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+        fallingPlatform?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+        
+        // Creating platformTranslate 
+        platformOne?.physicsBody?.categoryBitMask = PhysicsCategory.TransPlatform | PhysicsCategory.BlueCharacter
+        platformOne?.physicsBody?.collisionBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+        platformOne?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+        //
+        platformTwo?.physicsBody?.categoryBitMask = PhysicsCategory.TransPlatform | PhysicsCategory.BlueCharacter
+        platformTwo?.physicsBody?.collisionBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+        platformTwo?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+        // 
+        platformThree?.physicsBody?.categoryBitMask = PhysicsCategory.TransPlatform | PhysicsCategory.BlueCharacter
+        platformThree?.physicsBody?.collisionBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+        platformThree?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+        // 
+        platformFour?.physicsBody?.categoryBitMask = PhysicsCategory.TransPlatform | PhysicsCategory.BlueCharacter
+        platformFour?.physicsBody?.collisionBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+        platformFour?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
         
         ///////////////////////////
         /// Creating Checkpoint ///
@@ -242,7 +298,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         healthBar.zPosition = 4
         healthBar.anchorPoint.x = 0
         //print(healthBar.position)
-        
         
         ///////////////////////////
         /// Creating indicator  ///
@@ -309,7 +364,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         characterCamera.addChild(healthBar)
         // characterCamera.addChild(indicator)
         
-        
         /////////////////////////
         /// Camera attributes ///
         /////////////////////////
@@ -333,22 +387,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /////////////////////////
         /// Calling functions ///
         /////////////////////////
-        
-        // autoSeparate()
-        // bloodshotEffect()
-        
+    
         activateJumpButton()
         activateSwitchButton()
         createChain(characterBack: pinkCharacter, characterFront: blueCharacter)
         activateSeparateButton()
     
-       
         // Creating a physical boundary to the edge of the scene
         physicsBody = SKPhysicsBody(edgeLoopFromRect: view.frame)
         physicsBody?.categoryBitMask = PhysicsCategory.Platform
         physicsBody?.collisionBitMask = 1
         
     }
+    
+    // MARK: - Collision and Contact Events
     
     func didBeginContact(contact: SKPhysicsContact) {
         let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
@@ -361,15 +413,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // This goes to the LevelCompleteScene after making contact and the distance between the two objects is less than 50 pixels
             // The < 60 or > - 60 helps assure that only if the distance of the two characters is less than 60 pixels away, the checkpoint will work
             if distanceOfCharacterDifferenceX < 60 && distanceOfCharacterDifferenceX > -60 && separationExecuted == true {
-                levelChanger += 1
-                changeScene()
+                if levelChanger < 9 {
+                    levelChanger += 1
+                    changeScene()
+                    print("This was called")
+                }
+                
+                if levelChanger == 9 {
+                    changeToTheEnd()
+                }
             }
             
         } else if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.Checkpoint {
             // This goes to the LevelCompleteScene scene after making contact and the distance between the two objects is less than 60 pixels
             if distanceOfCharacterDifferenceX < 60 && distanceOfCharacterDifferenceX > -60 && separationExecuted == true {
-                levelChanger += 1
-                changeScene()
+                if levelChanger < 9 {
+                    levelChanger += 1
+                    changeScene()
+                    print("This was called")
+                }
+                
+                if levelChanger == 9 {
+                    changeToTheEnd()
+                }
             }
             
             ////////////////////////////////////////////////////
@@ -391,6 +457,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blockade?.physicsBody?.affectedByGravity = true
             // print("THIS IS RUNNING")
         }
+        
             /////////////////////////////////////////////////////////////////
             // These two initiates the gameOverScene when the player falls //
             /////////////////////////////////////////////////////////////////
@@ -400,20 +467,50 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if levelChanger != 2 {
                 changeToGameOverScene()
             }
-            print("GAMEOVER")
+            //print("GAMEOVER")
         }
             
         if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.Trigger {
             if levelChanger != 2 {
                 changeToGameOverScene()
             }
-            print("GAMEOVER")
+            //print("GAMEOVER")
         }
         
+        if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.FallingPlatform {
+            platformFall = true
+            // fallingPlatformFunction()
+            // fallingPlatform?.physicsBody?.dynamic = true
+            // print("CONTACT WITH FALLING PLATFORM")
+        }
+        
+        if collision == PhysicsCategory.BlueCharacter | PhysicsCategory.FallingPlatform {
+            platformFall = true
+            // fallingPlatformFunction()
+            // fallingPlatform?.physicsBody?.dynamic = true
+            // print("CONTACT WITH FALLING PLATFORM")
+        }
+        
+        if collision == PhysicsCategory.BlueCharacter | PhysicsCategory.TransPlatform {
+            platformTranslate = true
+        }
+        
+        if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.TransPlatform {
+            platformTranslate = true
+        }
+        
+        if levelChanger == 9 {
+            if collision == PhysicsCategory.BlueCharacter | PhysicsCategory.Checkpoint {
+                changeToTheEnd()
+            }
+            if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.Checkpoint {
+                changeToTheEnd()
+            }
+        }
     }
     
     ///////////////////////////////////////////////
-    // when two objects are no longer in contact //
+    // When two objects are no longer in contact //
     ///////////////////////////////////////////////
     
     func didEndContact(contact: SKPhysicsContact) {
@@ -421,16 +518,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // print("NO LONGER IN CONTACT")
     }
     
+    // MARK: - Touches event
+    
     // Note: When the screen is tapped on, this code runs
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let touch = touches.first!
         // The cameraLocation means that the touch will be relative to the characterCamera's position
         let cameraLocation = touch.locationInNode(characterCamera)
-        // if cameraLocation.x < 0 {
+        if cameraLocation.x < 0 {
         base.alpha = 0.5
         base.hidden = false
         base.position = cameraLocation
-        //}
+        } else {
+            
+        }
     
         // If the other half of the screen is tapped, this will run
         if (CGRectContainsPoint(base.frame, cameraLocation)) {
@@ -468,9 +569,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         xValue = x / moveValue
         yValue = y / moveValue
         
-        // if cameraLocation.x < 0 {
+        if cameraLocation.x < 0 {
             stick.position = CGPoint(x: x, y: y)
-        // }
+        }
     }
 
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -483,6 +584,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         xValue = 0
         yValue = 0
     }
+    
+    // MARK: - Update Method
     
     ////////////////////
     // UPDATE METHOD ///
@@ -517,8 +620,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             characterCamera.position = pinkCharacter.position
         }
         // This prevents the camera from going beyond the frame
-        characterCamera.position.x.clamp(85, 483)
-        characterCamera.position.y.clamp(250, -80)
+        characterCamera.position.x.clamp(92, 476)
+        characterCamera.position.y.clamp(250, 52)
         
         // Calculates X the difference between the two characters
         distanceOfCharacterDifferenceX = blueCharacter.position.x - pinkCharacter.position.x
@@ -538,6 +641,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             restoreHealth()
         }
         
+        autoSeparate()
+        fallingPlatformFunction()
+        fadeGreenIndicator()
+        platformTranslateFunc(platformOne, yPosition: 100)
+        platformTranslateFunc(platformTwo, yPosition: 120)
+        platformTranslateFunc(platformThree, yPosition: 140)
+        platformTranslateFunc(platformFour, yPosition: 160)
+        
+      }
+    
+    // MARK: DidSimulatePhysics
+    
+    override func didSimulatePhysics() {
+        connectIndicatorBlue.position = blueCharacter.position
+        connectIndicatorPink.position = pinkCharacter.position
+        //
         if buttonFunctioning {
             // This is when the camera follows the blueCharacter
             indicator.position = CGPoint(x: blueCharacter.position.x, y: blueCharacter.position.y + 20)
@@ -547,14 +666,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             indicator.position = CGPoint(x: pinkCharacter.position.x, y: pinkCharacter.position.y + 20)
             // print("Indicator:", indicator.position)
         }
-        
-        autoSeparate()
-        // print(healthShouldReduce)
-        // print("Position of Bridge:",bridge?.position)
-        
-      }
+    }
     
     ///////////////////////////////////////////////////////
+    
+    // MARK: - Functions
 
     ///////////////////////////////
     // Inside here are functions //
@@ -571,7 +687,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         pos.x += ((characterBack.position.x - characterFront.position.x) / 16) * 1.78 // 2
         pos.y -= ((characterBack.position.y - characterFront.position.y) / 16) * 1.78
         links = [SKSpriteNode]()
-        for _ in 0..<9 {
+        for _ in 0..<8 {
             let link = SKSpriteNode(imageNamed: "link")
             link.size = CGSize(width: 2, height: 2)
             link.physicsBody = SKPhysicsBody(rectangleOfSize: link.size)
@@ -588,7 +704,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // This code allows the links to be visible after it's hidden because it helps the player to see that it's linked together after they press the join button
             if separationExecuted == false && levelChanger == 3 {
                 link.hidden = false
-                print("LINK HIDDEN == FALSE")
+                // print("LINK HIDDEN == FALSE")
             }
             
             addChild(link)
@@ -707,12 +823,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     ////////////////////////////////////////////////////////
     
     func changeScene() {
-        // Check for max levels because the this will always increase
-        let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 2)
-        let scene = GameScene(fileNamed: arrayOfLevels[levelChanger])
-        scene!.scaleMode = .AspectFill
-        self.view?.presentScene(scene!, transition: reveal)
-        // print(levelChanger)
+        if levelChanger <= 9 {
+            // Check for max levels because the this will always increase
+            let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 2)
+            let scene = GameScene(fileNamed: arrayOfLevels[levelChanger])
+            scene!.scaleMode = .AspectFill
+            self.view?.presentScene(scene!, transition: reveal)
+            // print(levelChanger)
+        }
     }
     
     //////////////////////
@@ -725,22 +843,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.removeSomeJoints()
                 self.separationExecuted = false
                 self.bloodshotShouldRun = true
+                self.separationButtonFade()
                 // This disables damage in IntroLvl1 so that it doesn't intimidate the players
                 if levelChanger == 0 {
                     self.healthShouldReduce = false
                 } else if levelChanger > 0 {
                    self.healthShouldReduce = true
                 }
-            } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && self.distanceOfCharacterDifferenceX <= 17 && self.distanceOfCharacterDifferenceX >= -17 {
+            } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && abs(self.distanceOfCharacterDifferenceX) <= 17  {
                 // The use of this is so that the links do not spawn backwards because the two characters have a negative difference in distance to each other.
                 // print("CODE GETS THIS FAR")
-                // THE PROBLEM IS THAT X < 0 BUT Y > THAN 0
                 if self.distanceOfCharacterDifferenceX < 0 {
                     // If the blueChracter is behind the pinkCharacter
                     self.createChain(characterBack: self.blueCharacter, characterFront: self.pinkCharacter)
                     self.separationExecuted = true
                     self.restoreHealth()
                     self.healthShouldReduce = false
+                    self.separateButton.removeAllActions()
                     
                     // print("CODE CREATES CHAIN 1")
                 } else if self.distanceOfCharacterDifferenceX > 0 {
@@ -749,6 +868,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.separationExecuted = true
                     self.restoreHealth()
                     self.healthShouldReduce = false
+                    self.separateButton.removeAllActions()
                     // print("CODE CREATES CHAIN 2")
                     
                 }
@@ -822,6 +942,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if separationExecuted == false && levelChanger != 3 {
             self.bloodshotShouldRun = true
             self.healthShouldReduce = true
+            separationButtonFade()
             // print("THIS IS BEING CALLED")
             // print(bloodshotShouldRun)
         }
@@ -862,7 +983,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         runAction(SKAction.sequence([
             SKAction.waitForDuration(0),
             SKAction.runBlock() {
-                print("CHANGING SCENE")
+                //print("CHANGING SCENE")
                 let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 1)
                 let scene = GameOverScene(size: self.size)
                 scene.scaleMode = .AspectFill
@@ -880,4 +1001,77 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.removeJoint(self.pinLinkCharacterBack)
         self.physicsWorld.removeJoint(self.pinLink)
     }
+    
+    /////////////////////////////////////////////////////////////////////////////////
+    // This function allows the platform at Level 5 to fall down after one second ///
+    /////////////////////////////////////////////////////////////////////////////////
+    
+    func fallingPlatformFunction() {
+        if platformFall == true {
+            let wait = SKAction.waitForDuration(1)
+            let fall = SKAction.moveToY(-20, duration: 0.2)
+            let sequence = SKAction.sequence([wait, fall])
+            fallingPlatform?.runAction(sequence)
+        }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // This function allows the platform at Level 7 to raise after 3 seconds ///
+    ////////////////////////////////////////////////////////////////////////////
+    
+    func platformTranslateFunc(platform: SKSpriteNode?, yPosition: CGFloat) {
+        if platformTranslate == true {
+            // Platform 1
+            let wait = SKAction.waitForDuration(1)
+            let translate = SKAction.moveToY(yPosition, duration: 1.5)
+            let sequence = SKAction.sequence([wait, translate])
+            platform?.runAction(sequence)
+        }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////
+    // This function allows the level to restart and the level to end to the final scene ///
+    ////////////////////////////////////////////////////////////////////////////////////////
+    
+    func changeToTheEnd() {
+        /// changeToTheEnd: Its something
+        runAction(SKAction.sequence([
+            SKAction.waitForDuration(0),
+            SKAction.runBlock() {
+                //print("CHANGING SCENE")
+                let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 1)
+                let scene = TheEnd(size: self.size)
+                scene.scaleMode = .AspectFill
+                self.view?.presentScene(scene, transition:reveal)
+                levelChanger = 0
+            }
+            ]))
+        
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    // This allows the greenIndicator to be seen when the distance of the character is close ///
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    
+    func fadeGreenIndicator() {
+        if abs(distanceOfCharacterDifferenceX) < 17 && abs(distanceOfCharacterDifferenceY) < 17 {
+            let fadeInIndicator = SKAction.fadeInWithDuration(0.5)
+            connectIndicatorBlue.runAction(fadeInIndicator)
+            connectIndicatorPink.runAction(fadeInIndicator)
+        // The separation button flashes to help the players see recognize the button
+            
+        } else {
+            let fadeInIndicator = SKAction.fadeOutWithDuration(0.5)
+            connectIndicatorBlue.runAction(fadeInIndicator)
+            connectIndicatorPink.runAction(fadeInIndicator)
+        }
+    }
+    
+    func separationButtonFade() {
+        let flashOut = SKAction.fadeOutWithDuration(0.5)
+        let flashIn = SKAction.fadeInWithDuration(0.5)
+        let sequence = SKAction.sequence([flashOut, flashIn])
+        separateButton.runAction(SKAction.repeatActionForever(sequence))
+    }
+
 }
