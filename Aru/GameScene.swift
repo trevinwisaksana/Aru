@@ -22,6 +22,8 @@ let arrayOfLevels: Array = ["IntroLvl1", // 0
                             "Level5",    // 7
                             "Level6",    // 8
                             "Level7"]    // 9
+
+
 //////////////////////////////////////////////////////
 
 // MARK: GameScene Class
@@ -50,6 +52,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var buttonFunctioning: Bool = true
     var jumpButton: MSButtonNode!
     var alreadyTapped: Bool = true
+    
+    // Declaring pauseButton object
+    var pauseButton: MSButtonNode!
+    var continueButton: MSButtonNode!
     
     // Allows the button to be pressed once every 1 second
     var canJump = true
@@ -139,7 +145,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    // MARK: - didMoveToView
+    
     override func didMoveToView(view: SKView) {
+        
+        print("*************LevelChangerValue:", "\(levelChanger)*******************")
         
         // Sets the physics world so that it can detect contact
         self.physicsWorld.contactDelegate = self
@@ -167,11 +177,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(connectIndicatorPink)
         
         if levelChanger == 0 || levelChanger == 1 {
-            blueCharacter.position = CGPoint(x: 65, y: 125)
+            blueCharacter.position = CGPoint(x: 51, y: 125)
             pinkCharacter.position = CGPoint(x: 50, y: 125)
             // print("THIS IS WORKING")
         } else if levelChanger == 2 {
-            blueCharacter.position = CGPoint(x: 65, y: 175)
+            blueCharacter.position = CGPoint(x: 60, y: 175)
             pinkCharacter.position = CGPoint(x: 50, y: 175)
             // print("THIS IS WORKING")
         } else if levelChanger == 3 {
@@ -184,11 +194,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else if levelChanger == 4 {
             // This is Level 2
             blueCharacter.position = CGPoint(x: 70, y: 175)
-            pinkCharacter.position = CGPoint(x: 40, y: 175)
+            pinkCharacter.position = CGPoint(x: 60, y: 175)
         } else if levelChanger == 5 {
             // This is Level 3
             blueCharacter.position = CGPoint(x: 50, y: 100)
-            pinkCharacter.position = CGPoint(x: 30, y: 100)
+            pinkCharacter.position = CGPoint(x: 40, y: 100)
         } else if levelChanger == 6 {
             // This is Level 4
             blueCharacter.position = CGPoint(x: 280, y: 274)
@@ -298,6 +308,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         healthBar.zPosition = 4
         healthBar.anchorPoint.x = 0
         //print(healthBar.position)
+        
+        /////////////////////////////
+        /// Creating Pause Button ///
+        /////////////////////////////
+        pauseButton = MSButtonNode(imageNamed: "pauseButton")
+        pauseButton.size = CGSize(width: pauseButton.size.width / 3, height: pauseButton.size.height / 3)
+        pauseButton.position = CGPoint(x: 250, y: 130)
+        pauseButton.zPosition = 11
+        pauseButton.state = .Active
+        characterCamera.addChild(pauseButton)
+        setupPauseButton()
+        
+        ////////////////////////////
+        /// Creating Play Button ///
+        ////////////////////////////
+        continueButton = MSButtonNode(imageNamed: "continueToPlayButton")
+        continueButton.size = CGSize(width: continueButton.size.width / 2, height: continueButton.size.height / 2)
+        continueButton.position = CGPoint(x: 0, y: 0)
+        continueButton.zPosition = 11
+        continueButton.state = .Active
+        continueButton.hidden = true
+        characterCamera.addChild(continueButton)
+        setupPlayButton()
         
         ///////////////////////////
         /// Creating indicator  ///
@@ -592,6 +625,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     ////////////////////
 
     override func update(currentTime: CFTimeInterval) {
+        // print(continueButton.hidden)
+        // setupPauseButton()
         // Called before each frame is rendered
         if buttonFunctioning == true {
             if stickActive == true {
@@ -725,7 +760,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
             } else {
                 var anchorPosition = links[i].position
-                anchorPosition.x -= 1
+                anchorPosition.x -= 0.1
                 // anchorPosition.y += characterBack.position.y - characterFront.position.y
                 pinLink = SKPhysicsJointPin.jointWithBodyA(links[i - 1].physicsBody!,bodyB: links[i].physicsBody!, anchor: anchorPosition)
              
@@ -827,6 +862,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // Check for max levels because the this will always increase
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 2)
             let scene = GameScene(fileNamed: arrayOfLevels[levelChanger])
+            
+            print("Loading Level: \(arrayOfLevels[levelChanger])")
             scene!.scaleMode = .AspectFill
             self.view?.presentScene(scene!, transition: reveal)
             // print(levelChanger)
@@ -1067,11 +1104,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    ///////////////////////////////////////////////////////////////////////////
+    // This allows the separationButton to flash through fadeIn and fadeOut ///
+    ///////////////////////////////////////////////////////////////////////////
+    
     func separationButtonFade() {
         let flashOut = SKAction.fadeOutWithDuration(0.5)
         let flashIn = SKAction.fadeInWithDuration(0.5)
         let sequence = SKAction.sequence([flashOut, flashIn])
         separateButton.runAction(SKAction.repeatActionForever(sequence))
+    }
+    
+    func setupPauseButton() {
+        pauseButton.selectedHandler = {
+            let wait = SKAction.waitForDuration(0.1)
+            let show = SKAction.runBlock({
+                self.continueButton.hidden = false
+            })
+            let pause = SKAction.runBlock({
+                  self.scene!.view!.paused = true
+            })
+            let sequence = SKAction.sequence([wait, show, pause])
+            self.pauseButton.runAction(sequence)
+        }
+    }
+    
+    func setupPlayButton() {
+        continueButton.selectedHandler = {
+            self.scene?.view?.paused = false
+            self.continueButton.hidden = true
+        }
     }
 
 }
