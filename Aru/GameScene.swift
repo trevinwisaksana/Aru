@@ -26,7 +26,15 @@ let arrayOfLevels: Array = ["IntroLvl1", // 0
 
 //////////////////////////////////////////////////////
 
-// MARK: GameScene Class
+var completedLevel1: Bool = false
+var completedLevel2: Bool = false
+var completedLevel3: Bool = false
+var completedLevel4: Bool = false
+var completedLevel5: Bool = false
+var completedLevel6: Bool = false
+var completedLevel7: Bool = false
+
+// MARK: - GameScene Class
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
@@ -144,6 +152,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
     }
+    
+    // MARK: - Menu Objects
+    var pauseMenu: SKSpriteNode!
     
     // MARK: - didMoveToView
     
@@ -320,16 +331,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         characterCamera.addChild(pauseButton)
         setupPauseButton()
         
+        //////////////////////////
+        /// Creating pauseMenu ///
+        //////////////////////////
+        pauseMenu = SKSpriteNode(imageNamed: "pauseMenu")
+        pauseMenu.position = CGPoint(x: 0, y: 0)
+        pauseMenu.size = CGSize(width: self.pauseMenu.size.width / 3.5, height: self.pauseMenu.size.height / 3.5)
+        pauseMenu.zPosition = 1000
+        pauseMenu.alpha = 0
+        pauseMenu.hidden = true
+        characterCamera.addChild(pauseMenu)
+        
         ////////////////////////////
         /// Creating Play Button ///
         ////////////////////////////
         continueButton = MSButtonNode(imageNamed: "continueToPlayButton")
         continueButton.size = CGSize(width: continueButton.size.width / 2, height: continueButton.size.height / 2)
         continueButton.position = CGPoint(x: 0, y: 0)
-        continueButton.zPosition = 11
+        continueButton.zPosition = 15
         continueButton.state = .Active
         continueButton.hidden = true
-        characterCamera.addChild(continueButton)
+        pauseMenu.addChild(continueButton)
         setupPlayButton()
         
         ///////////////////////////
@@ -454,6 +476,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 if levelChanger == 9 {
                     changeToTheEnd()
+                }
+                
+                if levelChanger == 3 {
+                    completedLevel1 = true
                 }
             }
             
@@ -983,9 +1009,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // print("THIS IS BEING CALLED")
             // print(bloodshotShouldRun)
         }
-            
-        
-   
     }
     
     ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1118,14 +1141,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func setupPauseButton() {
         pauseButton.selectedHandler = {
             let wait = SKAction.waitForDuration(0.1)
+            let reveal = SKAction.fadeInWithDuration(0.5)
             let show = SKAction.runBlock({
                 self.continueButton.hidden = false
+                self.pauseMenu.hidden = false
             })
             let pause = SKAction.runBlock({
                   self.scene!.view!.paused = true
             })
-            let sequence = SKAction.sequence([wait, show, pause])
-            self.pauseButton.runAction(sequence)
+            let sequence = SKAction.sequence([reveal, show, wait, pause])
+            self.pauseMenu.runAction(sequence)
         }
     }
     
@@ -1133,6 +1158,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         continueButton.selectedHandler = {
             self.scene?.view?.paused = false
             self.continueButton.hidden = true
+            self.pauseMenu.hidden = true
         }
     }
 

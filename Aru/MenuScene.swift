@@ -31,24 +31,32 @@ class MenuScene: SKScene {
     var level7Button: MSButtonNode!
     // TODO: Create a menu where this will be the parent of all the objects
     
+    // MARK: - Level List Checker
+    var levelListChecker: Int = 0
+    
     // MARK: - didMoveToView
     override func didMoveToView(view: SKView) {
         setupButtons()
     }
     
+    // MARK: - touchesBegan
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         // let touch = touches.first
         // let location = touch?.locationInNode(self)
         
     }
     
+    // MARK: - touchesMoved
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
     }
     
+    // MARK: - update
     override func update(currentTime: NSTimeInterval) {
         
     }
+    
+    // MARK: - Setup Buttons
     
     /// This sets up all the buttons. This method is called in didMoveToView.
     func setupButtons() {
@@ -105,7 +113,9 @@ class MenuScene: SKScene {
         level1Button.size = CGSize(width: self.level1Button.size.width / 3, height: self.level1Button.size.height / 3)
         level1Button.zPosition = 15
         levelMenu.addChild(level1Button)
-        level1Button.state = .Active
+        if completedLevel1 == true {
+            level1Button.state = .Active
+        }
         setupLevel1Button()
         
         /////////////////////////////////
@@ -113,10 +123,12 @@ class MenuScene: SKScene {
         /////////////////////////////////
         level2Button = MSButtonNode(imageNamed: "level2Button")
         level2Button.position = CGPoint(x: 0, y: 0)
-        level2Button.size = CGSize(width: self.level1Button.size.width / 3, height: self.level1Button.size.height / 3)
+        level2Button.size = CGSize(width: self.level2Button.size.width / 3, height: self.level2Button.size.height / 3)
         level2Button.zPosition = 15
         levelMenu.addChild(level2Button)
         level2Button.state = .Active
+        level2Button.hidden = true
+        level2Button.alpha = 0
         setupLevel2Button()
         
         ///////////////////////////////////
@@ -124,10 +136,12 @@ class MenuScene: SKScene {
         ///////////////////////////////////
         level3Button = MSButtonNode(imageNamed: "level3Button")
         level3Button.position = CGPoint(x: 0, y: 0)
-        level3Button.size = CGSize(width: self.level1Button.size.width / 3, height: self.level1Button.size.height / 3)
+        level3Button.size = CGSize(width: self.level3Button.size.width / 3, height: self.level3Button.size.height / 3)
         level3Button.zPosition = 15
         levelMenu.addChild(level3Button)
         level3Button.state = .Active
+        level3Button.hidden = true
+        level3Button.alpha = 0
         setupLevel3Button()
         
         //////////////////////////////////
@@ -135,10 +149,12 @@ class MenuScene: SKScene {
         //////////////////////////////////
         level4Button = MSButtonNode(imageNamed: "level4Button")
         level4Button.position = CGPoint(x: 0, y: 0)
-        level4Button.size = CGSize(width: self.level1Button.size.width / 3, height: self.level1Button.size.height / 3)
+        level4Button.size = CGSize(width: self.level4Button.size.width / 3, height: self.level4Button.size.height / 3)
         level4Button.zPosition = 15
         levelMenu.addChild(level4Button)
         level4Button.state = .Active
+        level4Button.hidden = true
+        level4Button.alpha = 0
         setupLevel4Button()
         
         //////////////////////////////////
@@ -146,24 +162,65 @@ class MenuScene: SKScene {
         //////////////////////////////////
         level5Button = MSButtonNode(imageNamed: "level5Button")
         level5Button.position = CGPoint(x: 0, y: 0)
-        level5Button.size = CGSize(width: self.level1Button.size.width / 3, height: self.level1Button.size.height / 3)
+        level5Button.size = CGSize(width: self.level5Button.size.width / 3, height: self.level5Button.size.height / 3)
         level5Button.zPosition = 15
         levelMenu.addChild(level5Button)
         level5Button.state = .Active
+        level5Button.hidden = true
+        level5Button.alpha = 0
         setupLevel5Button()
+        
+        /////////////////////////////////
+        // Level Six Button Properties //
+        /////////////////////////////////
+        level6Button = MSButtonNode(imageNamed: "level6Button")
+        level6Button.position = CGPoint(x: 0, y: 0)
+        level6Button.size = CGSize(width: self.level6Button.size.width / 3, height: self.level6Button.size.height / 3)
+        level6Button.zPosition = 15
+        levelMenu.addChild(level6Button)
+        level6Button.hidden = true
+        level6Button.alpha = 0
+        setupLevel6Button()
+        
+        ///////////////////////////////////
+        // Level Seven Button Properties //
+        ///////////////////////////////////
+        level7Button = MSButtonNode(imageNamed: "level7Button")
+        level7Button.position = CGPoint(x: 0, y: 0)
+        level7Button.size = CGSize(width: self.level7Button.size.width / 3, height: self.level7Button.size.height / 3)
+        level7Button.zPosition = 15
+        levelMenu.addChild(level7Button)
+        level7Button.hidden = true
+        level7Button.alpha = 0
+        setupLevel6Button()
         
         ////////////////////////////
         // Left Button Properties //
         ////////////////////////////
-        leftButton = MSButtonNode(imageNamed: "switchLeftButton")
-        leftButton.position = CGPoint(x: frame.width * 0.8, y: frame.height / 2)
-        leftButton.size = CGSize(width: self.leftButton.size.width / 3, height: self.leftButton.size.height / 3)
+        leftButton = MSButtonNode(imageNamed: "switchLevelLeft")
+        leftButton.position = CGPoint(x: -200, y: 0)
+        leftButton.size = CGSize(width: self.leftButton.size.width / 10, height: self.leftButton.size.height / 10)
         leftButton.zPosition = 15
         levelMenu.addChild(leftButton)
+        leftButton.state = .Active
+        setupLeftButton()
         
+        /////////////////////////////
+        // Right Button Properties //
+        /////////////////////////////
+        rightButton = MSButtonNode(imageNamed: "switchLevelRight")
+        rightButton.position = CGPoint(x: 200, y: 0)
+        rightButton.size = CGSize(width: self.rightButton.size.width / 10, height: self.rightButton.size.height / 10)
+        rightButton.zPosition = 15
+        levelMenu.addChild(rightButton)
+        rightButton.state = .Active
+        setupRightButton()
         
     }
     
+    ///////////////////////////////////////////////////////////////////
+    // These methods sets up the actions when the buttons are tapped //
+    ///////////////////////////////////////////////////////////////////
     
     /// This sets the playButton to do the actions listed here.
     func setupPlayButton() {
@@ -179,7 +236,7 @@ class MenuScene: SKScene {
     func setupLevelButton() {
         levelsButton.selectedHandler = {
             self.levelMenu.hidden = false
-            let fadeIn = SKAction.fadeInWithDuration(0.1)
+            let fadeIn = SKAction.fadeInWithDuration(0.2)
             self.levelMenu.runAction(fadeIn)
             
         }
@@ -188,7 +245,7 @@ class MenuScene: SKScene {
     /// When setupExitButton it will set the scale of the levelMenu to 0 and makes it hidden
     func setupExitButton() {
         exitLevelMenu.selectedHandler = {
-            let minimize = SKAction.fadeOutWithDuration(0.1) /*SKAction.scaleTo(0, duration: 0.1)*/
+            let minimize = SKAction.fadeOutWithDuration(0.2)
             let hidden = SKAction.runBlock({
                 self.levelMenu.hidden = true
             })
@@ -304,6 +361,125 @@ class MenuScene: SKScene {
     func setupLeftButton() {
         leftButton.selectedHandler = {
             
+            if self.levelListChecker > 0 {
+                self.levelListChecker -= 1
+                print(self.levelListChecker)
+            }
+            self.levelSwitchButtonCase(oneAppear: self.level2Button,
+                                       oneDisappear: self.level3Button,
+                                       
+                                       twoAppear: self.level3Button,
+                                       twoDisappear: self.level4Button,
+                                       
+                                       threeAppear: self.level4Button,
+                                       threeDisappear: self.level5Button,
+                                       
+                                       fourAppear: self.level5Button,
+                                       fourDisappear: self.level6Button,
+                                       
+                                       fiveAppear: self.level6Button,
+                                       fiveDisappear: self.level7Button,
+                                       
+                                       sixAppear: self.level6Button,
+                                       sixDisappear: self.level7Button)
+        
+      }
+    }
+    
+    /// This sets up the rightButton so that it could switch between the level option on the list
+    func setupRightButton() {
+        rightButton.selectedHandler = {
+            
+            if self.levelListChecker < 6 {
+                self.levelListChecker += 1
+                print(self.levelListChecker)
+            }
+            self.levelSwitchButtonCase(oneAppear: self.level2Button,
+                                       oneDisappear: self.level1Button,
+                                       
+                                       twoAppear: self.level3Button,
+                                       twoDisappear: self.level2Button,
+                                       
+                                       threeAppear: self.level4Button,
+                                       threeDisappear: self.level3Button,
+                                       
+                                       fourAppear: self.level5Button,
+                                       fourDisappear: self.level4Button,
+                                       
+                                       fiveAppear: self.level6Button,
+                                       fiveDisappear: self.level5Button,
+                                       
+                                       sixAppear: self.level7Button,
+                                       sixDisappear: self.level6Button)
+        
+        }
+    }
+    
+    //////////////////////////////////////////////////////////////////
+    // These methods sets up case of which button disappears or not //
+    //////////////////////////////////////////////////////////////////
+    
+    func buttonDisappear(hide: MSButtonNode) {
+        // The level1Button disappears
+        let fadeOut = SKAction.fadeOutWithDuration(0.5)
+        hide.runAction(fadeOut)
+        hide.hidden = true
+    }
+    
+    func buttonAppear(appear: MSButtonNode) {
+        // The level2Button appears
+        let fadeIn = SKAction.fadeInWithDuration(0.5)
+        appear.runAction(fadeIn)
+        appear.hidden = false
+    }
+    
+    /// Sets which buttons to appear or disappear
+    func levelSwitchButtonCase(oneAppear oneAppear: MSButtonNode, oneDisappear: MSButtonNode, twoAppear: MSButtonNode, twoDisappear: MSButtonNode, threeAppear: MSButtonNode, threeDisappear: MSButtonNode, fourAppear: MSButtonNode, fourDisappear: MSButtonNode, fiveAppear: MSButtonNode, fiveDisappear: MSButtonNode, sixAppear: MSButtonNode, sixDisappear: MSButtonNode) {
+        switch self.levelListChecker {
+        case 0:
+            // Only level1Button appears
+            buttonAppear(self.level1Button)
+            
+            buttonDisappear(self.level2Button)
+            break
+        case 1:
+            // The level1Button disappears
+            buttonDisappear(oneDisappear)
+            
+            // The level2Button appears
+            buttonAppear(oneAppear)
+        case 2:
+            // The level2Button disappears
+            buttonDisappear(twoDisappear)
+            
+            // The level3Button appears
+            buttonAppear(twoAppear)
+        case 3:
+            // The level2Button disappears
+            buttonDisappear(threeDisappear)
+            
+            // The level2Button appears
+            buttonAppear(threeAppear)
+        case 4:
+            // The level2Button disappears
+            buttonDisappear(fourDisappear)
+            
+            // The level2Button appears
+            buttonAppear(fourAppear)
+        case 5:
+            // The level2Button disappears
+            buttonDisappear(fiveDisappear)
+            
+            // The level2Button appears
+            buttonAppear(fiveAppear)
+        case 6:
+            // The level2Button disappears
+            buttonDisappear(sixDisappear)
+        
+            // The level2Button appears
+            buttonAppear(sixAppear)
+        default:
+            break
         }
     }
 }
