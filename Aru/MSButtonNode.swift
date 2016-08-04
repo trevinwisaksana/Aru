@@ -34,7 +34,7 @@ class MSButtonNode: SKSpriteNode {
                 break
             case .Inactive:
                 // Semi transparent and non functional
-                self.alpha = 0.05
+                self.alpha = 0.1
                 // Disable touch
                 self.userInteractionEnabled = false
                 break

@@ -180,6 +180,7 @@ class MenuScene: SKScene {
         levelMenu.addChild(level6Button)
         level6Button.hidden = true
         level6Button.alpha = 0
+        level6Button.state = .Active
         setupLevel6Button()
         
         ///////////////////////////////////
@@ -192,7 +193,8 @@ class MenuScene: SKScene {
         levelMenu.addChild(level7Button)
         level7Button.hidden = true
         level7Button.alpha = 0
-        setupLevel6Button()
+        level7Button.state = .Active
+        setupLevel7Button()
         
         ////////////////////////////
         // Left Button Properties //
@@ -289,7 +291,7 @@ class MenuScene: SKScene {
     
     /// This sets up the Level 3 Button so that it runs the designated code.
     func setupLevel3Button() {
-        level2Button.selectedHandler = {
+        level3Button.selectedHandler = {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
             levelChanger = 5
             if let scene = GameScene(fileNamed: arrayOfLevels[5]) {
@@ -303,7 +305,7 @@ class MenuScene: SKScene {
     
     /// This sets up the Level 4 Button so that it runs the designated code.
     func setupLevel4Button() {
-        level2Button.selectedHandler = {
+        level4Button.selectedHandler = {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
             levelChanger = 6
             if let scene = GameScene(fileNamed: arrayOfLevels[6]) {
@@ -317,7 +319,7 @@ class MenuScene: SKScene {
     
     /// This sets up the Level 5 Button so that it runs the designated code.
     func setupLevel5Button() {
-        level2Button.selectedHandler = {
+        level5Button.selectedHandler = {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
             levelChanger = 7
             if let scene = GameScene(fileNamed: arrayOfLevels[7]) {
@@ -331,7 +333,7 @@ class MenuScene: SKScene {
     
     /// This sets up the Level 6 Button so that it runs the designated code.
     func setupLevel6Button() {
-        level2Button.selectedHandler = {
+        level6Button.selectedHandler = {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
             levelChanger = 8
             if let scene = GameScene(fileNamed: arrayOfLevels[8]) {
@@ -345,7 +347,7 @@ class MenuScene: SKScene {
     
     /// This sets up the Level 7 Button so that it runs the designated code.
     func setupLevel7Button() {
-        level2Button.selectedHandler = {
+        level7Button.selectedHandler = {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
             levelChanger = 9
             if let scene = GameScene(fileNamed: arrayOfLevels[9]) {

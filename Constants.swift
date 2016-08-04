@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SpriteKit
 
 // These are the physics categories which must be set to allow collisions and contacts between objects
 struct PhysicsCategory {
@@ -21,3 +22,9 @@ struct PhysicsCategory {
     static let FallingPlatform: UInt32  = 0b10000000
     static let TransPlatform: UInt32    = 0b100000000
 }
+
+struct GameScaleMode {
+    static let AllScenes: SKSceneScaleMode = .AspectFit
+}
+
+// GameScaleMode.AllScenes
