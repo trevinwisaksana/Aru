@@ -21,6 +21,8 @@ struct PhysicsCategory {
     static let BridgeNode: UInt32       = 0b1000000
     static let FallingPlatform: UInt32  = 0b10000000
     static let TransPlatform: UInt32    = 0b100000000
+    // This is the trigger that shows the switch button instruction
+    static let TriggerSwitchIns: UInt32 = 0b1000000000
 }
 
 struct GameScaleMode {
