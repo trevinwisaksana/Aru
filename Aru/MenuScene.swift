@@ -227,9 +227,9 @@ class MenuScene: SKScene {
     /// This sets the playButton to do the actions listed here.
     func setupPlayButton() {
         playButton.selectedHandler = {
-            let reveal = SKTransition.fadeWithColor(UIColor.whiteColor(), duration: 0.5)
+            let reveal = SKTransition.fadeWithColor(UIColor.blackColor(), duration: 1)
             let scene = GameScene(fileNamed: "IntroLvl1")
-            scene?.scaleMode = .AspectFill
+            scene?.scaleMode = .AspectFit
             self.view!.presentScene(scene!, transition: reveal)
         }
     }
@@ -267,7 +267,7 @@ class MenuScene: SKScene {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
             levelChanger = 3
             if let scene = GameScene(fileNamed: arrayOfLevels[3]) {
-                scene.scaleMode = .AspectFill
+                scene.scaleMode = .AspectFit
                 self.view!.presentScene(scene, transition: reveal)
             } else {
                 print("Could not load level")
@@ -281,7 +281,7 @@ class MenuScene: SKScene {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
             levelChanger = 4
             if let scene = GameScene(fileNamed: arrayOfLevels[4]) {
-                scene.scaleMode = .AspectFill
+                scene.scaleMode = .AspectFit
                 self.view!.presentScene(scene, transition: reveal)
             } else {
                 print("Could not load level")
@@ -295,7 +295,7 @@ class MenuScene: SKScene {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
             levelChanger = 5
             if let scene = GameScene(fileNamed: arrayOfLevels[5]) {
-                scene.scaleMode = .AspectFill
+                scene.scaleMode = .AspectFit
                 self.view!.presentScene(scene, transition: reveal)
             } else {
                 print("Could not load level")
@@ -309,7 +309,7 @@ class MenuScene: SKScene {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
             levelChanger = 6
             if let scene = GameScene(fileNamed: arrayOfLevels[6]) {
-                scene.scaleMode = .AspectFill
+                scene.scaleMode = .AspectFit
                 self.view!.presentScene(scene, transition: reveal)
             } else {
                 print("Could not load level")
@@ -323,7 +323,7 @@ class MenuScene: SKScene {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
             levelChanger = 7
             if let scene = GameScene(fileNamed: arrayOfLevels[7]) {
-                scene.scaleMode = .AspectFill
+                scene.scaleMode = .AspectFit
                 self.view!.presentScene(scene, transition: reveal)
             } else {
                 print("Could not load level")
@@ -337,7 +337,7 @@ class MenuScene: SKScene {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
             levelChanger = 8
             if let scene = GameScene(fileNamed: arrayOfLevels[8]) {
-                scene.scaleMode = .AspectFill
+                scene.scaleMode = .AspectFit
                 self.view!.presentScene(scene, transition: reveal)
             } else {
                 print("Could not load level")
@@ -351,7 +351,7 @@ class MenuScene: SKScene {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
             levelChanger = 9
             if let scene = GameScene(fileNamed: arrayOfLevels[9]) {
-                scene.scaleMode = .AspectFill
+                scene.scaleMode = .AspectFit
                 self.view!.presentScene(scene, transition: reveal)
             } else {
                 print("Could not load level")

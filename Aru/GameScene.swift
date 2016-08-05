@@ -109,6 +109,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // Create character indicator 
     var indicator: SKSpriteNode!
+    var checkpointActiveIndicator = SKSpriteNode(imageNamed: "checkpointInactive")
     
     // MARK: - Instruction Objects
     // Instructions
@@ -120,8 +121,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var handInstruction = SKSpriteNode(imageNamed: "touchingHand")
     var jumpingHand = SKSpriteNode(imageNamed: "jumpingHand")
     var switchInstruction = SKSpriteNode(imageNamed: "switchInstruction")
+    var connectInstruciton = SKSpriteNode(imageNamed: "connectInstruction")
     var forwardAndJumpIns = SKSpriteNode(imageNamed: "forwardAndJumpIns")
     var workTogetherInstruction = SKSpriteNode(imageNamed: "workTogetherInstruction")
+    var warning = SKSpriteNode(imageNamed: "warning")
     var alreadyTriggered: Bool = false
     
     // Healthbar objects
@@ -144,6 +147,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var fallingPlatformLvl0: SKSpriteNode?
     var platformFall: Bool = false
     var platformFallLvl0: Bool = false
+    
+    // Creating cutscenes 
+    var cutSceneOne = SKSpriteNode(imageNamed: "letMeIntroduce")
+    
     
     // Translating Platform Objects 
     var platformOne: SKSpriteNode?
@@ -248,6 +255,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // From the Checkpoint class, the checkpoint gets its position set and is added to the scene
         target = childNodeWithName("//checkpoint") as! Checkpoint
         target.setup()
+        
+        checkpointActiveIndicator.zPosition = 100
+        checkpointActiveIndicator.size = CGSize(width: 60, height: 60)
+        checkpointActiveIndicator.position = CGPoint(x: 0, y: 0)
+        target.addChild(checkpointActiveIndicator)
         
         //////////////////////////
         /// Creating Bloodshot ///
@@ -403,11 +415,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         baseInstruction.position = CGPoint(x: -100, y: -100)
         characterCamera.addChild(baseInstruction)
         
+        // STICK INSTRUCTION ATTRIBUTE
         stickInstruction.zPosition = 102
         stickInstruction.size = CGSize(width: 40, height: 40)
         stickInstruction.alpha = 1
         stickInstruction.position = CGPoint(x: 0, y: 0)
         baseInstruction.addChild(stickInstruction)
+        
+        // CONNECT INSTRUCTION ATTRIBUTE
+        connectInstruciton.zPosition = 102
+        connectInstruciton.size = CGSize(width: connectInstruciton.size.width / 3, height: connectInstruciton.size.height / 3)
+        connectInstruciton.alpha = 1
+        connectInstruciton.position = CGPoint(x: -130, y: -20)
+        connectInstruciton.hidden = true
+        characterCamera.addChild(connectInstruciton)
         
         tapToJump = SKSpriteNode(imageNamed: "tapToJump")
         tapToJump?.zPosition = 100
@@ -417,11 +438,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         tapToJump?.position = CGPoint(x: 150, y: 0)
         characterCamera.addChild(tapToJump!)
         
+        // WARNING INSTRUCTION
+        warning.zPosition = 100
+        warning.size = CGSize(width: warning.size.width / 3, height: warning.size.height / 3)
+        warning.alpha = 1
+        warning.hidden = true
+        warning.position = CGPoint(x: 150, y: 0)
+        characterCamera.addChild(warning)
+        
+        // SWITCH INSTRUCTION ATTRIBUTE
         switchInstruction.zPosition = 100
-        switchInstruction.size = CGSize(width: tapToJump!.size.width / 1, height: tapToJump!.size.height / 1)
+        switchInstruction.size = CGSize(width: switchInstruction.size.width / 3, height: switchInstruction.size.height / 3)
         switchInstruction.alpha = 1
         switchInstruction.hidden = true
-        switchInstruction.position = CGPoint(x: 90, y: -100)
+        switchInstruction.position = CGPoint(x: -130, y: -10)
         characterCamera.addChild(switchInstruction)
         
         handInstruction.zPosition = 102
@@ -436,6 +466,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         jumpingHand.position = CGPoint(x: 140, y: -90)
         characterCamera.addChild(jumpingHand)
 
+        ////////////////////////////////////////////////////////
+        /// Creating different cutscenes for different levels //
+        ////////////////////////////////////////////////////////
+        
+        cutSceneOne.zPosition = 1000
+        cutSceneOne.alpha = 1
+        cutSceneOne.hidden = true
+        cutSceneOne.position = CGPoint(x: 0, y: 0)
+        cutSceneOne.size = CGSize(width: cutSceneOne.size.width / 3.35, height: cutSceneOne.size.height / 3.35)
+        characterCamera.addChild(cutSceneOne)
+        
         
         ////////////////////////////////////////////////////////////
         /// Creating different positions for spawning the players //
@@ -447,65 +488,81 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.position = CGPoint(x: 110, y: 125)
             pinkCharacter.position = CGPoint(x: 100, y: 125)
             
-            // This is the animation for the tutorials
-            let handFadeIn = SKAction.fadeInWithDuration(0.5)
-            let handMove = SKAction.moveToX(-25, duration: 1)
-            let handStart = SKAction.moveToX(-80, duration: 0.7)
-            let hideHand = SKAction.runBlock({
-                self.handInstruction.hidden = true
+            let instructionsShow = SKAction.runBlock({
+                // This is the animation for the tutorials
+                let handFadeIn = SKAction.fadeInWithDuration(0.5)
+                let handMove = SKAction.moveToX(-25, duration: 1)
+                let handStart = SKAction.moveToX(-80, duration: 0.7)
+                let hideHand = SKAction.runBlock({
+                    self.handInstruction.hidden = true
+                })
+                let showHand = SKAction.runBlock({
+                    self.handInstruction.hidden = false
+                })
+                let sequenceHand = SKAction.sequence([handFadeIn, handMove, hideHand, handStart, showHand])
+                self.handInstruction.runAction(SKAction.repeatActionForever(sequenceHand))
+                
+                // Tutorial objects and properties
+                let fadeIn = SKAction.fadeInWithDuration(0.5)
+                let sequence = SKAction.sequence([fadeIn])
+                self.moveInstruction?.runAction(sequence)
+                
+                // Tutorial objects and properties
+                self.forwardAndJumpIns.hidden = false
+                self.jumpingHand.hidden = false
+                let fadeInJump = SKAction.fadeInWithDuration(0.5)
+                let sequenceJump = SKAction.sequence([fadeInJump])
+                self.forwardAndJumpIns.runAction(sequenceJump)
+                
+                // Jumping Hand Animation
+                self.jumpingHand.alpha = 1
+                let jumpHandScaleBig = SKAction.scaleTo(1.5, duration: 1)
+                let jumpHandScaleSmall = SKAction.scaleTo(1, duration: 1)
+                let jumpHandSequence = SKAction.sequence([jumpHandScaleBig, jumpHandScaleSmall])
+                self.jumpingHand.runAction(SKAction.repeatActionForever(jumpHandSequence))
+                
+                let wait = SKAction.waitForDuration(0.45)
+                let show = SKAction.runBlock({
+                    self.baseInstruction.hidden = false
+                })
+                let waitForShow = SKAction.waitForDuration(1.05)
+                let baseHide = SKAction.runBlock({
+                    self.baseInstruction.hidden = true
+                })
+                let waitAgain = SKAction.waitForDuration(0.7)
+                let baseSeq = SKAction.sequence([wait, show, waitForShow, baseHide, waitAgain])
+                self.baseInstruction.runAction(SKAction.repeatActionForever(baseSeq))
+                
+                let stickWait = SKAction.waitForDuration(0.5)
+                let start = SKAction.moveToX(0, duration: 0.7)
+                let move = SKAction.moveToX(60, duration: 1)
+                let hide = SKAction.runBlock({
+                    self.stickInstruction.hidden = true
+                })
+                let hideFalse = SKAction.runBlock({
+                    self.stickInstruction.hidden = false
+                })
+                self.stickInstruction.runAction(SKAction.repeatActionForever(SKAction.sequence([stickWait, move, hide, start, hideFalse])))
+
             })
-            let showHand = SKAction.runBlock({
-                self.handInstruction.hidden = false
-            })
-            let sequenceHand = SKAction.sequence([handFadeIn, handMove, hideHand, handStart, showHand])
-            handInstruction.runAction(SKAction.repeatActionForever(sequenceHand))
             
-            // Tutorial objects and properties
-            let fadeIn = SKAction.fadeInWithDuration(0.5)
-            let sequence = SKAction.sequence([fadeIn])
-            moveInstruction?.runAction(sequence)
+            let cutSceneOneShow = SKAction.runBlock({
+                let showCutScene = SKAction.fadeInWithDuration(1)
+                self.cutSceneOne.hidden = false
+                let waitToShow = SKAction.waitForDuration(1)
+                let showScene = SKAction.fadeOutWithDuration(0.5)
+                let seq = SKAction.sequence([showCutScene, waitToShow, showScene])
+                self.cutSceneOne.runAction(seq)
+            })
             
-            // Tutorial objects and properties
-            forwardAndJumpIns.hidden = false
-            jumpingHand.hidden = false
-            let fadeInJump = SKAction.fadeInWithDuration(0.5)
-            let sequenceJump = SKAction.sequence([fadeInJump])
-            forwardAndJumpIns.runAction(sequenceJump)
+            let sequence = SKAction.sequence([cutSceneOneShow, instructionsShow])
             
-            // Jumping Hand Animation
-            jumpingHand.alpha = 1
-            let jumpHandScaleBig = SKAction.scaleTo(1.5, duration: 1)
-            let jumpHandScaleSmall = SKAction.scaleTo(1, duration: 1)
-            let jumpHandSequence = SKAction.sequence([jumpHandScaleBig, jumpHandScaleSmall])
-            jumpingHand.runAction(SKAction.repeatActionForever(jumpHandSequence))
-           
-            let wait = SKAction.waitForDuration(0.45)
-            let show = SKAction.runBlock({
-                self.baseInstruction.hidden = false
-            })
-            let waitForShow = SKAction.waitForDuration(1.05)
-            let baseHide = SKAction.runBlock({
-                self.baseInstruction.hidden = true
-            })
-            let waitAgain = SKAction.waitForDuration(0.7)
-            let baseSeq = SKAction.sequence([wait, show, waitForShow, baseHide, waitAgain])
-            baseInstruction.runAction(SKAction.repeatActionForever(baseSeq))
-            
-            let stickWait = SKAction.waitForDuration(0.5)
-            let start = SKAction.moveToX(0, duration: 0.7)
-            let move = SKAction.moveToX(60, duration: 1)
-            let hide = SKAction.runBlock({
-                self.stickInstruction.hidden = true
-            })
-            let hideFalse = SKAction.runBlock({
-                self.stickInstruction.hidden = false
-            })
-            stickInstruction.runAction(SKAction.repeatActionForever(SKAction.sequence([stickWait, move, hide, start, hideFalse])))
+            runAction(sequence)
             
         case 1:
             // This is introLevel2
-            blueCharacter.position = CGPoint(x: 160, y: 125)
-            pinkCharacter.position = CGPoint(x: 145, y: 125)
+            blueCharacter.position = CGPoint(x: 220, y: 125)
+            pinkCharacter.position = CGPoint(x: 200, y: 125)
             
             workTogetherInstruction.zPosition = 100
             workTogetherInstruction.size = CGSize(width: workTogetherInstruction.size.width / 3, height: workTogetherInstruction.size.height / 3)
@@ -653,6 +710,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     levelChanger += 1
                     changeScene()
                     print("This was called")
+                } else {
+                    
                 }
                 
                 if levelChanger == 9 {
@@ -671,6 +730,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     levelChanger += 1
                     changeScene()
                     print("This was called")
+                } else {
+                    
                 }
                 
                 if levelChanger == 9 {
@@ -693,13 +754,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.Trigger {
             blockade?.physicsBody?.affectedByGravity = true
             fallingPlatformLvl0?.physicsBody?.affectedByGravity = true
-              fallingPlatformLvl0?.physicsBody?.dynamic = true
+            fallingPlatformLvl0?.physicsBody?.dynamic = true
+            
+            if levelChanger == 2 {
+                connectInstruciton.hidden = false
+                let fadeIn = SKAction.fadeInWithDuration(0.5)
+                let wait = SKAction.waitForDuration(3)
+                let fadeOut = SKAction.fadeOutWithDuration(0.5)
+                let sequence = SKAction.sequence([fadeIn, wait, fadeOut])
+                connectInstruciton.runAction(sequence)
+            }
+            
             // print("THIS IS RUNNING")
         } else if collision == PhysicsCategory.BlueCharacter | PhysicsCategory.Trigger {
             blockade?.physicsBody?.affectedByGravity = true
             fallingPlatformLvl0?.physicsBody?.affectedByGravity = true
             fallingPlatformLvl0?.physicsBody?.dynamic = true
             // print("THIS IS RUNNING")
+            
+            if levelChanger == 2 {
+                connectInstruciton.hidden = false
+                let fadeIn = SKAction.fadeInWithDuration(0.5)
+                let wait = SKAction.waitForDuration(3)
+                let fadeOut = SKAction.fadeOutWithDuration(0.5)
+                let sequence = SKAction.sequence([fadeIn, wait, fadeOut])
+                connectInstruciton.runAction(sequence)
+            }
         }
         
                                 /////////////////////////////////////////////////////////////////
@@ -740,12 +820,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if collision == PhysicsCategory.BlueCharacter | PhysicsCategory.TriggerSwitchIns {
             // Contact between the characters and the Trigger in LevelChanger = 0
-//            let fadeIn = SKAction.fadeInWithDuration(0.5)
-//            let sequence = SKAction.sequence([fadeIn])
-//            switchInstruction.runAction(sequence)
-//            switchInstruction.hidden = false
-//            print("This should be deleted")
-            // print("CONTACT MADE")
+            let fadeIn = SKAction.fadeInWithDuration(0.5)
+            let wait = SKAction.waitForDuration(1)
+            let fadeOut = SKAction.fadeOutWithDuration(0.5)
+            let sequence = SKAction.sequence([fadeIn, wait, fadeOut])
+            switchInstruction.runAction(sequence)
+            switchInstruction.hidden = false
             triggerSwitchLvl0?.removeFromParent()
         }
         
@@ -753,10 +833,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if collision == PhysicsCategory.PinkCharacter | PhysicsCategory.TriggerSwitchIns {
             // Contact between the characters and the Trigger in LevelChanger = 0
             let fadeIn = SKAction.fadeInWithDuration(0.5)
-            let sequence = SKAction.sequence([fadeIn])
+            let wait = SKAction.waitForDuration(1)
+            let fadeOut = SKAction.fadeOutWithDuration(0.5)
+            let sequence = SKAction.sequence([fadeIn, wait, fadeOut])
             switchInstruction.runAction(sequence)
             switchInstruction.hidden = false
-            // print("CONTACT MADE")
             triggerSwitchLvl0?.removeFromParent()
         }
         
@@ -793,8 +874,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func didEndContact(contact: SKPhysicsContact) {
         twoBodiesMadeContact = false
-        
-        // print("NO LONGER IN CONTACT")
     }
     
     // MARK: - Touches event
@@ -812,7 +891,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         baseInstruction.removeAllActions()
         tapToJump?.hidden = true
         handInstruction.hidden = true
-        switchInstruction.hidden = true
+        // switchInstruction.hidden = true
         forwardAndJumpIns.hidden = true
         jumpingHand.hidden = true
         handInstruction.removeAllActions()
@@ -941,6 +1020,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         autoSeparate()
         fallingPlatformFunction()
         fadeGreenIndicator()
+        checkpointIndicatorChange()
         platformTranslateFunc(platformOne, yPosition: 100)
         platformTranslateFunc(platformTwo, yPosition: 120)
         platformTranslateFunc(platformThree, yPosition: 140)
@@ -1061,8 +1141,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if self.buttonFunctioning {
                 if self.canJump {
                     self.canJump = false
+                    self.canJump = false
+                    // These are the jump button attributes for blueCharacter
                     if levelChanger == 3 {
-                        self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 50))
+                        self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 1))
+                    } else if self.separationExecuted == false {
+                        self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 200))
                     } else {
                         self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 330))
                     }
@@ -1076,8 +1160,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             } else if self.buttonFunctioning == false {
                 if self.canJump {
                     self.canJump = false
+                    // These are the jupm button attributes for pinkCharacter
                     if levelChanger == 3 {
-                        self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 50))
+                        self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 1))
+                    } else if self.separationExecuted == false {
+                        self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 200))
                     } else {
                         self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 330))
                     }
@@ -1104,11 +1191,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.buttonFunctioning = false
                 // This is used to change the color of the buttons from blue to pink
                 self.switchButton.texture = SKTexture(imageNamed: "pinkSwitchButton")
+                self.separateButton.texture = SKTexture(imageNamed: "separatePinkButton")
             } else if self.buttonFunctioning == false {
                 // Switch to the blueCharacter
                 self.buttonFunctioning = true
                 // This is used to change the color of the buttons from pink to blue
                 self.switchButton.texture = SKTexture(imageNamed: "blueSwitchButton")
+                self.separateButton.texture = SKTexture(imageNamed: "separateBlueButton")
             }
         }
     }
@@ -1124,7 +1213,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let scene = GameScene(fileNamed: arrayOfLevels[levelChanger])
             
             print("Loading Level: \(arrayOfLevels[levelChanger])")
-            scene!.scaleMode = .AspectFill
+            scene!.scaleMode = .AspectFit
             self.view?.presentScene(scene!, transition: reveal)
             // print(levelChanger)
         }
@@ -1222,6 +1311,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if levelChanger == 0 || levelChanger == 1 {
             
         } else if abs(distanceOfCharacterDifferenceX) > 130 || abs(distanceOfCharacterDifferenceY) > 100 {
+            if levelChanger == 3 || levelChanger == 2 {
+                
+            } else {
+                warning.hidden = false
+                let show = SKAction.fadeInWithDuration(0.5)
+                let wait = SKAction.waitForDuration(1)
+                let hide = SKAction.fadeOutWithDuration(0.5)
+                let sequence = SKAction.sequence([show, wait, hide])
+                warning.runAction(sequence)
+            }
+            
+            
+            
             self.removeSomeJoints()
             // SeparationExecuted is set to false because it will trigger the reduceHealth in the update moethod
             self.separationExecuted = false
@@ -1414,5 +1516,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             scene!.scaleMode = .AspectFill
             self.view!.presentScene(scene!, transition: reveal)
       }
+    }
+    
+    func checkpointIndicatorChange() {
+        if distanceOfCharacterDifferenceX < 60 && distanceOfCharacterDifferenceX > -60 && separationExecuted == true {
+            self.checkpointActiveIndicator.texture = SKTexture(imageNamed: "checkpointActive")
+        } else {
+            self.checkpointActiveIndicator.texture = SKTexture(imageNamed: "checkpointInactive")
+        }
     }
 }
