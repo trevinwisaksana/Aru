@@ -33,6 +33,7 @@
 		DD8BBA271D3E9B18006BEF76 /* ChooseCharacterScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = DD8BBA261D3E9B18006BEF76 /* ChooseCharacterScene.sks */; };
 		DD8BBA2F1D3EA1AE006BEF76 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD8BBA2E1D3EA1AE006BEF76 /* Constants.swift */; };
 		DD8BBA321D3EA298006BEF76 /* MoveCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD8BBA311D3EA298006BEF76 /* MoveCharacter.swift */; };
+		DDAD7D2F1D5571DE00A8FC7A /* YouthfulDreams.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DDAD7D2E1D5571DE00A8FC7A /* YouthfulDreams.mp3 */; };
 		DDB4DBCD1D3D63E200A113C0 /* IntroLvl1.sks in Resources */ = {isa = PBXBuildFile; fileRef = DDB4DBCC1D3D63E200A113C0 /* IntroLvl1.sks */; };
 		DDC4793A1D3565670036E972 /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC4792E1D3565670036E972 /* CGFloat+Extensions.swift */; };
 		DDC4793B1D3565670036E972 /* CGPoint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC4792F1D3565670036E972 /* CGPoint+Extensions.swift */; };
@@ -51,8 +52,6 @@
 		DDF7E3661D206566005F9A49 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E3651D206566005F9A49 /* GameViewController.swift */; };
 		DDF7E3691D206566005F9A49 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DDF7E3671D206566005F9A49 /* Main.storyboard */; };
 		DDF7E36E1D206566005F9A49 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DDF7E36C1D206566005F9A49 /* LaunchScreen.storyboard */; };
-		DDF7E3791D206566005F9A49 /* AruTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E3781D206566005F9A49 /* AruTests.swift */; };
-		DDF7E3841D206566005F9A49 /* AruUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E3831D206566005F9A49 /* AruUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +98,7 @@
 		DD8BBA261D3E9B18006BEF76 /* ChooseCharacterScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ChooseCharacterScene.sks; sourceTree = "<group>"; };
 		DD8BBA2E1D3EA1AE006BEF76 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		DD8BBA311D3EA298006BEF76 /* MoveCharacter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoveCharacter.swift; sourceTree = "<group>"; };
+		DDAD7D2E1D5571DE00A8FC7A /* YouthfulDreams.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = YouthfulDreams.mp3; sourceTree = "<group>"; };
 		DDB4DBCC1D3D63E200A113C0 /* IntroLvl1.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = IntroLvl1.sks; sourceTree = "<group>"; };
 		DDC4792E1D3565670036E972 /* CGFloat+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extensions.swift"; sourceTree = "<group>"; };
 		DDC4792F1D3565670036E972 /* CGPoint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extensions.swift"; sourceTree = "<group>"; };
@@ -120,11 +120,7 @@
 		DDF7E36D1D206566005F9A49 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DDF7E36F1D206566005F9A49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DDF7E3741D206566005F9A49 /* AruTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AruTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		DDF7E3781D206566005F9A49 /* AruTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AruTests.swift; sourceTree = "<group>"; };
-		DDF7E37A1D206566005F9A49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DDF7E37F1D206566005F9A49 /* AruUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AruUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		DDF7E3831D206566005F9A49 /* AruUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AruUITests.swift; sourceTree = "<group>"; };
-		DDF7E3851D206566005F9A49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -316,8 +312,6 @@
 			isa = PBXGroup;
 			children = (
 				DDF7E35E1D206566005F9A49 /* Aru */,
-				DDF7E3771D206566005F9A49 /* AruTests */,
-				DDF7E3821D206566005F9A49 /* AruUITests */,
 				DDF7E35D1D206566005F9A49 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -345,30 +339,13 @@
 				DDB308E01D28ADE800FC1FD0 /* Sprites */,
 				DD04935F1D22BF8D00B9D551 /* Levels */,
 				DDF7E3651D206566005F9A49 /* GameViewController.swift */,
+				DDAD7D2E1D5571DE00A8FC7A /* YouthfulDreams.mp3 */,
 				DDF7E3671D206566005F9A49 /* Main.storyboard */,
 				DD0493641D22C3C900B9D551 /* Assets.xcassets */,
 				DDF7E36C1D206566005F9A49 /* LaunchScreen.storyboard */,
 				DDF7E36F1D206566005F9A49 /* Info.plist */,
 			);
 			path = Aru;
-			sourceTree = "<group>";
-		};
-		DDF7E3771D206566005F9A49 /* AruTests */ = {
-			isa = PBXGroup;
-			children = (
-				DDF7E3781D206566005F9A49 /* AruTests.swift */,
-				DDF7E37A1D206566005F9A49 /* Info.plist */,
-			);
-			path = AruTests;
-			sourceTree = "<group>";
-		};
-		DDF7E3821D206566005F9A49 /* AruUITests */ = {
-			isa = PBXGroup;
-			children = (
-				DDF7E3831D206566005F9A49 /* AruUITests.swift */,
-				DDF7E3851D206566005F9A49 /* Info.plist */,
-			);
-			path = AruUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -479,6 +456,7 @@
 				DD07EFC81D429D33000C0541 /* Level3.sks in Resources */,
 				DD8BBA1C1D3E8976006BEF76 /* LevelCompleteScene.sks in Resources */,
 				DD07EFCC1D429D45000C0541 /* Level5.sks in Resources */,
+				DDAD7D2F1D5571DE00A8FC7A /* YouthfulDreams.mp3 in Resources */,
 				DD50C8611D3D570B00E6790B /* IntroLvl3.sks in Resources */,
 				DD10020C1D22CE2C00715CA0 /* MenuScene.sks in Resources */,
 				DD0150DA1D277F27006D6AD9 /* IntroLvl2.sks in Resources */,
@@ -551,7 +529,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDF7E3791D206566005F9A49 /* AruTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -559,7 +536,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDF7E3841D206566005F9A49 /* AruUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
