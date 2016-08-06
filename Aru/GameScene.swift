@@ -8,7 +8,7 @@
 
 
 import SpriteKit
-
+// TODO: GREEN INDICATOR SHOULD NOT BE PLACED IN THE UPDATE
 // The arrayOfLevels is used so that we can call the index number of the level string when changing levels.
 ///////////////////////////////////////////////////////
 // MARK: - Array of Levels
@@ -153,7 +153,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var cutSceneTwo = SKSpriteNode(imageNamed: "youreReady") // 2
     var cutSceneThree = SKSpriteNode(imageNamed: "dayYouMet") // 3
     var cutSceneFour = SKSpriteNode(imageNamed: "youBeginToBond") // 4
-    var cutSceneFive = SKSpriteNode(imageNamed: "youBridge") // 5
+    var cutSceneFive = SKSpriteNode(imageNamed: "bridgingTrust") // 5
+    var cutSceneSix = SKSpriteNode(imageNamed: "showCommittment") // 6
+    var cutSceneSeven = SKSpriteNode(imageNamed: "cutSceneSeven")
+    var chooseLeftOrRight = SKSpriteNode(imageNamed: "chooseLeftOrRight")
+    var wrongChoice = SKSpriteNode(imageNamed: "wrongChoice")
+    var trustChallenge = SKSpriteNode(imageNamed: "trustChallenge")
+    var challengedAgain = SKSpriteNode(imageNamed: "challengedAgain")
+    var allIsOver = SKSpriteNode(imageNamed: "allIsOver")
     
     // Translating Platform Objects 
     var platformOne: SKSpriteNode?
@@ -185,7 +192,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // MARK: - didMoveToView
     
     override func didMoveToView(view: SKView) {
-        
+        // TODO: MAKE THE ITEMS ONLY LOAD DURING ITS SPECIFIC LEVELS
         // Sets the physics world so that it can detect contact
         self.physicsWorld.contactDelegate = self
         
@@ -472,35 +479,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /// Creating different cutscenes for different levels //
         ////////////////////////////////////////////////////////
         
-        cutSceneOne.zPosition = 1000
-        cutSceneOne.alpha = 1
-        cutSceneOne.userInteractionEnabled = false
-        cutSceneOne.hidden = true
-        cutSceneOne.position = CGPoint(x: 0, y: 0)
-        cutSceneOne.size = CGSize(width: cutSceneOne.size.width / 3.35, height: cutSceneOne.size.height / 3.35)
-        characterCamera.addChild(cutSceneOne)
+        setupInstructions(cutSceneOne, positionX: 0, positionY: 0, alpha: 1)
         
-        cutSceneTwo.zPosition = 1000
-        cutSceneTwo.alpha = 0
-        cutSceneTwo.hidden = true
-        cutSceneTwo.position = CGPoint(x: 0, y: 0)
-        cutSceneTwo.size = CGSize(width: cutSceneTwo.size.width / 3.35, height: cutSceneTwo.size.height / 3.35)
-        characterCamera.addChild(cutSceneTwo)
+        setupInstructions(cutSceneTwo, positionX: 0, positionY: 0, alpha: 0)
         
-        // dayYouMet ATTRIBUTE
-        cutSceneThree.zPosition = 102
-        cutSceneThree.size = CGSize(width: cutSceneThree.size.width / 3.35, height: cutSceneThree.size.height / 3.35)
-        cutSceneThree.alpha = 1
-        cutSceneThree.position = CGPoint(x: -10, y: -95)
-        cutSceneThree.hidden = true
-        characterCamera.addChild(cutSceneThree)
+        setupInstructions(cutSceneThree, positionX: -10, positionY: -95, alpha: 0)
         
-        cutSceneFour.zPosition = 1000
-        cutSceneFour.size = CGSize(width: cutSceneFour.size.width / 3.35, height: cutSceneFour.size.height / 3.35)
-        cutSceneFour.alpha = 1
-        cutSceneFour.position = CGPoint(x: 0, y: 0)
-        cutSceneFour.hidden = true
-        characterCamera.addChild(cutSceneFour)
+        setupInstructions(cutSceneFour, positionX: 0, positionY: 0, alpha: 0)
+        
+        setupInstructions(cutSceneFive, positionX: -20, positionY: -10, alpha: 0)
+        
+        setupInstructions(cutSceneSix, positionX: -20, positionY: -10, alpha: 0)
+        
+        setupInstructions(cutSceneSeven, positionX: 0, positionY: 0, alpha: 1)
+        
+        setupInstructions(chooseLeftOrRight, positionX: -20, positionY: -10, alpha: 0)
+        
+        setupInstructions(wrongChoice, positionX: -20, positionY: -10, alpha: 0)
+        // TODO: MAKE THE TRIGGER FOR THE WRONG CHIOCE 
+        
+        // OFTEN YOUR TRUST WILL BE CHALLENGED
+        setupInstructions(trustChallenge, positionX: -20, positionY: -10, alpha: 0)
+        
+        setupInstructions(challengedAgain, positionX: -20, positionY: -10, alpha: 0)
+        
+        setupInstructions(allIsOver, positionX: -20, positionY: -10, alpha: 0)
         
         ////////////////////////////////////////////////////////////
         /// Creating different positions for spawning the players //
@@ -593,16 +596,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // This is introLevel2
             blueCharacter.position = CGPoint(x: 220, y: 125)
             pinkCharacter.position = CGPoint(x: 200, y: 125)
-            workTogetherInstruction.hidden = false
-            let showText = SKAction.fadeInWithDuration(0.5)
-            let waitToShow = SKAction.waitForDuration(2)
-            let doNotShowText = SKAction.fadeOutWithDuration(0.5)
-            workTogetherInstruction.runAction(SKAction.sequence([showText, waitToShow, doNotShowText]))
+            
+            fadeInAndFadeOut(workTogetherInstruction)
         
         case 2:
             // This is introLevel3
             blueCharacter.position = CGPoint(x: 180, y: 175)
             pinkCharacter.position = CGPoint(x: 160, y: 175)
+            
         case 3:
             // This is Level 1
             blueCharacter.position = CGPoint(x: 520, y: 260)
@@ -610,28 +611,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.physicsBody?.linearDamping = 1
             pinkCharacter.physicsBody?.linearDamping = 1
             
-            cutSceneThree.hidden = false
-            let fadeIn = SKAction.fadeInWithDuration(0.5)
-            let wait = SKAction.waitForDuration(3)
-            let fadeOut = SKAction.fadeOutWithDuration(0.5)
-            let sequence = SKAction.sequence([fadeIn, wait, fadeOut])
-            cutSceneThree.runAction(sequence)
+            fadeInAndFadeOut(cutSceneThree)
             
         case 4:
             // This is Level 2
             blueCharacter.position = CGPoint(x: 70, y: 175)
             pinkCharacter.position = CGPoint(x: 60, y: 175)
             
-            
+            fadeInAndFadeOut(cutSceneFive)
             
         case 5:
             // This is Level 3
             blueCharacter.position = CGPoint(x: 50, y: 100)
             pinkCharacter.position = CGPoint(x: 40, y: 100)
+            
+            fadeInAndFadeOut(cutSceneSix)
+            
         case 6:
             // This is Level 4
             blueCharacter.position = CGPoint(x: 280, y: 274)
             pinkCharacter.position = CGPoint(x: 265, y: 274)
+            
+            fadeInAndFadeOut(chooseLeftOrRight)
+            
         case 7:
             // This is Level 5
             blueCharacter.position = CGPoint(x: 60, y: 260)
@@ -640,6 +642,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let moveLeft = SKAction.moveToX(100, duration: 4)
             let moveRight = SKAction.moveToX(192, duration: 4)
             self.movingPlatform.runAction(SKAction.repeatActionForever(SKAction.sequence([moveLeft, moveRight])))
+            
+            
+            
         case 8:
             // This is Level 6
             blueCharacter.position = CGPoint(x: 60, y: 300)
@@ -665,7 +670,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         switchButton = MSButtonNode(imageNamed: "blueSwitchButton")
         switchButton.size = CGSize(width: switchButton.size.width / 7, height: switchButton.size.height / 7)
         switchButton.zPosition = 106
-        switchButton.position.x = 180
+        switchButton.position.x = 120
         switchButton.position.y = -100
         
         jumpButton = MSButtonNode(color: SKColor.clearColor(), size: CGSize(width: self.frame.width / 2, height: self.frame.height))
@@ -676,7 +681,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         separateButton = MSButtonNode(imageNamed: "separateBlueButton")
         separateButton.size = CGSize(width: separateButton.size.width / 16, height: separateButton.size.height / 16)
         separateButton.zPosition = 106
-        separateButton.position = CGPoint(x: 80, y: -110)
+        separateButton.position = CGPoint(x: 20, y: -110)
         
         // Button States
         if levelChanger == 0 {
@@ -758,6 +763,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                             let sequence = SKAction.sequence([fadeIn, wait, fadeOut])
                             self.cutSceneTwo.runAction(sequence)
                             
+                            
                         })
                         let waitChange = SKAction.waitForDuration(2)
                         let change = SKAction.runBlock({
@@ -767,12 +773,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         runAction(sequence)
                     case 3:
                         let showCutSceneFour = SKAction.runBlock({
-                            self.cutSceneFour.hidden = false
-                            let fadeIn = SKAction.fadeInWithDuration(0.5)
-                            let wait = SKAction.waitForDuration(3)
-                            let fadeOut = SKAction.fadeOutWithDuration(0.5)
-                            let sequence = SKAction.sequence([fadeIn, wait, fadeOut])
-                            self.cutSceneFour.runAction(sequence)
+                            self.fadeInAndFadeOut(self.cutSceneFour)
                         })
                         let waitCutScene4 = SKAction.waitForDuration(3)
                         let changeLevelTo4 = SKAction.runBlock({
@@ -785,7 +786,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     case 4:
                         levelChangerIncrement()
                     case 5:
-                        levelChangerIncrement()
+                        let revealCutSceneCase5 = SKAction.runBlock({
+                           self.fadeInAndFadeOut(self.cutSceneSeven)
+                        })
+                        
+                        let waitCase5 = SKAction.waitForDuration(2)
+                        
+                        let changeLevelCase5 = SKAction.runBlock({
+                             self.levelChangerIncrement()
+                        })
+                       let sequenceCase5 = SKAction.sequence([revealCutSceneCase5, waitCase5, changeLevelCase5])
+                       runAction(sequenceCase5)
+                        
                     case 6:
                         levelChangerIncrement()
                     case 7:
@@ -851,6 +863,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         levelChangerIncrement()
                     case 5:
                         levelChangerIncrement()
+                        fadeInAndFadeOut(cutSceneSeven)
                     case 6:
                         levelChangerIncrement()
                     case 7:
@@ -1001,6 +1014,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let location = touch.locationInNode(base)
         switch levelChanger {
         case 0:
+            // TOOD: MAKE SURE THIS ONLY RUNS ONCE
             // To remove moveInstruction from the scene
             moveInstruction?.removeAllActions()
             moveInstruction?.hidden = true
@@ -1111,7 +1125,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             
         }
-                
+        
         // This prevents the camera from going beyond the frame
         characterCamera.position.x.clamp(92, 476)
         characterCamera.position.y.clamp(250, 52)
@@ -1676,4 +1690,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         platformTranslateFunc(platformThree, yPosition: 140)
         platformTranslateFunc(platformFour, yPosition: 160)
     }
+    
+    // Used to setup instructions so that we don't have to repeat code
+    func setupInstructions(instruction: SKSpriteNode, positionX: CGFloat, positionY: CGFloat, alpha: CGFloat) {
+        instruction.zPosition = 1000
+        instruction.size = CGSize(width: instruction.size.width / 3.35, height: instruction.size.height / 3.35)
+        instruction.alpha = alpha
+        instruction.position = CGPoint(x: positionX, y: positionY)
+        instruction.hidden = true
+        characterCamera.addChild(instruction)
+    }
+    
+    func fadeInAndFadeOut(cutScene: SKSpriteNode) {
+        cutScene.hidden = false
+        let fadeIn = SKAction.fadeInWithDuration(0.5)
+        let wait = SKAction.waitForDuration(3)
+        let fadeOut = SKAction.fadeOutWithDuration(0.5)
+        let sequence = SKAction.sequence([fadeIn, wait, fadeOut])
+        cutScene.runAction(sequence)
+    }
+    
+   
 }
