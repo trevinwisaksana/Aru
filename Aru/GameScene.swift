@@ -26,6 +26,7 @@ let arrayOfLevels: Array = ["IntroLvl1", // 0
 
 //////////////////////////////////////////////////////
 
+// Used to keep track which level is completed to unlock the level
 var completedLevel1: Bool = false
 var completedLevel2: Bool = false
 var completedLevel3: Bool = false
@@ -33,6 +34,15 @@ var completedLevel4: Bool = false
 var completedLevel5: Bool = false
 var completedLevel6: Bool = false
 var completedLevel7: Bool = false
+
+// Death counter object
+var level1DeathCount: Int = 0
+var level2DeathCount: Int = 0
+var level3DeathCount: Int = 0
+var level4DeathCount: Int = 0
+var level5DeathCount: Int = 0
+var level6DeathCount: Int = 0
+var level7DeathCount: Int = 0
 
 // MARK: - GameScene Class
 
@@ -78,10 +88,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Creating the checkpoint object
     var target: Checkpoint!
     
-    // X Distance between each character
+    // X and Y Distance between each character
     var distanceOfCharacterDifferenceX: CGFloat!
-    
-    // Y Distance between each character
     var distanceOfCharacterDifferenceY: CGFloat!
     
     // Separate Button
@@ -184,6 +192,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
     }
+
     
     // MARK: - Menu Objects
     var pauseMenu: SKSpriteNode!
@@ -192,7 +201,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // MARK: - didMoveToView
     
     override func didMoveToView(view: SKView) {
-        // TODO: MAKE THE ITEMS ONLY LOAD DURING ITS SPECIFIC LEVELS
         // Sets the physics world so that it can detect contact
         self.physicsWorld.contactDelegate = self
         
@@ -235,28 +243,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.physicsWorld.addJoint(bridgePin)
         }
         
-        // Creating fallingPlatform
-        fallingPlatform = childNodeWithName("//fallingPlatform") as? SKSpriteNode
-        fallingPlatform?.physicsBody?.categoryBitMask = PhysicsCategory.FallingPlatform | PhysicsCategory.BlueCharacter
-        fallingPlatform?.physicsBody?.collisionBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
-        fallingPlatform?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
-        
-        // Creating platformTranslate 
-        platformOne?.physicsBody?.categoryBitMask = PhysicsCategory.TransPlatform | PhysicsCategory.BlueCharacter
-        platformOne?.physicsBody?.collisionBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
-        platformOne?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
-        //
-        platformTwo?.physicsBody?.categoryBitMask = PhysicsCategory.TransPlatform | PhysicsCategory.BlueCharacter
-        platformTwo?.physicsBody?.collisionBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
-        platformTwo?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
-        // 
-        platformThree?.physicsBody?.categoryBitMask = PhysicsCategory.TransPlatform | PhysicsCategory.BlueCharacter
-        platformThree?.physicsBody?.collisionBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
-        platformThree?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
-        // 
-        platformFour?.physicsBody?.categoryBitMask = PhysicsCategory.TransPlatform | PhysicsCategory.BlueCharacter
-        platformFour?.physicsBody?.collisionBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
-        platformFour?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
         
         ///////////////////////////
         /// Creating Checkpoint ///
@@ -279,50 +265,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bloodshot = childNodeWithName("//bloodshot") as! SKSpriteNode
         bloodshot.hidden = true
         bloodshot.zPosition = 95
-        
-        /////////////////////////////////////
-        /// Creating Trigger and Blocakde ///
-        /////////////////////////////////////
-        
-        // Creating Trigger that will cause the blockade to drop
-        trigger = childNodeWithName("//trigger") as? SKSpriteNode
-        trigger?.physicsBody = SKPhysicsBody(rectangleOfSize: (trigger?.size)!)
-        trigger?.physicsBody?.categoryBitMask = PhysicsCategory.Trigger
-        trigger?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
-        trigger?.physicsBody?.collisionBitMask = PhysicsCategory.None
-        trigger?.physicsBody?.affectedByGravity = false
-        
-        // Another trigger at Level 0
-        triggerLvl0 = childNodeWithName("//triggerLvl0") as? SKSpriteNode
-        triggerLvl0?.physicsBody = SKPhysicsBody(rectangleOfSize: (triggerLvl0?.size)!)
-        triggerLvl0?.physicsBody?.categoryBitMask = PhysicsCategory.Trigger
-        triggerLvl0?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
-        triggerLvl0?.physicsBody?.collisionBitMask = PhysicsCategory.None
-        triggerLvl0?.physicsBody?.affectedByGravity = false
-        
-        // Another trigger at Level 0. This trigger shows the switch button instruciton
-        triggerSwitchLvl0 = childNodeWithName("//triggerSwitchLvl0") as? SKSpriteNode
-        triggerSwitchLvl0?.physicsBody = SKPhysicsBody(rectangleOfSize: (triggerLvl0?.size)!)
-        triggerSwitchLvl0?.physicsBody?.categoryBitMask = PhysicsCategory.TriggerSwitchIns
-        triggerSwitchLvl0?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
-        triggerSwitchLvl0?.physicsBody?.collisionBitMask = PhysicsCategory.None
-        triggerSwitchLvl0?.physicsBody?.affectedByGravity = false
-        
-        // Blockade drops when the character makes contact with the trigger
-        blockade = childNodeWithName("//blockade") as? SKSpriteNode
-        blockade?.physicsBody?.affectedByGravity = false
-        blockade?.physicsBody?.allowsRotation = false
-        
-        fallingPlatformLvl0 = childNodeWithName("//fallingPlatformLvl2") as? SKSpriteNode
-        fallingPlatformLvl0?.physicsBody?.dynamic = false
-        fallingPlatformLvl0?.physicsBody?.affectedByGravity = false
-        fallingPlatformLvl0?.physicsBody?.allowsRotation = false
-        
+    
         
         ///////////////////////////
         /// Creating Health Bar ///
         ///////////////////////////
-        healthBar.position = CGPoint(x: -270, y: 140)
+        healthBar.position = CGPoint(x: frame.width * -0.459, y: frame.width * 0.24)
         healthBar.zPosition = 4
         healthBar.anchorPoint.x = 0
         //print(healthBar.position)
@@ -401,45 +349,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /// Creating instructions //
         ////////////////////////////
         
-        // MARK: - Setup the instructions
-        moveInstruction = SKSpriteNode(imageNamed: "moveInstruction")
-        moveInstruction?.zPosition = 100
-        moveInstruction?.size = CGSize(width: moveInstruction!.size.width / 3.2, height: moveInstruction!.size.height / 3.2)
-        moveInstruction?.alpha = 0
-        moveInstruction?.position = CGPoint(x: -150, y: -10)
-        characterCamera.addChild(moveInstruction!)
-        // moveInstruction?.hidden = false
-        
-        forwardAndJumpIns = SKSpriteNode(imageNamed: "tapToJump")
-        forwardAndJumpIns.zPosition = 100
-        forwardAndJumpIns.size = CGSize(width: forwardAndJumpIns.size.width / 3.2, height: forwardAndJumpIns.size.height / 3.2)
-        forwardAndJumpIns.alpha = 0
-        forwardAndJumpIns.position = CGPoint(x: 0, y: -50)
-        characterCamera.addChild(forwardAndJumpIns)
-        // moveInstruction?.hidden = false
-        
-        baseInstruction.zPosition = 101
-        baseInstruction.size = CGSize(width: 50, height: 50)
-        baseInstruction.alpha = 1
-        baseInstruction.hidden = true
-        baseInstruction.position = CGPoint(x: -100, y: -100)
-        characterCamera.addChild(baseInstruction)
-        
-        // STICK INSTRUCTION ATTRIBUTE
-        stickInstruction.zPosition = 102
-        stickInstruction.size = CGSize(width: 40, height: 40)
-        stickInstruction.alpha = 1
-        stickInstruction.position = CGPoint(x: 0, y: 0)
-        baseInstruction.addChild(stickInstruction)
-        
-        // CONNECT INSTRUCTION ATTRIBUTE
-        connectInstruciton.zPosition = 102
-        connectInstruciton.size = CGSize(width: connectInstruciton.size.width / 3, height: connectInstruciton.size.height / 3)
-        connectInstruciton.alpha = 1
-        connectInstruciton.position = CGPoint(x: -130, y: -20)
-        connectInstruciton.hidden = true
-        characterCamera.addChild(connectInstruciton)
-        
         // WARNING INSTRUCTION
         warning.zPosition = 100
         warning.size = CGSize(width: warning.size.width / 3, height: warning.size.height / 3)
@@ -447,63 +356,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         warning.hidden = true
         warning.position = CGPoint(x: 150, y: 0)
         characterCamera.addChild(warning)
-        
-        // SWITCH INSTRUCTION ATTRIBUTE
-        switchInstruction.zPosition = 100
-        switchInstruction.size = CGSize(width: switchInstruction.size.width / 3, height: switchInstruction.size.height / 3)
-        switchInstruction.alpha = 1
-        switchInstruction.hidden = true
-        switchInstruction.position = CGPoint(x: -130, y: -10)
-        characterCamera.addChild(switchInstruction)
-        
-        handInstruction.zPosition = 102
-        handInstruction.size = CGSize(width: handInstruction.size.width / 9, height: handInstruction.size.height / 9)
-        handInstruction.alpha = 0
-        handInstruction.position = CGPoint(x: -80, y: -150)
-        characterCamera.addChild(handInstruction)
-        
-        workTogetherInstruction.zPosition = 100
-        workTogetherInstruction.size = CGSize(width: workTogetherInstruction.size.width / 3, height: workTogetherInstruction.size.height / 3)
-        workTogetherInstruction.alpha = 0
-        workTogetherInstruction.hidden = true
-        workTogetherInstruction.position = CGPoint(x: -120, y: -10)
-        characterCamera.addChild(workTogetherInstruction)
-        
-        jumpingHand.zPosition = 102
-        jumpingHand.size = CGSize(width: jumpingHand.size.width / 6, height: jumpingHand.size.height / 6)
-        jumpingHand.alpha = 0
-        jumpingHand.position = CGPoint(x: 140, y: -90)
-        characterCamera.addChild(jumpingHand)
-
-        ////////////////////////////////////////////////////////
-        /// Creating different cutscenes for different levels //
-        ////////////////////////////////////////////////////////
-        
-        setupInstructions(cutSceneOne, positionX: 0, positionY: 0, alpha: 1)
-        
-        setupInstructions(cutSceneTwo, positionX: 0, positionY: 0, alpha: 0)
-        
-        setupInstructions(cutSceneThree, positionX: -10, positionY: -95, alpha: 0)
-        
-        setupInstructions(cutSceneFour, positionX: 0, positionY: 0, alpha: 0)
-        
-        setupInstructions(cutSceneFive, positionX: -20, positionY: -10, alpha: 0)
-        
-        setupInstructions(cutSceneSix, positionX: -20, positionY: -10, alpha: 0)
-        
-        setupInstructions(cutSceneSeven, positionX: 0, positionY: 0, alpha: 1)
-        
-        setupInstructions(chooseLeftOrRight, positionX: -20, positionY: -10, alpha: 0)
-        
-        setupInstructions(wrongChoice, positionX: -20, positionY: -10, alpha: 0)
-        // TODO: MAKE THE TRIGGER FOR THE WRONG CHIOCE 
-        
-        // OFTEN YOUR TRUST WILL BE CHALLENGED
-        setupInstructions(trustChallenge, positionX: -20, positionY: -10, alpha: 0)
-        
-        setupInstructions(challengedAgain, positionX: -20, positionY: -10, alpha: 0)
-        
-        setupInstructions(allIsOver, positionX: -20, positionY: -10, alpha: 0)
+  
         
         ////////////////////////////////////////////////////////////
         /// Creating different positions for spawning the players //
@@ -515,6 +368,67 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // This is introLevel1
             blueCharacter.position = CGPoint(x: 110, y: 125)
             pinkCharacter.position = CGPoint(x: 100, y: 125)
+            
+            // This is the "Let me show you how things work"
+            setupInstructions(cutSceneOne, positionX: 0, positionY: 0, alpha: 1, zPosition: 1000)
+            
+            // Another trigger at Level 0. This trigger shows the switch button instruciton
+            triggerSwitchLvl0 = childNodeWithName("//triggerSwitchLvl0") as? SKSpriteNode
+            triggerSwitchLvl0?.physicsBody = SKPhysicsBody(rectangleOfSize: (triggerSwitchLvl0?.size)!)
+            triggerSwitchLvl0?.physicsBody?.categoryBitMask = PhysicsCategory.TriggerSwitchIns
+            triggerSwitchLvl0?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+            triggerSwitchLvl0?.physicsBody?.collisionBitMask = PhysicsCategory.None
+            triggerSwitchLvl0?.physicsBody?.affectedByGravity = false
+            
+            moveInstruction = SKSpriteNode(imageNamed: "moveInstruction")
+            moveInstruction?.zPosition = 100
+            moveInstruction?.size = CGSize(width: moveInstruction!.size.width / 3.2, height: moveInstruction!.size.height / 3.2)
+            moveInstruction?.alpha = 0
+            moveInstruction?.position = CGPoint(x: -150, y: -10)
+            characterCamera.addChild(moveInstruction!)
+            // moveInstruction?.hidden = false
+            
+            forwardAndJumpIns = SKSpriteNode(imageNamed: "tapToJump")
+            forwardAndJumpIns.zPosition = 100
+            forwardAndJumpIns.size = CGSize(width: forwardAndJumpIns.size.width / 3.2, height: forwardAndJumpIns.size.height / 3.2)
+            forwardAndJumpIns.alpha = 0
+            forwardAndJumpIns.position = CGPoint(x: 0, y: -50)
+            characterCamera.addChild(forwardAndJumpIns)
+            // moveInstruction?.hidden = false
+            
+            baseInstruction.zPosition = 101
+            baseInstruction.size = CGSize(width: 50, height: 50)
+            baseInstruction.alpha = 1
+            baseInstruction.hidden = true
+            baseInstruction.position = CGPoint(x: -100, y: -100)
+            characterCamera.addChild(baseInstruction)
+            
+            // STICK INSTRUCTION ATTRIBUTE
+            stickInstruction.zPosition = 102
+            stickInstruction.size = CGSize(width: 40, height: 40)
+            stickInstruction.alpha = 1
+            stickInstruction.position = CGPoint(x: 0, y: 0)
+            baseInstruction.addChild(stickInstruction)
+            
+            // SWITCH INSTRUCTION ATTRIBUTE
+            switchInstruction.zPosition = 100
+            switchInstruction.size = CGSize(width: switchInstruction.size.width / 3, height: switchInstruction.size.height / 3)
+            switchInstruction.alpha = 1
+            switchInstruction.hidden = true
+            switchInstruction.position = CGPoint(x: -130, y: -10)
+            characterCamera.addChild(switchInstruction)
+            
+            handInstruction.zPosition = 102
+            handInstruction.size = CGSize(width: handInstruction.size.width / 9, height: handInstruction.size.height / 9)
+            handInstruction.alpha = 0
+            handInstruction.position = CGPoint(x: -80, y: -150)
+            characterCamera.addChild(handInstruction)
+            
+            jumpingHand.zPosition = 102
+            jumpingHand.size = CGSize(width: jumpingHand.size.width / 6, height: jumpingHand.size.height / 6)
+            jumpingHand.alpha = 0
+            jumpingHand.position = CGPoint(x: 140, y: -90)
+            characterCamera.addChild(jumpingHand)
             
             let instructionsShow = SKAction.runBlock({
                 
@@ -597,12 +511,49 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.position = CGPoint(x: 220, y: 125)
             pinkCharacter.position = CGPoint(x: 200, y: 125)
             
+            workTogetherInstruction.zPosition = 100
+            workTogetherInstruction.size = CGSize(width: workTogetherInstruction.size.width / 3, height: workTogetherInstruction.size.height / 3)
+            workTogetherInstruction.alpha = 0
+            workTogetherInstruction.hidden = true
+            workTogetherInstruction.position = CGPoint(x: -120, y: -10)
+            characterCamera.addChild(workTogetherInstruction)
+            
             fadeInAndFadeOut(workTogetherInstruction)
         
         case 2:
             // This is introLevel3
             blueCharacter.position = CGPoint(x: 180, y: 175)
             pinkCharacter.position = CGPoint(x: 160, y: 175)
+            
+            // This is the "You're ready to being this journey"
+            setupInstructions(cutSceneTwo, positionX: 0, positionY: 0, alpha: 0, zPosition: 90)
+            
+            // Creates falling platform
+            fallingPlatformLvl0 = childNodeWithName("//fallingPlatformLvl2") as? SKSpriteNode
+            fallingPlatformLvl0?.physicsBody?.dynamic = false
+            fallingPlatformLvl0?.physicsBody?.affectedByGravity = false
+            fallingPlatformLvl0?.physicsBody?.allowsRotation = false
+            
+            // Creating Trigger that will cause the blockade to drop
+            trigger = childNodeWithName("//trigger") as? SKSpriteNode
+            trigger?.physicsBody = SKPhysicsBody(rectangleOfSize: (trigger?.size)!)
+            trigger?.physicsBody?.categoryBitMask = PhysicsCategory.Trigger
+            trigger?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+            trigger?.physicsBody?.collisionBitMask = PhysicsCategory.None
+            trigger?.physicsBody?.affectedByGravity = false
+            
+            // Blockade drops when the character makes contact with the trigger
+            blockade = childNodeWithName("//blockade") as? SKSpriteNode
+            blockade?.physicsBody?.affectedByGravity = false
+            blockade?.physicsBody?.allowsRotation = false
+            
+            // CONNECT INSTRUCTION ATTRIBUTE
+            connectInstruciton.zPosition = 102
+            connectInstruciton.size = CGSize(width: connectInstruciton.size.width / 3, height: connectInstruciton.size.height / 3)
+            connectInstruciton.alpha = 1
+            connectInstruciton.position = CGPoint(x: -130, y: -20)
+            connectInstruciton.hidden = true
+            characterCamera.addChild(connectInstruciton)
             
         case 3:
             // This is Level 1
@@ -611,12 +562,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.physicsBody?.linearDamping = 1
             pinkCharacter.physicsBody?.linearDamping = 1
             
+            // This is the "Day we met" cut scene
+            setupInstructions(cutSceneThree, positionX: -10, positionY: -95, alpha: 0, zPosition: 90)
+            // You begin to bond together
+            setupInstructions(cutSceneFour, positionX: 0, positionY: 0, alpha: 0, zPosition: 1000)
             fadeInAndFadeOut(cutSceneThree)
             
         case 4:
             // This is Level 2
             blueCharacter.position = CGPoint(x: 70, y: 175)
             pinkCharacter.position = CGPoint(x: 60, y: 175)
+            
+            // This is the "We show committment cut scene"
+            setupInstructions(cutSceneFive, positionX: -20, positionY: -10, alpha: 0, zPosition: 90)
             
             fadeInAndFadeOut(cutSceneFive)
             
@@ -625,6 +583,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.position = CGPoint(x: 50, y: 100)
             pinkCharacter.position = CGPoint(x: 40, y: 100)
             
+            // This is the "We began bridging our trust"
+            setupInstructions(cutSceneSix, positionX: -20, positionY: -10, alpha: 0, zPosition: 90)
+            // This is the "But in the end every choice will determine our future"
+            setupInstructions(cutSceneSeven, positionX: 0, positionY: 0, alpha: 1, zPosition: 1000)
+            
             fadeInAndFadeOut(cutSceneSix)
             
         case 6:
@@ -632,23 +595,45 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.position = CGPoint(x: 280, y: 274)
             pinkCharacter.position = CGPoint(x: 265, y: 274)
             
+            // Choose left or right statement
+            setupInstructions(chooseLeftOrRight, positionX: -20, positionY: -10, alpha: 0, zPosition: 90)
+            // When triggered "You've made the wrong choice"
+            setupInstructions(wrongChoice, positionX: -20, positionY: -10, alpha: 0, zPosition: 90)
+            // TODO: MAKE THE TRIGGER FOR THE WRONG CHIOCE
+            
             fadeInAndFadeOut(chooseLeftOrRight)
             
         case 7:
             // This is Level 5
             blueCharacter.position = CGPoint(x: 60, y: 260)
             pinkCharacter.position = CGPoint(x: 50, y: 260)
+            
+            // Creating fallingPlatform
+            fallingPlatform = childNodeWithName("//fallingPlatform") as? SKSpriteNode
+            fallingPlatform?.physicsBody?.categoryBitMask = PhysicsCategory.FallingPlatform | PhysicsCategory.BlueCharacter
+            fallingPlatform?.physicsBody?.collisionBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+            fallingPlatform?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+            
             movingPlatform = childNodeWithName("//movingPlatform") as! SKSpriteNode
             let moveLeft = SKAction.moveToX(100, duration: 4)
             let moveRight = SKAction.moveToX(192, duration: 4)
             self.movingPlatform.runAction(SKAction.repeatActionForever(SKAction.sequence([moveLeft, moveRight])))
             
+            // OFTEN YOUR TRUST WILL BE CHALLENGED
+            setupInstructions(trustChallenge, positionX: -20, positionY: -5, alpha: 0, zPosition: 90)
             
+            fadeInAndFadeOut(trustChallenge)
             
         case 8:
             // This is Level 6
             blueCharacter.position = CGPoint(x: 60, y: 300)
             pinkCharacter.position = CGPoint(x: 50, y: 300)
+            
+            // This is the challenged again cut scene
+            setupInstructions(challengedAgain, positionX: -20, positionY: 10, alpha: 0, zPosition: 90)
+            
+            fadeInAndFadeOut(challengedAgain)
+            
         case 9:
             // This is Level 7
             blueCharacter.position = CGPoint(x: 60, y: 150)
@@ -657,10 +642,40 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             platformTwo = childNodeWithName("2") as? SKSpriteNode
             platformThree = childNodeWithName("3") as? SKSpriteNode
             platformFour = childNodeWithName("4") as? SKSpriteNode
+            
+            // Creating platformTranslate
+            platformOne?.physicsBody?.categoryBitMask = PhysicsCategory.TransPlatform | PhysicsCategory.BlueCharacter
+            platformOne?.physicsBody?.collisionBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+            platformOne?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+            //
+            platformTwo?.physicsBody?.categoryBitMask = PhysicsCategory.TransPlatform | PhysicsCategory.BlueCharacter
+            platformTwo?.physicsBody?.collisionBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+            platformTwo?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+            //
+            platformThree?.physicsBody?.categoryBitMask = PhysicsCategory.TransPlatform | PhysicsCategory.BlueCharacter
+            platformThree?.physicsBody?.collisionBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+            platformThree?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+            //
+            platformFour?.physicsBody?.categoryBitMask = PhysicsCategory.TransPlatform | PhysicsCategory.BlueCharacter
+            platformFour?.physicsBody?.collisionBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+            platformFour?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+            
+            // This is when all is over for the final scene
+            setupInstructions(allIsOver, positionX: -20, positionY: 10, alpha: 10, zPosition: 90)
+            fadeInAndFadeOut(allIsOver)
+            
         default:
             break
             
         }
+        
+        // Creating Trigger that will cause gameOver
+        trigger = childNodeWithName("//trigger") as? SKSpriteNode
+        trigger?.physicsBody = SKPhysicsBody(rectangleOfSize: (trigger?.size)!)
+        trigger?.physicsBody?.categoryBitMask = PhysicsCategory.Trigger
+        trigger?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
+        trigger?.physicsBody?.collisionBitMask = PhysicsCategory.None
+        trigger?.physicsBody?.affectedByGravity = false
         
         ////////////////////////////////////
         /// These are buttons properties ///
@@ -729,6 +744,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.separateButton.state = .Inactive
         }
         
+        let backgroundMusic = SKAction.playSoundFileNamed("YouthfulDreams.mp3", waitForCompletion: true)
+        runAction(SKAction.repeatActionForever(backgroundMusic))
+        
     }
     
     // MARK: - Collision and Contact Events
@@ -747,7 +765,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // This goes to the LevelCompleteScene after making contact and the distance between the two objects is less than 50 pixels
             // The < 60 or > - 60 helps assure that only if the distance of the two characters is less than 60 pixels away, the checkpoint will work
             if distanceOfCharacterDifferenceX < 60 && distanceOfCharacterDifferenceX > -60 && separationExecuted == true {
-                if levelChanger < 9 {
+                if levelChanger <= 9 {
                     switch levelChanger {
                     case 0:
                         levelChangerIncrement()
@@ -800,12 +818,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         
                     case 6:
                         levelChangerIncrement()
+                        
                     case 7:
                         levelChangerIncrement()
+                        
                     case 8:
                         levelChangerIncrement()
+                        
                     case 9:
                         changeToTheEnd()
+                        
                     default:
                         break
                     }
@@ -819,7 +841,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case PhysicsCategory.PinkCharacter | PhysicsCategory.Checkpoint:
             // This goes to the LevelCompleteScene scene after making contact and the distance between the two objects is less than 60 pixels
             if distanceOfCharacterDifferenceX < 60 && distanceOfCharacterDifferenceX > -60 && separationExecuted == true {
-                if levelChanger < 9 {
+                if levelChanger <= 9 {
                     switch levelChanger {
                     case 0:
                         levelChangerIncrement()
@@ -872,6 +894,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         levelChangerIncrement()
                     case 9:
                         changeToTheEnd()
+                        
                     default:
                         break
                     }
@@ -885,12 +908,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case PhysicsCategory.PinkCharacter | PhysicsCategory.BlueCharacter:
             twoBodiesMadeContact = true
             
+            
+            
         // WHEN PINK CHARACTER MAKES CONTACT WITH TRIGGER
         case PhysicsCategory.PinkCharacter | PhysicsCategory.Trigger:
             switch levelChanger {
             case 0:
                 // Contact between the characters and the Trigger in LevelChanger = 0
                 triggerLvl0?.removeFromParent()
+                
             case 2:
                 // This reveals the instruction to not panic and connect
                 // TODO: NO REPETITION
@@ -913,6 +939,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 fallingPlatform?.runAction(sequenceFall)
                 
                 changeToGameOverScene()
+                
             default:
                 changeToGameOverScene()
             }
@@ -1520,12 +1547,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func changeToGameOverScene() {
         runAction(SKAction.sequence([
-            SKAction.waitForDuration(0),
+            SKAction.runBlock() {
+                switch levelChanger {
+                case 3:
+                    level1DeathCount += 1
+                    print(level1DeathCount)
+                case 4:
+                    level2DeathCount += 1
+                    print(level2DeathCount)
+                case 5:
+                    level3DeathCount += 1
+                    print(level3DeathCount)
+                case 6:
+                    level4DeathCount += 1
+                    print(level4DeathCount)
+                case 7:
+                    level5DeathCount += 1
+                    print(level5DeathCount)
+                case 8:
+                    level6DeathCount += 1
+                    print(level6DeathCount)
+                case 9:
+                    level7DeathCount += 1
+                    print(level7DeathCount)
+                default:
+                    break
+                }
+            },
+            SKAction.waitForDuration(0.1),
             SKAction.runBlock() {
                 //print("CHANGING SCENE")
                 let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 1)
                 let scene = GameOverScene(size: self.size)
-                scene.scaleMode = .AspectFill
+                scene.scaleMode = GameScaleMode.AllScenes
                 self.view?.presentScene(scene, transition:reveal)
             }
             ]))
@@ -1580,7 +1634,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 //print("CHANGING SCENE")
                 let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 1)
                 let scene = TheEnd(size: self.size)
-                scene.scaleMode = .AspectFill
+                scene.scaleMode = GameScaleMode.AllScenes
                 self.view?.presentScene(scene, transition:reveal)
                 levelChanger = 0
             }
@@ -1617,6 +1671,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         separateButton.runAction(SKAction.repeatActionForever(sequence))
     }
     
+    ///////////////////////////////////////////////////////////////////////////
+    // These methods sets up the buttons so that it will run certan actions ///
+    ///////////////////////////////////////////////////////////////////////////
+    
     func setupPauseButton() {
         pauseButton.selectedHandler = {
             let wait = SKAction.waitForDuration(0.1)
@@ -1651,12 +1709,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             levelChanger = 0
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 2)
             let scene = MenuScene(fileNamed: "MenuScene")
-            scene!.scaleMode = .AspectFill
+            scene!.scaleMode = GameScaleMode.AllScenes
             self.view!.presentScene(scene!, transition: reveal)
       }
     }
     
+    //////////////////////////////////////////////////////////////////////////////////
+    // This changes the color of the indicator when the player is close or too far ///
+    //////////////////////////////////////////////////////////////////////////////////
+    
     func checkpointIndicatorChange() {
+        // TODO: Prevent memory overflow due to the constant change in texture
         if distanceOfCharacterDifferenceX < 60 && distanceOfCharacterDifferenceX > -60 && separationExecuted == true {
             self.checkpointActiveIndicator.texture = SKTexture(imageNamed: "checkpointActive")
         } else {
@@ -1664,11 +1727,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    /// This function increments the levelChanger by 1 and executes the changeScene method.
     func levelChangerIncrement() {
         levelChanger += 1
         self.changeScene()
     }
     
+    /// This is the default move impulse to the character when the joystick is moved.
     func movePlayerDefault(sprite: SKSpriteNode) {
         switch separationExecuted {
         // This code shows that if the character is separated, the character will be weaker
@@ -1683,6 +1748,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    /// This function is specific to Level 7 where there is a moving platform
     func levelChanger7PlatformAnimation() {
         fallingPlatformFunction()
         platformTranslateFunc(platformOne, yPosition: 100)
@@ -1691,9 +1757,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         platformTranslateFunc(platformFour, yPosition: 160)
     }
     
-    // Used to setup instructions so that we don't have to repeat code
-    func setupInstructions(instruction: SKSpriteNode, positionX: CGFloat, positionY: CGFloat, alpha: CGFloat) {
-        instruction.zPosition = 1000
+    /// Used to setup instructions so that we don't have to repeat code.
+    func setupInstructions(instruction: SKSpriteNode, positionX: CGFloat, positionY: CGFloat, alpha: CGFloat, zPosition: CGFloat) {
+        instruction.zPosition = zPosition
         instruction.size = CGSize(width: instruction.size.width / 3.35, height: instruction.size.height / 3.35)
         instruction.alpha = alpha
         instruction.position = CGPoint(x: positionX, y: positionY)
@@ -1701,6 +1767,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         characterCamera.addChild(instruction)
     }
     
+    /// This is the animation used to fade in and out the instructions.
     func fadeInAndFadeOut(cutScene: SKSpriteNode) {
         cutScene.hidden = false
         let fadeIn = SKAction.fadeInWithDuration(0.5)
@@ -1708,6 +1775,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let fadeOut = SKAction.fadeOutWithDuration(0.5)
         let sequence = SKAction.sequence([fadeIn, wait, fadeOut])
         cutScene.runAction(sequence)
+    }
+    
+    func convert(point: CGPoint)->CGPoint {
+        return self.view!.convertPoint(CGPoint(x: point.x, y:self.view!.frame.height-point.y), toScene:self)
     }
     
    

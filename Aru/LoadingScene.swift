@@ -28,7 +28,7 @@ class LoadingScene: SKScene {
         let changeScene = SKAction.runBlock({
             let transition = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 1)
             let scene = MenuScene(fileNamed: "MenuScene")
-            scene!.scaleMode = .AspectFit
+            scene!.scaleMode = GameScaleMode.AllScenes
             self.view!.presentScene(scene!, transition: transition)
         })
         self.runAction(SKAction.sequence([logoPresent, wait, logoDisappear, changeScene]))
