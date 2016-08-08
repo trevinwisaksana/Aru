@@ -30,6 +30,7 @@ class MenuScene: SKScene {
     var level6Button: MSButtonNode!
     var level7Button: MSButtonNode!
     // TODO: Create a menu where this will be the parent of all the objects
+
     
     // MARK: - Level List Checker
     var levelListChecker: Int = 0
@@ -37,6 +38,25 @@ class MenuScene: SKScene {
     // MARK: - didMoveToView
     override func didMoveToView(view: SKView) {
         setupButtons()
+        
+        let aruTitle = SKSpriteNode(imageNamed: "aruTitle")
+        aruTitle.position = CGPoint(x: view.frame.width * 0.2, y: view.frame.height * 0.75)
+        aruTitle.zPosition = 100
+        aruTitle.size = CGSize(width: view.frame.size.width / 3, height: view.frame.size.height / 3)
+        self.addChild(aruTitle)
+        
+        let background = SKSpriteNode(imageNamed: "menuBackground")
+        background.position = CGPoint(x: view.frame.width / 2, y: view.frame.height / 2)
+        background.zPosition = -1
+        background.size = CGSize(width: view.frame.size.width * 1, height: view.frame.size.height * 1)
+        self.addChild(background)
+        
+        let cloud = SKSpriteNode(imageNamed: "cloud")
+        cloud.position = CGPoint(x: view.frame.width / 2, y: view.frame.height * 0.6)
+        cloud.zPosition = 1
+        cloud.size = CGSize(width: cloud.size.width / 2, height: cloud.size.height / 2)
+        self.addChild(cloud)
+        
     }
     
     // MARK: - touchesBegan
@@ -66,7 +86,7 @@ class MenuScene: SKScene {
         playButton = MSButtonNode(imageNamed: "playButton")
         playButton.zPosition = 10
         playButton.size = CGSize(width: playButton.size.width / 3, height: playButton.size.height / 3)
-        playButton.position = CGPoint(x: self.frame.width * 0.7, y: self.frame.height / 2)
+        playButton.position = CGPoint(x: frame.width * 0.7, y: frame.height / 2)
         addChild(playButton)
         setupPlayButton()
         playButton.state = .Active
@@ -77,7 +97,7 @@ class MenuScene: SKScene {
         levelsButton = MSButtonNode(imageNamed: "levelsButton")
         levelsButton.zPosition = 10
         levelsButton.size = CGSize(width: levelsButton.size.width / 4, height: levelsButton.size.height / 4)
-        levelsButton.position = CGPoint(x: self.frame.width * 0.4, y: self.frame.height / 2)
+        levelsButton.position = CGPoint(x: frame.width * 0.4, y: frame.height / 2)
         addChild(levelsButton)
         setupLevelButton()
         levelsButton.state = .Active

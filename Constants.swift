@@ -26,7 +26,7 @@ struct PhysicsCategory {
 }
 
 struct GameScaleMode {
-    static let AllScenes: SKSceneScaleMode = .Fill
+    static let AllScenes: SKSceneScaleMode = .ResizeFill
 }
 
 // GameScaleMode.AllScenes

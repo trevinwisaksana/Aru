@@ -27,9 +27,9 @@ class LoadingScene: SKScene {
         let wait = SKAction.waitForDuration(2)
         let changeScene = SKAction.runBlock({
             let transition = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 1)
-            let scene = MenuScene(fileNamed: "MenuScene")
-            scene!.scaleMode = GameScaleMode.AllScenes
-            self.view!.presentScene(scene!, transition: transition)
+            let scene = MenuScene(size: view.frame.size)
+            scene.scaleMode = GameScaleMode.AllScenes
+            self.view!.presentScene(scene, transition: transition)
         })
         self.runAction(SKAction.sequence([logoPresent, wait, logoDisappear, changeScene]))
     }
@@ -37,5 +37,6 @@ class LoadingScene: SKScene {
     override func update(currentTime: NSTimeInterval) {
         
     }
+
     
 }
