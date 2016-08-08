@@ -210,7 +210,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Creating background
         background = SKSpriteNode(imageNamed: "menuBackground")
-        background.size = CGSize(width: view.frame.width, height: view.frame.height)
+        background.size = CGSize(width: view.frame.width * 2, height: view.frame.height * 2)
         background.position = CGPoint(x: frame.width / 2, y: frame.height / 2)
         background.zPosition = -1
         addChild(background)
@@ -275,9 +275,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Bloodshot
         bloodshot = SKSpriteNode(imageNamed: "bloodshot")
         bloodshot.size = CGSize(width: view.frame.width, height: view.frame.height)
-        bloodshot.position = CGPoint(x: view.frame.width, y: view.frame.height)
+        bloodshot.position = CGPoint(x: 0, y: 0)
         bloodshot.hidden = true
         bloodshot.zPosition = 95
+        characterCamera.addChild(bloodshot)
         
         ///////////////////////////
         /// Creating Health Bar ///
@@ -584,10 +585,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             if view.frame.size == CGSize(width: 480, height: 320) {
                 // This is the "You're ready to being this journey"
-                setupInstructions(cutSceneTwo, positionX: -90, positionY: 0, alpha: 1001, zPosition: 90, width: cutSceneTwo.size.width / 3.35, height: cutSceneTwo.size.width / 3.35)
+                setupInstructions(cutSceneTwo, positionX: -90, positionY: 0, alpha: 2000, zPosition: 90, width: cutSceneTwo.size.width / 3.35, height: cutSceneTwo.size.width / 3.35)
             } else {
                 // This is the "You're ready to being this journey"
-                setupInstructions(cutSceneTwo, positionX: 0, positionY: 0, alpha: 1001, zPosition: 90, width: view.frame.width * 1, height: view.frame.height * 1)
+                setupInstructions(cutSceneTwo, positionX: 0, positionY: 0, alpha: 2000, zPosition: 90, width: view.frame.width * 1, height: view.frame.height * 1)
             }
         
             // Creates falling platform
@@ -646,7 +647,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // If the iPhone is a 4s
             if view.frame.size == CGSize(width: 480, height: 320) {
                 // You begin to bond together
-                setupInstructions(cutSceneFour, positionX: 0, positionY: 0, alpha: 0, zPosition: 1000, width: cutSceneFour.size.width / 3.35, height: cutSceneFour.size.height / 3.35)
+                setupInstructions(cutSceneFour, positionX: 30, positionY: 0, alpha: 0, zPosition: 1000, width: cutSceneFour.size.width / 3.35, height: cutSceneFour.size.height / 3.35)
             } else {
                 // You begin to bond together
                 setupInstructions(cutSceneFour, positionX: 0, positionY: 0, alpha: 0, zPosition: 1000, width: view.frame.width * 1, height: view.frame.height * 1)
@@ -659,8 +660,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.position = CGPoint(x: 70, y: 175)
             pinkCharacter.position = CGPoint(x: 60, y: 175)
             
-            // This is the "We began bridging our trust"
-            setupInstructions(cutSceneFive, positionX: -10, positionY: -10, alpha: 0, zPosition: 90, width: cutSceneFive.size.width / 3.35, height: cutSceneFive.size.height / 3.35)
+            if view.frame.size == CGSize(width: 480, height: 320) {
+                // This is the "We began bridging our trust"
+                setupInstructions(cutSceneFive, positionX: 30, positionY: -10, alpha: 0, zPosition: 90, width: cutSceneFive.size.width / 3.35, height: cutSceneFive.size.height / 3.35)
+            } else {
+                // This is the "We began bridging our trust"
+                setupInstructions(cutSceneFive, positionX: -10, positionY: -10, alpha: 0, zPosition: 90, width: cutSceneFive.size.width / 3.35, height: cutSceneFive.size.height / 3.35)
+            }
             
             fadeInAndFadeOut(cutSceneFive)
             
@@ -670,7 +676,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             pinkCharacter.position = CGPoint(x: 40, y: 100)
             
             if view.frame.size == CGSize(width: 480, height: 320) {
-                
+                // This is the "We're committed to each other, work together"
+                setupInstructions(cutSceneSix, positionX: 30, positionY: -10, alpha: 0, zPosition: 90, width: cutSceneSix.size.width / 3.35, height: cutSceneSix.size.height / 3.35)
             } else {
                 // This is the "We're committed to each other, work together"
                 setupInstructions(cutSceneSix, positionX: -10, positionY: -10, alpha: 0, zPosition: 90, width: cutSceneSix.size.width / 3.35, height: cutSceneSix.size.height / 3.35)
@@ -692,11 +699,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.position = CGPoint(x: 280, y: 274)
             pinkCharacter.position = CGPoint(x: 265, y: 274)
             
-            // Choose left or right statement
-            setupInstructions(chooseLeftOrRight, positionX: -10, positionY: -10, alpha: 0, zPosition: 90, width: chooseLeftOrRight.size.width / 3.35, height: chooseLeftOrRight.size.height / 3.35)
-            // When triggered "You've made the wrong choice"
-            setupInstructions(wrongChoice, positionX: -20, positionY: -10, alpha: 0, zPosition: 90, width: wrongChoice.size.width / 3.35, height: wrongChoice.size.height / 3.35)
-            // TODO: MAKE THE TRIGGER FOR THE WRONG CHIOCE
+            if view.frame.size == CGSize(width: 480, height: 320) {
+                // Choose left or right statement
+                setupInstructions(chooseLeftOrRight, positionX: 30, positionY: -10, alpha: 0, zPosition: 90, width: chooseLeftOrRight.size.width / 3.35, height: chooseLeftOrRight.size.height / 3.35)
+            } else {
+                // Choose left or right statement
+                setupInstructions(chooseLeftOrRight, positionX: -10, positionY: -10, alpha: 0, zPosition: 90, width: chooseLeftOrRight.size.width / 3.35, height: chooseLeftOrRight.size.height / 3.35)
+            }
+            
+            if view.frame.size == CGSize(width: 480, height: 320) {
+                // When triggered "You've made the wrong choice"
+                setupInstructions(wrongChoice, positionX: 30, positionY: -10, alpha: 0, zPosition: 90, width: wrongChoice.size.width / 3.35, height: wrongChoice.size.height / 3.35)
+                // TODO: MAKE THE TRIGGER FOR THE WRONG CHIOCE
+            } else {
+                // When triggered "You've made the wrong choice"
+                setupInstructions(wrongChoice, positionX: -10, positionY: -10, alpha: 0, zPosition: 90, width: wrongChoice.size.width / 3.35, height: wrongChoice.size.height / 3.35)
+                // TODO: MAKE THE TRIGGER FOR THE WRONG CHIOCE
+            }
             
             fadeInAndFadeOut(chooseLeftOrRight)
             
@@ -716,8 +735,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let moveRight = SKAction.moveToX(192, duration: 4)
             self.movingPlatform.runAction(SKAction.repeatActionForever(SKAction.sequence([moveLeft, moveRight])))
             
-            // OFTEN YOUR TRUST WILL BE CHALLENGED
-            setupInstructions(trustChallenge, positionX: -10, positionY: -5, alpha: 0, zPosition: 90, width: trustChallenge.size.width / 3.35, height: trustChallenge.size.height / 3.35)
+            if view.frame.size == CGSize(width: 480, height: 320) {
+                // OFTEN YOUR TRUST WILL BE CHALLENGED
+                setupInstructions(trustChallenge, positionX: 30, positionY: -5, alpha: 0, zPosition: 90, width: trustChallenge.size.width / 3.35, height: trustChallenge.size.height / 3.35)
+            } else {
+                // OFTEN YOUR TRUST WILL BE CHALLENGED
+                setupInstructions(trustChallenge, positionX: -10, positionY: -5, alpha: 0, zPosition: 90, width: trustChallenge.size.width / 3.35, height: trustChallenge.size.height / 3.35)
+            }
             
             fadeInAndFadeOut(trustChallenge)
             
@@ -726,8 +750,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.position = CGPoint(x: 60, y: 300)
             pinkCharacter.position = CGPoint(x: 50, y: 300)
             
-            // This is the challenged again cut scene
-            setupInstructions(challengedAgain, positionX: -10, positionY: 10, alpha: 0, zPosition: 90, width: challengedAgain.size.width / 3.35, height: challengedAgain.size.height / 3.35)
+            if view.frame.size == CGSize(width: 480, height: 320) {
+                // This is the challenged again cut scene
+                setupInstructions(challengedAgain, positionX: 30, positionY: 10, alpha: 0, zPosition: 90, width: challengedAgain.size.width / 3.35, height: challengedAgain.size.height / 3.35)
+            } else {
+                // This is the challenged again cut scene
+                setupInstructions(challengedAgain, positionX: -10, positionY: 10, alpha: 0, zPosition: 90, width: challengedAgain.size.width / 3.35, height: challengedAgain.size.height / 3.35)
+            }
             
             fadeInAndFadeOut(challengedAgain)
             
@@ -757,8 +786,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             platformFour?.physicsBody?.collisionBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
             platformFour?.physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
             
-            // This is when all is over for the final scene
-            setupInstructions(allIsOver, positionX: -10, positionY: 10, alpha: 10, zPosition: 90, width: allIsOver.size.width / 3.35, height: allIsOver.size.height / 3.35)
+            if view.frame.size == CGSize(width: 480, height: 320) {
+                // This is when all is over for the final scene
+                setupInstructions(allIsOver, positionX: 30, positionY: 10, alpha: 10, zPosition: 90, width: allIsOver.size.width / 3.35, height: allIsOver.size.height / 3.35)
+            } else {
+                // This is when all is over for the final scene
+                setupInstructions(allIsOver, positionX: -10, positionY: 10, alpha: 10, zPosition: 90, width: allIsOver.size.width / 3.35, height: allIsOver.size.height / 3.35)
+            }
+            
             fadeInAndFadeOut(allIsOver)
             
         default:
@@ -833,7 +868,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         activateSeparateButton()
     
         // Creating a physical boundary to the edge of the scene
-        physicsBody = SKPhysicsBody(edgeLoopFromRect: view.frame)
+        physicsBody = SKPhysicsBody(edgeLoopFromRect: background.frame)
         physicsBody?.categoryBitMask = PhysicsCategory.Platform
         physicsBody?.collisionBitMask = 1
         
@@ -1473,7 +1508,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let scene = GameScene(fileNamed: arrayOfLevels[levelChanger])
             
             print("Loading Level: \(arrayOfLevels[levelChanger])")
-            scene!.scaleMode = .AspectFit
+            scene!.scaleMode = GameScaleMode.AllScenes
             self.view?.presentScene(scene!, transition: reveal)
             // print(levelChanger)
         }
@@ -1675,7 +1710,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             SKAction.runBlock() {
                 //print("CHANGING SCENE")
                 let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 1)
-                let scene = GameOverScene(size: self.size)
+                let scene = GameOverScene(size: self.view!.frame.size)
                 scene.scaleMode = GameScaleMode.AllScenes
                 self.view?.presentScene(scene, transition:reveal)
             }
@@ -1872,13 +1907,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let fadeIn = SKAction.fadeInWithDuration(0.5)
         let wait = SKAction.waitForDuration(3)
         let fadeOut = SKAction.fadeOutWithDuration(0.5)
-        let sequence = SKAction.sequence([fadeIn, wait, fadeOut])
+        let delete = SKAction.removeFromParent()
+        let sequence = SKAction.sequence([fadeIn, wait, fadeOut, delete])
         cutScene.runAction(sequence)
     }
-    
-    func convert(point: CGPoint)->CGPoint {
-        return self.view!.convertPoint(CGPoint(x: point.x, y:self.view!.frame.height-point.y), toScene:self)
-    }
-    
    
 }

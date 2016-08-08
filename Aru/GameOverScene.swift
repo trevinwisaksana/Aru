@@ -12,6 +12,7 @@ import SpriteKit
 class GameOverScene: SKScene {
     
     var restartButton = MSButtonNode(color: SKColor.blueColor(), size: CGSize(width: 100, height: 50))
+    var background = SKSpriteNode(imageNamed: "menuBackground")
     
     override func didMoveToView(view: SKView) {
         backgroundColor = SKColor.whiteColor()
@@ -21,12 +22,16 @@ class GameOverScene: SKScene {
         restartButton.zPosition = 100
         addChild(restartButton)
         
+        background.position = CGPoint(x: frame.width / 2, y: frame.height * 0.7)
+        background.size =  CGSize(width: view.frame.size.width * 2, height: view.frame.size.height * 2)
+        background.zPosition = -1
+        addChild(background)
+        
         // Restart Button
         restartButton.selectedHandler = {
-            print("RESTART BUTTON TAPPED")
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
             if let scene = GameScene(fileNamed: arrayOfLevels[levelChanger]) {
-                scene.scaleMode = .AspectFill
+                scene.scaleMode = GameScaleMode.AllScenes
                 self.view!.presentScene(scene, transition: reveal)
             } else {
                 print("Could not load IntroLvl2")
