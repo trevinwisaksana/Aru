@@ -22,8 +22,8 @@ class GameViewController: UIViewController {
         let skView = self.view as! SKView
         // Used only when debugging and testing
         skView.showsFPS = false
-        skView.showsNodeCount = true
-        skView.showsDrawCount = true
+        skView.showsNodeCount = false
+        skView.showsDrawCount = false
         skView.showsPhysics = false
         
         /* Sprite Kit applies additional optimizations to improve rendering performance */

@@ -20,9 +20,9 @@ class TheEnd: SKScene {
         let wait = SKAction.waitForDuration(4)
         let changeScene = SKAction.runBlock({
             let transition = SKTransition.fadeWithColor(SKColor.blackColor(), duration: 1)
-            let scene = MenuScene(fileNamed: "MenuScene")
-            scene!.scaleMode = .AspectFill
-            self.view!.presentScene(scene!, transition: transition)
+            let scene = MenuScene(size: view.frame.size)
+            scene.scaleMode = GameScaleMode.AllScenes
+            self.view!.presentScene(scene, transition: transition)
         })
         self.runAction(SKAction.sequence([wait, changeScene]))
     }

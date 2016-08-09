@@ -41,7 +41,7 @@ class MenuScene: SKScene {
         
         let aruTitle = SKSpriteNode(imageNamed: "aruTitle")
         aruTitle.position = CGPoint(x: view.frame.width * 0.2, y: view.frame.height * 0.75)
-        aruTitle.zPosition = 100
+        aruTitle.zPosition = 20
         aruTitle.size = CGSize(width: view.frame.size.width / 3, height: view.frame.size.height / 3)
         self.addChild(aruTitle)
         
@@ -108,7 +108,7 @@ class MenuScene: SKScene {
         levelMenu = SKSpriteNode(imageNamed: "levelMenu")
         levelMenu.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
         levelMenu.size = CGSize(width: self.levelMenu.size.width / 3.5, height: self.levelMenu.size.height / 3.5)
-        levelMenu.zPosition = 11
+        levelMenu.zPosition = 21
         levelMenu.alpha = 0
         levelMenu.hidden = true
         addChild(self.levelMenu)

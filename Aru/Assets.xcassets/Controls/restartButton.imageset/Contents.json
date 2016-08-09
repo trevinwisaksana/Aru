@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "connectIndicator .png",
+      "filename" : "restartButton.png",
       "scale" : "1x"
     },
     {

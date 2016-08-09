@@ -120,7 +120,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // Create character indicator 
     var indicator: SKSpriteNode!
-    var checkpointActiveIndicator = SKSpriteNode(imageNamed: "checkpointInactive")
+    // var checkpointActiveIndicator = SKSpriteNode(imageNamed: "checkpointInactive")
     
     // MARK: - Instruction Objects
     // Instructions
@@ -263,10 +263,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         target = childNodeWithName("//checkpoint") as! Checkpoint
         target.setup()
         
-        checkpointActiveIndicator.zPosition = 50
-        checkpointActiveIndicator.size = CGSize(width: 60, height: 60)
-        checkpointActiveIndicator.position = CGPoint(x: 0, y: 0)
-        target.addChild(checkpointActiveIndicator)
+//        checkpointActiveIndicator.zPosition = 50
+//        checkpointActiveIndicator.size = CGSize(width: 60, height: 60)
+//        checkpointActiveIndicator.position = CGPoint(x: 0, y: 0)
+//        target.addChild(checkpointActiveIndicator)
         
         //////////////////////////
         /// Creating Bloodshot ///
@@ -292,9 +292,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /// Creating Pause Button ///
         /////////////////////////////
         pauseButton = MSButtonNode(imageNamed: "pauseButton")
-        pauseButton.size = CGSize(width: pauseButton.size.width / 3, height: pauseButton.size.height / 3)
+        pauseButton.size = CGSize(width: pauseButton.size.width / 2, height: pauseButton.size.height / 2)
         pauseButton.position = CGPoint(x: frame.width * 0.44, y: frame.height * 0.43)
-        pauseButton.zPosition = 999
+        pauseButton.zPosition = 120
         pauseButton.state = .Active
         characterCamera.addChild(pauseButton)
         setupPauseButton()
@@ -304,8 +304,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //////////////////////////
         pauseMenu = SKSpriteNode(imageNamed: "pauseMenu")
         pauseMenu.position = CGPoint(x: -40, y: -50)
-        pauseMenu.size = CGSize(width: pauseMenu.size.width / 3.35, height: pauseMenu.size.height / 3.35)
-        pauseMenu.zPosition = 999
+        pauseMenu.size = CGSize(width: pauseMenu.size.width / 1, height: pauseMenu.size.height / 1)
+        pauseMenu.zPosition = 120
         pauseMenu.alpha = 0
         pauseMenu.hidden = true
         pauseButton.addChild(pauseMenu)
@@ -314,7 +314,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /// Creating Play Button ///
         ////////////////////////////
         continueButton = MSButtonNode(imageNamed: "continueToPlayButton")
-        continueButton.size = CGSize(width: continueButton.size.width / 3, height: continueButton.size.height / 3)
+        continueButton.size = CGSize(width: continueButton.size.width / 1.5, height: continueButton.size.height / 1.5)
         continueButton.position = CGPoint(x: -15, y: -10)
         continueButton.zPosition = 1000
         continueButton.state = .Active
@@ -327,7 +327,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ////////////////////////////
         homeButton = MSButtonNode(imageNamed: "homeButton")
         homeButton.position = CGPoint(x: -50, y: 50)
-        homeButton.size = CGSize(width: homeButton.size.width / 3, height: homeButton.size.height / 3)
+        homeButton.size = CGSize(width: homeButton.size.width / 1.5, height: homeButton.size.height / 1.5)
         homeButton.zPosition = 1000
         homeButton.state = .Active
         homeButton.hidden = true
@@ -338,7 +338,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         /// Creating indicator  ///
         ///////////////////////////
         indicator = SKSpriteNode(imageNamed: "indicator")
-        indicator.size = CGSize(width: self.size.width / 50, height: self.size.height / 50)
+        indicator.size = CGSize(width: self.size.width / 10, height: self.size.height / 9)
         indicator.zPosition = 100
         indicator.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         addChild(indicator)
@@ -352,9 +352,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         base.zPosition = 10
         base.position.x = view.frame.width * -0.35
         base.position.y = view.frame.height * -0.25
-        base.alpha = 1
+        base.alpha = 0.5
         
-        stick = SKSpriteNode(imageNamed: "stick")
+        stick = SKSpriteNode(imageNamed: "base")
         stick.size = CGSize(width: 80, height: 80)
         base.addChild(stick)
         
@@ -585,10 +585,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             if view.frame.size == CGSize(width: 480, height: 320) {
                 // This is the "You're ready to being this journey"
-                setupInstructions(cutSceneTwo, positionX: -90, positionY: 0, alpha: 2000, zPosition: 90, width: cutSceneTwo.size.width / 3.35, height: cutSceneTwo.size.width / 3.35)
+                setupInstructions(cutSceneTwo, positionX: -90, positionY: 0, alpha: 0, zPosition: 150, width: cutSceneTwo.size.width / 3.35, height: cutSceneTwo.size.width / 3.35)
             } else {
                 // This is the "You're ready to being this journey"
-                setupInstructions(cutSceneTwo, positionX: 0, positionY: 0, alpha: 2000, zPosition: 90, width: view.frame.width * 1, height: view.frame.height * 1)
+                setupInstructions(cutSceneTwo, positionX: 0, positionY: 0, alpha: 0, zPosition: 150, width: view.frame.width * 1, height: view.frame.height * 1)
             }
         
             // Creates falling platform
@@ -826,7 +826,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         jumpButton.zPosition = 98
         
         separateButton = MSButtonNode(imageNamed: "separateBlueButton")
-        separateButton.size = CGSize(width: separateButton.size.width / 16, height: separateButton.size.height / 16)
+        separateButton.size = CGSize(width: separateButton.size.width / 1.5, height: separateButton.size.height / 1.5)
         separateButton.zPosition = 106
         separateButton.position = CGPoint(x: view.frame.width * 0.01, y: view.frame.height * -0.3)
         
@@ -868,7 +868,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         activateSeparateButton()
     
         // Creating a physical boundary to the edge of the scene
-        physicsBody = SKPhysicsBody(edgeLoopFromRect: background.frame)
+        if view.frame.size == CGSize(width: 480, height: 320) {
+            physicsBody = SKPhysicsBody(edgeLoopFromRect: background.frame)
+        } else {
+            physicsBody = SKPhysicsBody(edgeLoopFromRect: view.frame)
+        }
         physicsBody?.categoryBitMask = PhysicsCategory.Platform
         physicsBody?.collisionBitMask = 1
         
@@ -1850,14 +1854,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // This changes the color of the indicator when the player is close or too far ///
     //////////////////////////////////////////////////////////////////////////////////
     
-    func checkpointIndicatorChange() {
-        // TODO: Prevent memory overflow due to the constant change in texture
-        if distanceOfCharacterDifferenceX < 60 && distanceOfCharacterDifferenceX > -60 && separationExecuted == true {
-            self.checkpointActiveIndicator.texture = SKTexture(imageNamed: "checkpointActive")
-        } else {
-            self.checkpointActiveIndicator.texture = SKTexture(imageNamed: "checkpointInactive")
-        }
-    }
+//    func checkpointIndicatorChange() {
+//        // TODO: Prevent memory overflow due to the constant change in texture
+//        if distanceOfCharacterDifferenceX < 60 && distanceOfCharacterDifferenceX > -60 && separationExecuted == true {
+//            self.checkpointActiveIndicator.texture = SKTexture(imageNamed: "checkpointActive")
+//        } else {
+//            self.checkpointActiveIndicator.texture = SKTexture(imageNamed: "checkpointInactive")
+//        }
+//    }
     
     /// This function increments the levelChanger by 1 and executes the changeScene method.
     func levelChangerIncrement() {
