@@ -68,11 +68,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var connectIndicatorBlue: SKSpriteNode!
     var connectIndicatorPink: SKSpriteNode!
     
-    // Declaring the switchButton property
+    // Declaring the play button objects
     var switchButton: MSButtonNode!
     var buttonFunctioning: Bool = true
     var jumpButton: MSButtonNode!
     var alreadyTapped: Bool = true
+    var anchorButton: MSButtonNode!
+    var alreadyAnchored: Bool = false
     
     // MARK: - Control Button Properties
     // Declaring pauseButton object
@@ -208,13 +210,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Sets the physics world so that it can detect contact
         self.physicsWorld.contactDelegate = self
         
-        // Creating background
-        background = SKSpriteNode(imageNamed: "menuBackground")
-        background.size = CGSize(width: view.frame.width * 2, height: view.frame.height * 2)
-        background.position = CGPoint(x: frame.width / 2, y: frame.height / 2)
-        background.zPosition = -1
-        addChild(background)
-        
         ////////////////////////////
         /// Character attributes ///
         ////////////////////////////
@@ -262,11 +257,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // From the Checkpoint class, the checkpoint gets its position set and is added to the scene
         target = childNodeWithName("//checkpoint") as! Checkpoint
         target.setup()
-        
-//        checkpointActiveIndicator.zPosition = 50
-//        checkpointActiveIndicator.size = CGSize(width: 60, height: 60)
-//        checkpointActiveIndicator.position = CGPoint(x: 0, y: 0)
-//        target.addChild(checkpointActiveIndicator)
         
         //////////////////////////
         /// Creating Bloodshot ///
@@ -378,8 +368,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         switch levelChanger {
         case 0:
             // This is introLevel1
-            blueCharacter.position = CGPoint(x: 110, y: 125)
-            pinkCharacter.position = CGPoint(x: 100, y: 125)
+            blueCharacter.position = CGPoint(x: 110, y: 200)
+            pinkCharacter.position = CGPoint(x: 100, y: 200)
+            
+            background = SKSpriteNode(imageNamed: "backgroundLvl1")
             
             // Another trigger at Level 0. This trigger shows the switch button instruciton
             triggerSwitchLvl0 = childNodeWithName("//triggerSwitchLvl0") as? SKSpriteNode
@@ -430,7 +422,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 forwardAndJumpIns.zPosition = 100
                 forwardAndJumpIns.size = CGSize(width: forwardAndJumpIns.size.width / 3.2, height: forwardAndJumpIns.size.height / 3.2)
                 forwardAndJumpIns.alpha = 0
-                forwardAndJumpIns.position = CGPoint(x: 0, y: -50)
+                forwardAndJumpIns.position = CGPoint(x: 0, y: 100)
                 characterCamera.addChild(forwardAndJumpIns)
                 // moveInstruction?.hidden = false
                 
@@ -460,7 +452,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 forwardAndJumpIns.zPosition = 100
                 forwardAndJumpIns.size = CGSize(width: forwardAndJumpIns.size.width / 3.2, height: forwardAndJumpIns.size.height / 3.2)
                 forwardAndJumpIns.alpha = 0
-                forwardAndJumpIns.position = CGPoint(x: 0, y: -50)
+                forwardAndJumpIns.position = CGPoint(x: 155, y: 3)
                 characterCamera.addChild(forwardAndJumpIns)
                 // moveInstruction?.hidden = false
                 
@@ -469,7 +461,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 moveInstruction?.zPosition = 100
                 moveInstruction?.size = CGSize(width: moveInstruction!.size.width / 3.2, height: moveInstruction!.size.height / 3.2)
                 moveInstruction?.alpha = 0
-                moveInstruction?.position = CGPoint(x: -150, y: -10)
+                moveInstruction?.position = CGPoint(x: -130, y: -10)
                 characterCamera.addChild(moveInstruction!)
                 // moveInstruction?.hidden = false
                 
@@ -556,8 +548,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         case 1:
             // This is introLevel2
-            blueCharacter.position = CGPoint(x: 220, y: 125)
-            pinkCharacter.position = CGPoint(x: 200, y: 125)
+            blueCharacter.position = CGPoint(x: 180, y: 200)
+            pinkCharacter.position = CGPoint(x: 160, y: 200)
+            
+            background = SKSpriteNode(imageNamed: "backgroundLvl1")
             
             switch view.frame.size {
             case CGSize(width: 480, height: 320):
@@ -582,6 +576,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // This is introLevel3
             blueCharacter.position = CGPoint(x: 180, y: 175)
             pinkCharacter.position = CGPoint(x: 160, y: 175)
+            
+            background = SKSpriteNode(imageNamed: "backgroundLvl1")
             
             if view.frame.size == CGSize(width: 480, height: 320) {
                 // This is the "You're ready to being this journey"
@@ -635,6 +631,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.physicsBody?.linearDamping = 1
             pinkCharacter.physicsBody?.linearDamping = 1
             
+            background = SKSpriteNode(imageNamed: "menuBackground")
+            
             // If the iPhone is a 4s
             if view.frame.size == CGSize(width: 480, height: 320) {
                 // This is the "Day we met" cut scene
@@ -660,6 +658,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.position = CGPoint(x: 70, y: 175)
             pinkCharacter.position = CGPoint(x: 60, y: 175)
             
+            background = SKSpriteNode(imageNamed: "menuBackground")
+            
             if view.frame.size == CGSize(width: 480, height: 320) {
                 // This is the "We began bridging our trust"
                 setupInstructions(cutSceneFive, positionX: 30, positionY: -10, alpha: 0, zPosition: 90, width: cutSceneFive.size.width / 3.35, height: cutSceneFive.size.height / 3.35)
@@ -674,6 +674,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // This is Level 3
             blueCharacter.position = CGPoint(x: 50, y: 100)
             pinkCharacter.position = CGPoint(x: 40, y: 100)
+            
+            background = SKSpriteNode(imageNamed: "menuBackground")
             
             if view.frame.size == CGSize(width: 480, height: 320) {
                 // This is the "We're committed to each other, work together"
@@ -699,6 +701,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.position = CGPoint(x: 280, y: 274)
             pinkCharacter.position = CGPoint(x: 265, y: 274)
             
+            background = SKSpriteNode(imageNamed: "menuBackground")
+            
             if view.frame.size == CGSize(width: 480, height: 320) {
                 // Choose left or right statement
                 setupInstructions(chooseLeftOrRight, positionX: 30, positionY: -10, alpha: 0, zPosition: 90, width: chooseLeftOrRight.size.width / 3.35, height: chooseLeftOrRight.size.height / 3.35)
@@ -723,6 +727,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // This is Level 5
             blueCharacter.position = CGPoint(x: 60, y: 260)
             pinkCharacter.position = CGPoint(x: 50, y: 260)
+            
+            background = SKSpriteNode(imageNamed: "menuBackground")
             
             // Creating fallingPlatform
             fallingPlatform = childNodeWithName("//fallingPlatform") as? SKSpriteNode
@@ -750,6 +756,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.position = CGPoint(x: 60, y: 300)
             pinkCharacter.position = CGPoint(x: 50, y: 300)
             
+            background = SKSpriteNode(imageNamed: "menuBackground")
+            
             if view.frame.size == CGSize(width: 480, height: 320) {
                 // This is the challenged again cut scene
                 setupInstructions(challengedAgain, positionX: 30, positionY: 10, alpha: 0, zPosition: 90, width: challengedAgain.size.width / 3.35, height: challengedAgain.size.height / 3.35)
@@ -768,6 +776,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             platformTwo = childNodeWithName("2") as? SKSpriteNode
             platformThree = childNodeWithName("3") as? SKSpriteNode
             platformFour = childNodeWithName("4") as? SKSpriteNode
+            
+            background = SKSpriteNode(imageNamed: "menuBackground")
             
             // Creating platformTranslate
             platformOne?.physicsBody?.categoryBitMask = PhysicsCategory.TransPlatform | PhysicsCategory.BlueCharacter
@@ -797,9 +807,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             fadeInAndFadeOut(allIsOver)
             
         default:
-            break
+            background = SKSpriteNode(imageNamed: "menuBackground")
             
         }
+        
+        // Creating background
+        background.size = CGSize(width: view.frame.width * 2, height: view.frame.height * 2)
+        background.position = CGPoint(x: frame.width / 2, y: frame.height / 2)
+        background.zPosition = -2
+        addChild(background)
         
         // Creating Trigger that will cause gameOver
         trigger = childNodeWithName("//trigger") as? SKSpriteNode
@@ -820,11 +836,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         switchButton.position.x = view.frame.width * 0.2
         switchButton.position.y = view.frame.height * -0.3
         
+        // Creating jump button
         jumpButton = MSButtonNode(color: SKColor.clearColor(), size: CGSize(width: self.frame.width / 2, height: self.frame.height))
         jumpButton.position.x = 142
         jumpButton.position.y = 0
         jumpButton.zPosition = 98
         
+        // Creating anchor button 
+        anchorButton = MSButtonNode(imageNamed: "blueAnchor")
+        anchorButton.size = CGSize(width: anchorButton.size.width / 7, height: anchorButton.size.height / 7)
+        anchorButton.zPosition = 106
+        anchorButton.position.x = view.frame.width * 0.4
+        anchorButton.position.y = view.frame.height * 0.1
+        
+        // Creating Separate Button
         separateButton = MSButtonNode(imageNamed: "separateBlueButton")
         separateButton.size = CGSize(width: separateButton.size.width / 1.5, height: separateButton.size.height / 1.5)
         separateButton.zPosition = 106
@@ -839,6 +864,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         switchButton.state = .Active
         jumpButton.state = .Active
+        anchorButton.state = .Active
         
         // Adding the camera as the button's parent so that it follows its position
         characterCamera.addChild(switchButton)
@@ -846,6 +872,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         characterCamera.addChild(base)
         characterCamera.addChild(separateButton)
         characterCamera.addChild(healthBar)
+        characterCamera.addChild(anchorButton)
         // characterCamera.addChild(indicator)
         
         /////////////////////////
@@ -866,6 +893,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         activateSwitchButton()
         createChain(characterBack: pinkCharacter, characterFront: blueCharacter)
         activateSeparateButton()
+        setupAnchorButton()
     
         // Creating a physical boundary to the edge of the scene
         if view.frame.size == CGSize(width: 480, height: 320) {
@@ -1426,7 +1454,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                     switch levelChanger {
                     case 3:
-                        self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 1))
+                        self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 300))
                     default:
                         switch self.separationExecuted {
                         case false:
@@ -1454,7 +1482,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                     switch levelChanger {
                     case 3:
-                        self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 1))
+                        self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 300))
                     default:
                         switch self.separationExecuted {
                         case false:
@@ -1510,8 +1538,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // Check for max levels because the this will always increase
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 2)
             let scene = GameScene(fileNamed: arrayOfLevels[levelChanger])
-            
-            print("Loading Level: \(arrayOfLevels[levelChanger])")
             scene!.scaleMode = GameScaleMode.AllScenes
             self.view?.presentScene(scene!, transition: reveal)
             // print(levelChanger)
@@ -1850,19 +1876,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
       }
     }
     
-    //////////////////////////////////////////////////////////////////////////////////
-    // This changes the color of the indicator when the player is close or too far ///
-    //////////////////////////////////////////////////////////////////////////////////
+    func setupAnchorButton () {
+        anchorButton.selectedHandler = {
+            if self.alreadyAnchored == true {
+                if self.buttonFunctioning == true {
+                    self.blueCharacter.physicsBody?.pinned = false
+                    //self.blueCharacter.physicsBody?.allowsRotation = true
+                    self.alreadyAnchored = false
+                    print(self.alreadyAnchored)
+                } else {
+                    self.pinkCharacter.physicsBody?.pinned = false
+                    self.alreadyAnchored = false
+                }
+            } else if self.buttonFunctioning == false {
+                if self.alreadyAnchored == false {
+                    self.pinkCharacter.physicsBody?.pinned = true
+                    self.alreadyAnchored = true
+                    print(self.alreadyAnchored)
+                }
+            } else if self.buttonFunctioning {
+                if self.alreadyAnchored == false {
+                self.blueCharacter.physicsBody?.pinned = true
+                //self.blueCharacter.physicsBody?.allowsRotation = false
+                self.alreadyAnchored = true
+                print(self.alreadyAnchored)
+                }
+            }
+        }
+    }
     
-//    func checkpointIndicatorChange() {
-//        // TODO: Prevent memory overflow due to the constant change in texture
-//        if distanceOfCharacterDifferenceX < 60 && distanceOfCharacterDifferenceX > -60 && separationExecuted == true {
-//            self.checkpointActiveIndicator.texture = SKTexture(imageNamed: "checkpointActive")
-//        } else {
-//            self.checkpointActiveIndicator.texture = SKTexture(imageNamed: "checkpointInactive")
-//        }
-//    }
-    
+
     /// This function increments the levelChanger by 1 and executes the changeScene method.
     func levelChangerIncrement() {
         levelChanger += 1

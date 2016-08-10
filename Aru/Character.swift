@@ -30,7 +30,7 @@ class Character: SKSpriteNode {
         physicsBody?.mass = 0.989
         size = CGSize(width: 16, height: 16)
         zPosition = 10
-        physicsBody?.friction = 0.5
+        physicsBody?.friction = 0
         physicsBody?.affectedByGravity = true
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
         if characterColor.rawValue == "pinkBall" {
