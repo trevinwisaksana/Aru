@@ -86,7 +86,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // Array to contain the links of the joints
     var links: [SKSpriteNode]!
+    var pinJoints = [SKPhysicsJointPin]()
     var pinLinkCharacterFront: SKPhysicsJointPin!
+    var pinLinkCharacterFront2: SKPhysicsJointPin!
     var pinLinkCharacterBack: SKPhysicsJointPin!
     var pinLink: SKPhysicsJointPin!
     
@@ -368,8 +370,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         switch levelChanger {
         case 0:
             // This is introLevel1
-            blueCharacter.position = CGPoint(x: 110, y: 200)
-            pinkCharacter.position = CGPoint(x: 100, y: 200)
+            blueCharacter.position = CGPoint(x: 50, y: 200)
+            pinkCharacter.position = CGPoint(x: 50, y: 200)
             
             background = SKSpriteNode(imageNamed: "backgroundLvl1")
             
@@ -548,7 +550,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         case 1:
             // This is introLevel2
-            blueCharacter.position = CGPoint(x: 180, y: 200)
+            blueCharacter.position = CGPoint(x: 170, y: 200)
             pinkCharacter.position = CGPoint(x: 160, y: 200)
             
             background = SKSpriteNode(imageNamed: "backgroundLvl1")
@@ -574,7 +576,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         case 2:
             // This is introLevel3
-            blueCharacter.position = CGPoint(x: 180, y: 175)
+            blueCharacter.position = CGPoint(x: 160, y: 175)
             pinkCharacter.position = CGPoint(x: 160, y: 175)
             
             background = SKSpriteNode(imageNamed: "backgroundLvl1")
@@ -655,7 +657,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         case 4:
             // This is Level 2
-            blueCharacter.position = CGPoint(x: 70, y: 175)
+            blueCharacter.position = CGPoint(x: 60, y: 175)
             pinkCharacter.position = CGPoint(x: 60, y: 175)
             
             background = SKSpriteNode(imageNamed: "menuBackground")
@@ -699,7 +701,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case 6:
             // This is Level 4
             blueCharacter.position = CGPoint(x: 280, y: 274)
-            pinkCharacter.position = CGPoint(x: 265, y: 274)
+            pinkCharacter.position = CGPoint(x: 270, y: 274)
             
             background = SKSpriteNode(imageNamed: "menuBackground")
             
@@ -1367,16 +1369,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // The characterBack and characterFront specifices which character has a negative position to each other
     func createChain(characterBack characterBack: SKSpriteNode, characterFront: SKSpriteNode) {
         var pos = characterBack.position
-        // This changes the position of the joint. If we don't use this, the joints will all be at the characterBack.position.
+        // This changes the position of the joint. If we don't use this, the joints will not be placed at the center of the character because the position will change over time. This makes the position dynamic by taking the Y and X positions of the center of the characters into account so that the joint could to the center automatically regardless of the characters location.
         pos.x += ((characterBack.position.x - characterFront.position.x) / 16) * 1.78 // 2
         pos.y -= ((characterBack.position.y - characterFront.position.y) / 16) * 1.78
         links = [SKSpriteNode]()
-        for _ in 0..<8 {
+        for _ in 0..<7 {
+            //let link = SKSpriteNode(imageNamed: "link")
             let link = SKSpriteNode(imageNamed: "link")
             link.size = CGSize(width: 2, height: 2)
             link.physicsBody = SKPhysicsBody(rectangleOfSize: link.size)
             link.physicsBody?.affectedByGravity = true
-            link.zPosition = 1
+            link.zPosition = 100
             link.physicsBody?.categoryBitMask = PhysicsCategory.None
             link.physicsBody?.collisionBitMask = 0
             link.physicsBody?.contactTestBitMask = PhysicsCategory.None
@@ -1403,13 +1406,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for i in 0..<links.count {
             if i == 0 {
                 // This pins the joint to the pinkCharacter
-                pinLinkCharacterBack = SKPhysicsJointPin.jointWithBodyA(characterBack.physicsBody!,bodyB: links.first!.physicsBody!, anchor: characterBack.position)
+                pinLinkCharacterBack = SKPhysicsJointPin.jointWithBodyA(characterBack.physicsBody!,bodyB: links[i].physicsBody!, anchor: characterBack.position)
                
                 self.physicsWorld.addJoint(pinLinkCharacterBack)
                 
             } else {
                 var anchorPosition = links[i].position
-                anchorPosition.x -= 0.1
+                anchorPosition.x -= 0
+                
                 // anchorPosition.y += characterBack.position.y - characterFront.position.y
                 pinLink = SKPhysicsJointPin.jointWithBodyA(links[i - 1].physicsBody!,bodyB: links[i].physicsBody!, anchor: anchorPosition)
              
@@ -1945,8 +1949,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         instruction.hidden = true
         characterCamera.addChild(instruction)
     }
-    
-    // instruction.size = CGSize(width: view!.frame.size.width * 1, height: view!.frame.size.height * 1)
     
     /// This is the animation used to fade in and out the instructions.
     func fadeInAndFadeOut(cutScene: SKSpriteNode) {
