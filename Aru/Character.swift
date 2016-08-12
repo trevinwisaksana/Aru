@@ -21,7 +21,7 @@ class Character: SKSpriteNode {
     init(characterColor: CharacterColor) {
         self.characterColor = characterColor
         
-        let texture = SKTexture(imageNamed: characterColor.rawValue)
+        let texture = SKTexture(imageNamed: "base")
         
         super.init(texture: texture, color: UIColor.clearColor(), size: texture.size())
         
@@ -33,10 +33,14 @@ class Character: SKSpriteNode {
         physicsBody?.friction = 0
         physicsBody?.affectedByGravity = true
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        if characterColor.rawValue == "pinkBall" {
+        if characterColor == .Pink {
+            colorBlendFactor = 1
+            color = UIColor(red: 230/255, green: 126/255, blue: 208/255, alpha: 1)
             physicsBody?.categoryBitMask = PhysicsCategory.PinkCharacter
             physicsBody?.contactTestBitMask = PhysicsCategory.Checkpoint | PhysicsCategory.BlueCharacter | PhysicsCategory.Trigger
         } else {
+            colorBlendFactor = 1
+            color = UIColor(red: 48/255, green: 190/255, blue: 249/255, alpha: 1)
             physicsBody?.categoryBitMask = PhysicsCategory.BlueCharacter
             physicsBody?.contactTestBitMask = PhysicsCategory.Checkpoint | PhysicsCategory.PinkCharacter | PhysicsCategory.Trigger
         }

@@ -134,10 +134,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var moveInstruction: SKSpriteNode?
     var tapToJump: SKSpriteNode?
     var tapInstructions: Int = 0
-    var baseInstruction = SKSpriteNode(imageNamed: "baseInstruction")
-    var stickInstruction = SKSpriteNode(imageNamed: "stickInstruction")
+    var baseInstruction = SKSpriteNode(imageNamed: "base")
+    var stickInstruction = SKSpriteNode(imageNamed: "base")
     var handInstruction = SKSpriteNode(imageNamed: "touchingHand")
-    var jumpingHand = SKSpriteNode(imageNamed: "jumpingHand")
+    var jumpingHand = SKSpriteNode(imageNamed: "touchingHand")
     var switchInstruction = SKSpriteNode(imageNamed: "switchInstruction")
     var connectInstruciton = SKSpriteNode(imageNamed: "connectInstruction")
     // var forwardAndJumpIns = SKSpriteNode(imageNamed: "forwardAndJumpIns")
