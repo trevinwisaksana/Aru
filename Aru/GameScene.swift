@@ -67,6 +67,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var pinkCharacter: Character!
     var connectIndicatorBlue: SKSpriteNode!
     var connectIndicatorPink: SKSpriteNode!
+    var flash = SKSpriteNode(imageNamed: "flash")
+    var alreadyHidden: Bool = false
     
     // Declaring the play button objects
     var switchButton: MSButtonNode!
@@ -91,6 +93,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var pinLinkCharacterFront2: SKPhysicsJointPin!
     var pinLinkCharacterBack: SKPhysicsJointPin!
     var pinLink: SKPhysicsJointPin!
+    var locked: Bool = true
     
     // Creating the checkpoint object
     var target: Checkpoint!
@@ -200,6 +203,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
     }
+    
+    // Creating anchor to stop the player from moving 
+    var anchorObject: SKSpriteNode!
 
     
     // MARK: - Menu Objects
@@ -370,7 +376,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         switch levelChanger {
         case 0:
             // This is introLevel1
-            blueCharacter.position = CGPoint(x: 50, y: 200)
+            blueCharacter.position = CGPoint(x: 60, y: 200)
             pinkCharacter.position = CGPoint(x: 50, y: 200)
             
             background = SKSpriteNode(imageNamed: "backgroundLvl1")
@@ -577,7 +583,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case 2:
             // This is introLevel3
             blueCharacter.position = CGPoint(x: 160, y: 175)
-            pinkCharacter.position = CGPoint(x: 160, y: 175)
+            pinkCharacter.position = CGPoint(x: 150, y: 175)
             
             background = SKSpriteNode(imageNamed: "backgroundLvl1")
             
@@ -658,7 +664,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case 4:
             // This is Level 2
             blueCharacter.position = CGPoint(x: 60, y: 175)
-            pinkCharacter.position = CGPoint(x: 60, y: 175)
+            pinkCharacter.position = CGPoint(x: 50, y: 175)
             
             background = SKSpriteNode(imageNamed: "menuBackground")
             
@@ -818,6 +824,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         background.position = CGPoint(x: frame.width / 2, y: frame.height / 2)
         background.zPosition = -2
         addChild(background)
+        
+        // Creating flash effect 
+        flash.position = CGPoint(x: frame.width / 2, y: frame.height / 2)
+        flash.zPosition = 150
+        flash.size = CGSize(width: flash.size.width, height: flash.size.height)
+        flash.alpha = 0
+        addChild(flash)
         
         // Creating Trigger that will cause gameOver
         trigger = childNodeWithName("//trigger") as? SKSpriteNode
@@ -1073,8 +1086,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // WHEN BOTH CHARACTERS MAKE CONTACT WITH EACH OTHER
         case PhysicsCategory.PinkCharacter | PhysicsCategory.BlueCharacter:
             twoBodiesMadeContact = true
-            
-            
+
             
         // WHEN PINK CHARACTER MAKES CONTACT WITH TRIGGER
         case PhysicsCategory.PinkCharacter | PhysicsCategory.Trigger:
@@ -1368,63 +1380,57 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // The characterBack and characterFront specifices which character has a negative position to each other
     func createChain(characterBack characterBack: SKSpriteNode, characterFront: SKSpriteNode) {
-        var pos = characterBack.position
-        // This changes the position of the joint. If we don't use this, the joints will not be placed at the center of the character because the position will change over time. This makes the position dynamic by taking the Y and X positions of the center of the characters into account so that the joint could to the center automatically regardless of the characters location.
-        pos.x += ((characterBack.position.x - characterFront.position.x) / 16) * 1.78 // 2
-        pos.y -= ((characterBack.position.y - characterFront.position.y) / 16) * 1.78
-        links = [SKSpriteNode]()
-        for _ in 0..<7 {
-            //let link = SKSpriteNode(imageNamed: "link")
-            let link = SKSpriteNode(imageNamed: "link")
-            link.size = CGSize(width: 2, height: 2)
-            link.physicsBody = SKPhysicsBody(rectangleOfSize: link.size)
-            link.physicsBody?.affectedByGravity = true
-            link.zPosition = 100
-            link.physicsBody?.categoryBitMask = PhysicsCategory.None
-            link.physicsBody?.collisionBitMask = 0
-            link.physicsBody?.contactTestBitMask = PhysicsCategory.None
-            
-            // In this code, the links are hidden in Level 1 because it prevents the player from seeing the links falling down when the scene spawns.
-            if levelChanger == 3 {
-                link.hidden = true
-            }
-            // This code allows the links to be visible after it's hidden because it helps the player to see that it's linked together after they press the join button
-            if separationExecuted == false && levelChanger == 3 {
-                link.hidden = false
-                // print("LINK HIDDEN == FALSE")
-            }
-            
-            addChild(link)
-            
-            link.position = pos
-            pos.x -= ((characterBack.position.x - characterFront.position.x) / 16) * 1.78 // 2
-            // This assures that regardless of the Y position of the two characters, the link would be targeted to the center of the character
-            pos.y -= ((characterBack.position.y - characterFront.position.y) / 16) * 1.78
-            links.append(link)
-        }
         
-        for i in 0..<links.count {
-            if i == 0 {
-                // This pins the joint to the pinkCharacter
-                pinLinkCharacterBack = SKPhysicsJointPin.jointWithBodyA(characterBack.physicsBody!,bodyB: links[i].physicsBody!, anchor: characterBack.position)
-               
-                self.physicsWorld.addJoint(pinLinkCharacterBack)
+            var pos = characterBack.position
+            pos.x += 1
+
+            links = [SKSpriteNode]()
+    
+            for i in 0..<5 {
+                let link = SKSpriteNode(imageNamed: "link")
+                link.size = CGSize(width: 2, height: 2)
+                link.physicsBody = SKPhysicsBody(circleOfRadius: 1)
+                if alreadyHidden == true {
+                    link.hidden = true
+                }
                 
-            } else {
-                var anchorPosition = links[i].position
-                anchorPosition.x -= 0
+                link.physicsBody?.linearDamping = 0.2
                 
-                // anchorPosition.y += characterBack.position.y - characterFront.position.y
-                pinLink = SKPhysicsJointPin.jointWithBodyA(links[i - 1].physicsBody!,bodyB: links[i].physicsBody!, anchor: anchorPosition)
-             
-                self.physicsWorld.addJoint(pinLink)
+                link.physicsBody?.categoryBitMask = 0
+                link.physicsBody?.collisionBitMask = 0
+                
+                addChild(link)
+                link.position = pos
+                pos.x += 2
+                
+                links.append(link)
             }
             
-            // This pins the joint to the blueCharacter
-            pinLinkCharacterFront = SKPhysicsJointPin.jointWithBodyA(characterFront.physicsBody!, bodyB: links.last!.physicsBody!, anchor: characterFront.position)
-            self.physicsWorld.addJoint(pinLinkCharacterFront)
-           
-        }
+            for i in 0..<links.count {
+                if i == 0 {
+                    let pin = SKPhysicsJointPin.jointWithBodyA(characterBack.physicsBody!,
+                                                               bodyB: links[i].physicsBody!,
+                                                               anchor: characterBack.position)
+                    physicsWorld.addJoint(pin)
+                    pinJoints.append(pin)
+                    
+                } else {
+                    var anchor = links[i].position
+                    anchor.x -= 1
+                    let pin = SKPhysicsJointPin.jointWithBodyA(links[i - 1].physicsBody!,
+                                                               bodyB: links[i].physicsBody!,
+                                                               anchor: anchor)
+                    physicsWorld.addJoint(pin)
+                    pinJoints.append(pin)
+                }
+            }
+            
+            let pin = SKPhysicsJointPin.jointWithBodyA(characterFront.physicsBody!,
+                                                       bodyB: links.last!.physicsBody!,
+                                                       anchor: characterFront.position)
+            pinJoints.append(pin)
+            physicsWorld.addJoint(pin)
+
         
     }
     
@@ -1570,24 +1576,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
             } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && abs(self.distanceOfCharacterDifferenceX) <= 17  {
                 // The use of this is so that the links do not spawn backwards because the two characters have a negative difference in distance to each other.
-              
-                if self.distanceOfCharacterDifferenceX < 0 {
-                    // If the blueChracter is behind the pinkCharacter
-                    self.createChain(characterBack: self.blueCharacter, characterFront: self.pinkCharacter)
-                    self.separationExecuted = true
-                    self.restoreHealth()
-                    self.healthShouldReduce = false
-                    self.separateButton.removeAllActions()
-                    
-                } else if self.distanceOfCharacterDifferenceX > 0 {
                     // If the pinkCharacter is behind the blueCharacter
-                    self.createChain(characterBack: self.pinkCharacter, characterFront: self.blueCharacter)
+                    self.addChain()
                     self.separationExecuted = true
                     self.restoreHealth()
                     self.healthShouldReduce = false
                     self.separateButton.removeAllActions()
 
-                }
+                
             }
         }
     }
@@ -1756,9 +1752,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     func removeSomeJoints() {
-        self.physicsWorld.removeJoint(self.pinLinkCharacterFront)
-        self.physicsWorld.removeJoint(self.pinLinkCharacterBack)
-        self.physicsWorld.removeJoint(self.pinLink)
+        if !locked {
+            print("Sorry not pinned! pins already removed")
+            return
+        }
+        
+        locked = false
+        
+        for _ in 0 ..< pinJoints.count {
+            physicsWorld.removeJoint(pinJoints.removeFirst())
+        }
+        
+        for i in 0 ..< links.count {
+            let link = links.removeFirst()
+            link.removeFromParent()
+        }
     }
     
     /////////////////////////////////////////////////////////////////////////////////
@@ -1959,6 +1967,49 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let delete = SKAction.removeFromParent()
         let sequence = SKAction.sequence([fadeIn, wait, fadeOut, delete])
         cutScene.runAction(sequence)
+    }
+    
+    /// This function adds chain regardless of the position of the characters
+    func addChain() {
+        
+        if locked {
+            print("Sorry already pinned! pins in place")
+            return
+        }
+        
+        // Save position of blueCharacter and pinkCharacter
+        let characterBluePos = blueCharacter.position
+        let characterPinkPos = pinkCharacter.position
+        
+        let flashing = SKAction.runBlock({
+            let fadeIn = SKAction.fadeInWithDuration(0.2)
+            let fadeOut = SKAction.fadeOutWithDuration(0.2)
+            let sequence = SKAction.sequence([fadeIn, fadeOut])
+            self.flash.runAction(sequence)
+        })
+        
+        let creatingChain = SKAction.runBlock({
+            self.blueCharacter.position.x = 60
+            self.pinkCharacter.position.x = 50
+            
+            self.blueCharacter.position.y = 100
+            self.pinkCharacter.position.y = 100
+            
+            self.createChain(characterBack: self.pinkCharacter, characterFront: self.blueCharacter)
+            
+        })
+        
+        let reposition = SKAction.runBlock({
+            // Move blueCharacter to original position
+            self.blueCharacter.position = characterBluePos
+            // Move pinkCharacter to original position
+            self.pinkCharacter.position = characterPinkPos
+            
+        })
+        
+        runAction(SKAction.sequence([flashing, creatingChain, reposition]))
+        
+        locked = true
     }
    
 }

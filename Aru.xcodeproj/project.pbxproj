@@ -45,6 +45,7 @@
 		DDC479431D3565670036E972 /* SKTEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC479371D3565670036E972 /* SKTEffects.swift */; };
 		DDC479441D3565670036E972 /* SKTTimingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC479381D3565670036E972 /* SKTTimingFunctions.swift */; };
 		DDC479451D3565670036E972 /* Vector3.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC479391D3565670036E972 /* Vector3.swift */; };
+		DDF3C3E41D5D5EA400FE5E08 /* GameAssets.atlas in Resources */ = {isa = PBXBuildFile; fileRef = DDF3C3E31D5D5EA400FE5E08 /* GameAssets.atlas */; };
 		DDF7E3601D206566005F9A49 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E35F1D206566005F9A49 /* AppDelegate.swift */; };
 		DDF7E3641D206566005F9A49 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E3631D206566005F9A49 /* GameScene.swift */; };
 		DDF7E3661D206566005F9A49 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E3651D206566005F9A49 /* GameViewController.swift */; };
@@ -108,6 +109,7 @@
 		DDC479371D3565670036E972 /* SKTEffects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKTEffects.swift; sourceTree = "<group>"; };
 		DDC479381D3565670036E972 /* SKTTimingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKTTimingFunctions.swift; sourceTree = "<group>"; };
 		DDC479391D3565670036E972 /* Vector3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vector3.swift; sourceTree = "<group>"; };
+		DDF3C3E31D5D5EA400FE5E08 /* GameAssets.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = GameAssets.atlas; sourceTree = "<group>"; };
 		DDF7E35C1D206566005F9A49 /* Aru.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aru.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDF7E35F1D206566005F9A49 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DDF7E3631D206566005F9A49 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -335,6 +337,7 @@
 				DDF7E3651D206566005F9A49 /* GameViewController.swift */,
 				DDAD7D2E1D5571DE00A8FC7A /* YouthfulDreams.mp3 */,
 				DDF7E3671D206566005F9A49 /* Main.storyboard */,
+				DDF3C3E31D5D5EA400FE5E08 /* GameAssets.atlas */,
 				DD0493641D22C3C900B9D551 /* Assets.xcassets */,
 				DDF7E36C1D206566005F9A49 /* LaunchScreen.storyboard */,
 				DDF7E36F1D206566005F9A49 /* Info.plist */,
@@ -455,6 +458,7 @@
 				DD0150DA1D277F27006D6AD9 /* IntroLvl2.sks in Resources */,
 				DD07EFCA1D429D3A000C0541 /* Level4.sks in Resources */,
 				DD25C2FA1D4FC4ED00D8700D /* TheEnd.sks in Resources */,
+				DDF3C3E41D5D5EA400FE5E08 /* GameAssets.atlas in Resources */,
 				DD07EFC61D429D0C000C0541 /* Level2.sks in Resources */,
 				DD07EFD01D429D54000C0541 /* Level7.sks in Resources */,
 				DD3AACBD1D41CC5C00EB609C /* Level1.sks in Resources */,
