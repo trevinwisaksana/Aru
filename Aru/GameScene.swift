@@ -8,6 +8,9 @@
 
 
 import SpriteKit
+import AVFoundation
+
+
 // TODO: GREEN INDICATOR SHOULD NOT BE PLACED IN THE UPDATE
 // The arrayOfLevels is used so that we can call the index number of the level string when changing levels.
 ///////////////////////////////////////////////////////
@@ -51,8 +54,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Creating the background 
     var background: SKSpriteNode!
     
+    // Creating background music
+    var audioPlayer = AVAudioPlayer()
+    
     // This helps make sure that the level is only run once
     var alreadyRan = false
+    
+    // Already paused game
+    var gamePaused: Bool = false
     
     // Delcaring joystick property
     var base: SKSpriteNode!
@@ -69,6 +78,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var connectIndicatorPink: SKSpriteNode!
     var flash = SKSpriteNode(imageNamed: "flash")
     var alreadyHidden: Bool = false
+    var lock: SKSpriteNode!
+    var lock2: SKSpriteNode!
     
     // Declaring the play button objects
     var switchButton: MSButtonNode!
@@ -295,7 +306,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         pauseButton.zPosition = 120
         pauseButton.state = .Active
         characterCamera.addChild(pauseButton)
-        setupPauseButton()
+        // setupPauseButton()
         
         //////////////////////////
         /// Creating pauseMenu ///
@@ -340,6 +351,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         indicator.zPosition = 100
         indicator.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         addChild(indicator)
+        
+        lock = SKSpriteNode(imageNamed: "lock")
+        lock.size = CGSize(width: lock.size.width / 30, height: lock.size.height / 30)
+        lock.position = CGPoint(x: 0, y: 0)
+        lock.zPosition = 50
+        lock.hidden = true
+        blueCharacter.addChild(lock)
+        
+        lock2 = SKSpriteNode(imageNamed: "lock")
+        lock2.size = CGSize(width: lock2.size.width / 30, height: lock2.size.height / 30)
+        lock2.position = CGPoint(x: 0, y: 0)
+        lock2.zPosition = 50
+        lock2.hidden = true
+        pinkCharacter.addChild(lock2)
         
         ///////////////////////////
         /// Joystick properties ///
@@ -449,27 +474,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             default:
                 // Switch Instruction which appears when making contact with trigger
                 switchInstruction.zPosition = 100
-                switchInstruction.size = CGSize(width: switchInstruction.size.width / 3, height: switchInstruction.size.height / 3)
+                switchInstruction.size = CGSize(width: view.frame.width / 2, height: view.frame.height * 1.01)
                 switchInstruction.alpha = 1
                 switchInstruction.hidden = true
-                switchInstruction.position = CGPoint(x: -120, y: -10)
+                switchInstruction.position = CGPoint(x: frame.width * -0.24, y: frame.height * 0.001)
                 characterCamera.addChild(switchInstruction)
                 
                 // Tap to Jump instruction appears
                 forwardAndJumpIns = SKSpriteNode(imageNamed: "tapToJump")
                 forwardAndJumpIns.zPosition = 100
-                forwardAndJumpIns.size = CGSize(width: forwardAndJumpIns.size.width / 3.2, height: forwardAndJumpIns.size.height / 3.2)
+                // forwardAndJumpIns.size = CGSize(width: forwardAndJumpIns.size.width / 3.2, height: forwardAndJumpIns.size.height / 3.2)
+                forwardAndJumpIns.size = CGSize(width: view.frame.width / 2, height: view.frame.height * 1.01)
                 forwardAndJumpIns.alpha = 0
-                forwardAndJumpIns.position = CGPoint(x: 155, y: 3)
+                // forwardAndJumpIns.position = CGPoint(x: 155, y: 3)
+                forwardAndJumpIns.position = CGPoint(x: frame.width * 0.25, y: frame.height * 0.001)
                 characterCamera.addChild(forwardAndJumpIns)
                 // moveInstruction?.hidden = false
                 
                 // Move instruction which appears during the first few seconds in the game
                 moveInstruction = SKSpriteNode(imageNamed: "moveInstruction")
                 moveInstruction?.zPosition = 100
-                moveInstruction?.size = CGSize(width: moveInstruction!.size.width / 3.2, height: moveInstruction!.size.height / 3.2)
+                moveInstruction?.size = CGSize(width: view.frame.width / 2, height: view.frame.height * 1.01)
                 moveInstruction?.alpha = 0
-                moveInstruction?.position = CGPoint(x: -130, y: -10)
+                moveInstruction?.position = CGPoint(x: frame.width * -0.24, y: frame.height * 0.001)
                 characterCamera.addChild(moveInstruction!)
                 // moveInstruction?.hidden = false
                 
@@ -571,10 +598,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 characterCamera.addChild(workTogetherInstruction)
             default:
                 workTogetherInstruction.zPosition = 100
-                workTogetherInstruction.size = CGSize(width: workTogetherInstruction.size.width / 3, height: workTogetherInstruction.size.height / 3)
+                workTogetherInstruction.size = CGSize(width: view.frame.width / 2, height: view.frame.height * 1.01)
                 workTogetherInstruction.alpha = 0
                 workTogetherInstruction.hidden = true
-                workTogetherInstruction.position = CGPoint(x: -120, y: -10)
+                workTogetherInstruction.position = CGPoint(x: frame.width * -0.24, y: frame.height * 0.001)
                 characterCamera.addChild(workTogetherInstruction)
             }
             
@@ -582,8 +609,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         case 2:
             // This is introLevel3
-            blueCharacter.position = CGPoint(x: 160, y: 175)
-            pinkCharacter.position = CGPoint(x: 150, y: 175)
+            blueCharacter.position = CGPoint(x: 60, y: 260)
+            pinkCharacter.position = CGPoint(x: 50, y: 260)
             
             background = SKSpriteNode(imageNamed: "backgroundLvl1")
             
@@ -617,6 +644,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if view.frame.size == CGSize(width: 480, height: 320) {
                 // CONNECT INSTRUCTION ATTRIBUTE
                 connectInstruciton.zPosition = 102
+                // TODO: MAKE INSTRUCITONS COMPATIBLE WITH ALL PHONES
                 connectInstruciton.size = CGSize(width: connectInstruciton.size.width / 3, height: connectInstruciton.size.height / 3)
                 connectInstruciton.alpha = 1
                 connectInstruciton.position = CGPoint(x: -130, y: -20)
@@ -625,9 +653,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             } else {
                 // CONNECT INSTRUCTION ATTRIBUTE
                 connectInstruciton.zPosition = 102
-                connectInstruciton.size = CGSize(width: connectInstruciton.size.width / 3, height: connectInstruciton.size.height / 3)
+                connectInstruciton.size = CGSize(width: view.frame.width / 2, height: view.frame.height * 1.01)
                 connectInstruciton.alpha = 1
-                connectInstruciton.position = CGPoint(x: -120, y: -20)
+                connectInstruciton.position = CGPoint(x: frame.width * -0.24, y: frame.height * 0.001)
                 connectInstruciton.hidden = true
                 characterCamera.addChild(connectInstruciton)
             }
@@ -647,7 +675,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 setupInstructions(cutSceneThree, positionX: frame.width * 0.09, positionY: -95, alpha: 0, zPosition: 90, width: cutSceneThree.size.width / 3.35, height: cutSceneThree.size.height / 3.35)
             } else {
                 // This is the "Day we met" cut scene
-                setupInstructions(cutSceneThree, positionX: -5, positionY: -95, alpha: 0, zPosition: 90, width: cutSceneThree.size.width / 3.35, height: cutSceneThree.size.height / 3.35)
+                setupInstructions(cutSceneThree, positionX: frame.width * -0.03, positionY: frame.height * -0.24, alpha: 0, zPosition: 90, width: frame.width * 1, height: frame.height * 1.5)
             }
             
             // If the iPhone is a 4s
@@ -673,7 +701,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 setupInstructions(cutSceneFive, positionX: 30, positionY: -10, alpha: 0, zPosition: 90, width: cutSceneFive.size.width / 3.35, height: cutSceneFive.size.height / 3.35)
             } else {
                 // This is the "We began bridging our trust"
-                setupInstructions(cutSceneFive, positionX: -10, positionY: -10, alpha: 0, zPosition: 90, width: cutSceneFive.size.width / 3.35, height: cutSceneFive.size.height / 3.35)
+                setupInstructions(cutSceneFive, positionX: frame.width * -0.025, positionY: frame.height * -0.033, alpha: 0, zPosition: 90, width: view.frame.width / 1, height: view.frame.height * 1.01)
             }
             
             fadeInAndFadeOut(cutSceneFive)
@@ -690,7 +718,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 setupInstructions(cutSceneSix, positionX: 30, positionY: -10, alpha: 0, zPosition: 90, width: cutSceneSix.size.width / 3.35, height: cutSceneSix.size.height / 3.35)
             } else {
                 // This is the "We're committed to each other, work together"
-                setupInstructions(cutSceneSix, positionX: -10, positionY: -10, alpha: 0, zPosition: 90, width: cutSceneSix.size.width / 3.35, height: cutSceneSix.size.height / 3.35)
+                setupInstructions(cutSceneSix, positionX: frame.width * -0.025, positionY: frame.height * -0.033, alpha: 0, zPosition: 90, width: view.frame.width / 1, height: view.frame.height * 1.01)
             }
             
             // Setting up the position of the cutSceneSeven
@@ -699,7 +727,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 setupInstructions(cutSceneSeven, positionX: 0, positionY: 0, alpha: 1, zPosition: 1000, width: cutSceneSeven.size.width / 3.35, height: cutSceneSeven.size.height / 3.35)
             } else {
                 // This is the "But in the end every choice will determine our future"
-                setupInstructions(cutSceneSeven, positionX: 0, positionY: 0, alpha: 1, zPosition: 1000, width: cutSceneSeven.size.width / 3.35, height: cutSceneSeven.size.height / 3.35)
+                setupInstructions(cutSceneSeven, positionX: 0, positionY: 0, alpha: 1, zPosition: 1000, width: view.frame.width / 1, height: view.frame.height * 1.01)
             }
             
             fadeInAndFadeOut(cutSceneSix)
@@ -716,7 +744,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 setupInstructions(chooseLeftOrRight, positionX: 30, positionY: -10, alpha: 0, zPosition: 90, width: chooseLeftOrRight.size.width / 3.35, height: chooseLeftOrRight.size.height / 3.35)
             } else {
                 // Choose left or right statement
-                setupInstructions(chooseLeftOrRight, positionX: -10, positionY: -10, alpha: 0, zPosition: 90, width: chooseLeftOrRight.size.width / 3.35, height: chooseLeftOrRight.size.height / 3.35)
+                setupInstructions(chooseLeftOrRight, positionX: frame.width * -0.025, positionY: frame.height * -0.03, alpha: 0, zPosition: 90, width: view.frame.width / 1, height: view.frame.height / 1)
             }
             
             if view.frame.size == CGSize(width: 480, height: 320) {
@@ -736,7 +764,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.position = CGPoint(x: 60, y: 260)
             pinkCharacter.position = CGPoint(x: 50, y: 260)
             
-            background = SKSpriteNode(imageNamed: "menuBackground")
+            background = SKSpriteNode(imageNamed: "angryBackground")
             
             // Creating fallingPlatform
             fallingPlatform = childNodeWithName("//fallingPlatform") as? SKSpriteNode
@@ -754,7 +782,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 setupInstructions(trustChallenge, positionX: 30, positionY: -5, alpha: 0, zPosition: 90, width: trustChallenge.size.width / 3.35, height: trustChallenge.size.height / 3.35)
             } else {
                 // OFTEN YOUR TRUST WILL BE CHALLENGED
-                setupInstructions(trustChallenge, positionX: -10, positionY: -5, alpha: 0, zPosition: 90, width: trustChallenge.size.width / 3.35, height: trustChallenge.size.height / 3.35)
+                setupInstructions(trustChallenge, positionX: frame.width * -0.025, positionY: frame.height * -0.01, alpha: 0, zPosition: 90, width: view.frame.width / 1, height: view.frame.height / 1)
             }
             
             fadeInAndFadeOut(trustChallenge)
@@ -764,14 +792,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             blueCharacter.position = CGPoint(x: 60, y: 300)
             pinkCharacter.position = CGPoint(x: 50, y: 300)
             
-            background = SKSpriteNode(imageNamed: "menuBackground")
+            background = SKSpriteNode(imageNamed: "angryBackground")
             
             if view.frame.size == CGSize(width: 480, height: 320) {
                 // This is the challenged again cut scene
                 setupInstructions(challengedAgain, positionX: 30, positionY: 10, alpha: 0, zPosition: 90, width: challengedAgain.size.width / 3.35, height: challengedAgain.size.height / 3.35)
             } else {
                 // This is the challenged again cut scene
-                setupInstructions(challengedAgain, positionX: -10, positionY: 10, alpha: 0, zPosition: 90, width: challengedAgain.size.width / 3.35, height: challengedAgain.size.height / 3.35)
+                setupInstructions(challengedAgain, positionX: frame.width * -0.025, positionY: frame.height * -0.02, alpha: 0, zPosition: 90, width: view.frame.width / 1, height: view.frame.height / 1)
             }
             
             fadeInAndFadeOut(challengedAgain)
@@ -809,7 +837,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 setupInstructions(allIsOver, positionX: 30, positionY: 10, alpha: 10, zPosition: 90, width: allIsOver.size.width / 3.35, height: allIsOver.size.height / 3.35)
             } else {
                 // This is when all is over for the final scene
-                setupInstructions(allIsOver, positionX: -10, positionY: 10, alpha: 10, zPosition: 90, width: allIsOver.size.width / 3.35, height: allIsOver.size.height / 3.35)
+                setupInstructions(allIsOver, positionX: frame.width * -0.025, positionY: frame.height * 0.04, alpha: 10, zPosition: 90, width: view.frame.width / 1, height: view.frame.height / 1)
             }
             
             fadeInAndFadeOut(allIsOver)
@@ -826,11 +854,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(background)
         
         // Creating flash effect 
-        flash.position = CGPoint(x: frame.width / 2, y: frame.height / 2)
+        flash.position = CGPoint(x: 0, y: 0)
         flash.zPosition = 150
-        flash.size = CGSize(width: flash.size.width, height: flash.size.height)
+        flash.size = CGSize(width: view.frame.width, height: view.frame.height)
         flash.alpha = 0
-        addChild(flash)
+        characterCamera.addChild(flash)
         
         // Creating Trigger that will cause gameOver
         trigger = childNodeWithName("//trigger") as? SKSpriteNode
@@ -846,27 +874,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Creates the jump and switch button
         switchButton = MSButtonNode(imageNamed: "blueSwitchButton")
-        switchButton.size = CGSize(width: switchButton.size.width / 7, height: switchButton.size.height / 7)
+        switchButton.size = CGSize(width: view.frame.size.width / 7, height: view.frame.size.height / 4)
         switchButton.zPosition = 106
         switchButton.position.x = view.frame.width * 0.2
         switchButton.position.y = view.frame.height * -0.3
         
         // Creating jump button
-        jumpButton = MSButtonNode(color: SKColor.clearColor(), size: CGSize(width: self.frame.width / 2, height: self.frame.height))
-        jumpButton.position.x = 142
-        jumpButton.position.y = 0
+        jumpButton = MSButtonNode(imageNamed: "blueJumpButton")
+        jumpButton.size = CGSize(width: view.frame.size.width / 7, height: view.frame.size.height / 4)
+        jumpButton.position.x = view.frame.width * 0.39
+        jumpButton.position.y = view.frame.height * -0.3
         jumpButton.zPosition = 98
         
         // Creating anchor button 
         anchorButton = MSButtonNode(imageNamed: "blueAnchor")
-        anchorButton.size = CGSize(width: anchorButton.size.width / 7, height: anchorButton.size.height / 7)
+        anchorButton.size = CGSize(width: view.frame.size.width / 10 /*anchorButton.size.width / 7*/ , height: view.frame.size.height / 4.5)
         anchorButton.zPosition = 106
         anchorButton.position.x = view.frame.width * 0.4
         anchorButton.position.y = view.frame.height * 0.1
         
         // Creating Separate Button
         separateButton = MSButtonNode(imageNamed: "separateBlueButton")
-        separateButton.size = CGSize(width: separateButton.size.width / 1.5, height: separateButton.size.height / 1.5)
+        if view.frame.size == CGSize(width: 480, height: 320) {
+           separateButton.size = CGSize(width: separateButton.size.width / 1.5, height: separateButton.size.height / 1.5)
+        } else {
+           separateButton.size = CGSize(width: view.frame.size.width / 7, height: view.frame.size.height / 4.5)
+        }
+        
         separateButton.zPosition = 106
         separateButton.position = CGPoint(x: view.frame.width * 0.01, y: view.frame.height * -0.3)
         
@@ -909,6 +943,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         createChain(characterBack: pinkCharacter, characterFront: blueCharacter)
         activateSeparateButton()
         setupAnchorButton()
+        setupPauseButton()
     
         // Creating a physical boundary to the edge of the scene
         if view.frame.size == CGSize(width: 480, height: 320) {
@@ -923,8 +958,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.separateButton.state = .Inactive
         }
         
-        let backgroundMusic = SKAction.playSoundFileNamed("YouthfulDreams.mp3", waitForCompletion: true)
-        runAction(SKAction.repeatActionForever(backgroundMusic))
+        // This allows the game to play the background music
+        initAudioPlayer("YouthfulDreams.mp3")
+    
         
     }
     
@@ -1389,6 +1425,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             for i in 0..<5 {
                 let link = SKSpriteNode(imageNamed: "link")
                 link.size = CGSize(width: 2, height: 2)
+                link.zPosition = 2
                 link.physicsBody = SKPhysicsBody(circleOfRadius: 1)
                 if alreadyHidden == true {
                     link.hidden = true
@@ -1468,7 +1505,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     default:
                         switch self.separationExecuted {
                         case false:
-                            self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 250))
+                            self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 290))
                         default:
                             self.blueCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 330))
                         }
@@ -1496,7 +1533,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     default:
                         switch self.separationExecuted {
                         case false:
-                            self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 250))
+                            self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 290))
                         default:
                             self.pinkCharacter.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 330))
                         }
@@ -1529,12 +1566,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 // This is used to change the color of the buttons from blue to pink
                 self.switchButton.texture = SKTexture(imageNamed: "pinkSwitchButton")
                 self.separateButton.texture = SKTexture(imageNamed: "separatePinkButton")
+                self.jumpButton.texture = SKTexture(imageNamed: "pinkJumpButton")
+                self.anchorButton.texture = SKTexture(imageNamed: "pinkAnchor")
+                let switchSound = SKAction.playSoundFileNamed("switchSound", waitForCompletion: false)
+                self.runAction(switchSound)
             } else if self.buttonFunctioning == false {
                 // Switch to the blueCharacter
                 self.buttonFunctioning = true
                 // This is used to change the color of the buttons from pink to blue
                 self.switchButton.texture = SKTexture(imageNamed: "blueSwitchButton")
                 self.separateButton.texture = SKTexture(imageNamed: "separateBlueButton")
+                self.jumpButton.texture = SKTexture(imageNamed: "blueJumpButton")
+                self.anchorButton.texture = SKTexture(imageNamed: "blueAnchor")
+                let switchSound2 = SKAction.playSoundFileNamed("switchSound", waitForCompletion: false)
+                self.runAction(switchSound2)
             }
         }
     }
@@ -1565,7 +1610,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.separationExecuted = false
                 self.bloodshotShouldRun = true
                 self.separationButtonFade()
-                print(self.bloodshotShouldRun)
+                let pressSound = SKAction.playSoundFileNamed("failButton", waitForCompletion: false)
+                self.runAction(pressSound)
                 
                 // This disables damage in IntroLvl1 so that it doesn't intimidate the players
                 if levelChanger == 0 || levelChanger == 1 {
@@ -1574,7 +1620,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                    self.healthShouldReduce = true
                 }
                 
-            } else if self.separationExecuted == false && self.twoBodiesMadeContact == true && abs(self.distanceOfCharacterDifferenceX) <= 17  {
+            } else if self.separationExecuted == false && /* self.twoBodiesMadeContact == true && */ abs(self.distanceOfCharacterDifferenceX) <= 20  {
                 // The use of this is so that the links do not spawn backwards because the two characters have a negative difference in distance to each other.
                     // If the pinkCharacter is behind the blueCharacter
                     self.addChain()
@@ -1582,6 +1628,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     self.restoreHealth()
                     self.healthShouldReduce = false
                     self.separateButton.removeAllActions()
+                    let reconnectSound = SKAction.playSoundFileNamed("tinyButton", waitForCompletion: false)
+                    self.runAction(reconnectSound)
 
                 
             }
@@ -1736,7 +1784,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     break
                 }
             },
-            SKAction.waitForDuration(0.1),
+            SKAction.waitForDuration(0.001),
             SKAction.runBlock() {
                 //print("CHANGING SCENE")
                 let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 1)
@@ -1851,29 +1899,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func setupPauseButton() {
         pauseButton.selectedHandler = {
-            let wait = SKAction.waitForDuration(0.1)
-            let reveal = SKAction.fadeInWithDuration(0.1)
-            let show = SKAction.runBlock({
-                self.continueButton.hidden = false
-                self.pauseMenu.hidden = false
-                self.homeButton.hidden = false
-            })
-            let pause = SKAction.runBlock({
-                  self.scene!.view!.paused = true
-            })
-            let sequence = SKAction.sequence([show, reveal, wait, pause])
-            self.pauseMenu.runAction(sequence)
+            if self.gamePaused == false {
+                let wait = SKAction.waitForDuration(0.001)
+                let reveal = SKAction.fadeInWithDuration(0.1)
+                let show = SKAction.runBlock({
+                    self.continueButton.hidden = false
+                    self.pauseMenu.hidden = false
+                    self.homeButton.hidden = false
+                })
+                let pause = SKAction.runBlock({
+                    self.scene!.view!.paused = true
+                })
+                let sequence = SKAction.sequence([show, reveal, wait, pause])
+                self.pauseMenu.runAction(sequence)
+                self.gamePaused = true
+            } else {
+                
+            }
+            
         }
     }
     
     func setupPlayButton() {
         continueButton.selectedHandler = {
             self.scene?.view?.paused = false
-            self.continueButton.hidden = true
-            self.continueButton.alpha = 0
-            self.pauseMenu.hidden = true
-            self.pauseMenu.alpha = 0
-            self.homeButton.hidden = true
+            let disappear = SKAction.fadeOutWithDuration(0.3)
+            self.pauseMenu.runAction(SKAction.sequence([disappear]))
+            self.gamePaused = false
         }
     }
     
@@ -1890,25 +1942,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func setupAnchorButton () {
         anchorButton.selectedHandler = {
+            let lockSound = SKAction.playSoundFileNamed("blop", waitForCompletion: false)
+            self.runAction(lockSound)
             if self.alreadyAnchored == true {
                 if self.buttonFunctioning == true {
                     self.blueCharacter.physicsBody?.pinned = false
                     //self.blueCharacter.physicsBody?.allowsRotation = true
+                    self.lock.hidden = true
                     self.alreadyAnchored = false
-                    print(self.alreadyAnchored)
                 } else {
                     self.pinkCharacter.physicsBody?.pinned = false
+                    self.lock2.hidden = true
                     self.alreadyAnchored = false
                 }
             } else if self.buttonFunctioning == false {
                 if self.alreadyAnchored == false {
                     self.pinkCharacter.physicsBody?.pinned = true
+                    self.lock2.hidden = false
                     self.alreadyAnchored = true
                     print(self.alreadyAnchored)
                 }
             } else if self.buttonFunctioning {
                 if self.alreadyAnchored == false {
                 self.blueCharacter.physicsBody?.pinned = true
+                self.lock.hidden = false
                 //self.blueCharacter.physicsBody?.allowsRotation = false
                 self.alreadyAnchored = true
                 print(self.alreadyAnchored)
@@ -2010,6 +2067,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         runAction(SKAction.sequence([flashing, creatingChain, reposition]))
         
         locked = true
+    }
+    
+    /// This allows the game to call the background music file
+    func initAudioPlayer(filename: String) {
+        let url = NSBundle.mainBundle().URLForResource(filename, withExtension: nil)
+        guard let newURL = url else {
+            print("Could not find file: \(filename)")
+            return
+        }
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOfURL: newURL)
+            audioPlayer.numberOfLoops = -1
+            audioPlayer.volume = 0.1
+            audioPlayer.prepareToPlay()
+            audioPlayer.play()
+        } catch let error as NSError {
+            print(error.description)
+        }
+    }
+    
+    func toggleBackgroundMusic() {
+        if audioPlayer.playing {
+            audioPlayer.pause()
+        } else {
+            audioPlayer.play()
+        }
     }
    
 }

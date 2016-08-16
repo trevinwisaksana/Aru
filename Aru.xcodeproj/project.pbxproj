@@ -31,6 +31,7 @@
 		DD8BBA271D3E9B18006BEF76 /* ChooseCharacterScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = DD8BBA261D3E9B18006BEF76 /* ChooseCharacterScene.sks */; };
 		DD8BBA2F1D3EA1AE006BEF76 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD8BBA2E1D3EA1AE006BEF76 /* Constants.swift */; };
 		DD8BBA321D3EA298006BEF76 /* MoveCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD8BBA311D3EA298006BEF76 /* MoveCharacter.swift */; };
+		DD9655781D5EBF5F0018177B /* blop.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DD9655771D5EBF5F0018177B /* blop.mp3 */; };
 		DDAD7D2F1D5571DE00A8FC7A /* YouthfulDreams.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DDAD7D2E1D5571DE00A8FC7A /* YouthfulDreams.mp3 */; };
 		DDB4DBCD1D3D63E200A113C0 /* IntroLvl1.sks in Resources */ = {isa = PBXBuildFile; fileRef = DDB4DBCC1D3D63E200A113C0 /* IntroLvl1.sks */; };
 		DDC4793A1D3565670036E972 /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC4792E1D3565670036E972 /* CGFloat+Extensions.swift */; };
@@ -47,6 +48,9 @@
 		DDC479451D3565670036E972 /* Vector3.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC479391D3565670036E972 /* Vector3.swift */; };
 		DDF3C3E41D5D5EA400FE5E08 /* GameAssets.atlas in Resources */ = {isa = PBXBuildFile; fileRef = DDF3C3E31D5D5EA400FE5E08 /* GameAssets.atlas */; };
 		DDF3C3E61D5D64AF00FE5E08 /* Averta.otf in Resources */ = {isa = PBXBuildFile; fileRef = DDF3C3E51D5D64AF00FE5E08 /* Averta.otf */; };
+		DDF3C3E81D5D8CDA00FE5E08 /* tinyButton.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DDF3C3E71D5D8CDA00FE5E08 /* tinyButton.mp3 */; };
+		DDF3C3EA1D5D8CF300FE5E08 /* failButton.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DDF3C3E91D5D8CF300FE5E08 /* failButton.mp3 */; };
+		DDF3C3EC1D5D99BB00FE5E08 /* switchSound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DDF3C3EB1D5D99BB00FE5E08 /* switchSound.mp3 */; };
 		DDF7E3601D206566005F9A49 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E35F1D206566005F9A49 /* AppDelegate.swift */; };
 		DDF7E3641D206566005F9A49 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E3631D206566005F9A49 /* GameScene.swift */; };
 		DDF7E3661D206566005F9A49 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF7E3651D206566005F9A49 /* GameViewController.swift */; };
@@ -96,6 +100,7 @@
 		DD8BBA261D3E9B18006BEF76 /* ChooseCharacterScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ChooseCharacterScene.sks; sourceTree = "<group>"; };
 		DD8BBA2E1D3EA1AE006BEF76 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		DD8BBA311D3EA298006BEF76 /* MoveCharacter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoveCharacter.swift; sourceTree = "<group>"; };
+		DD9655771D5EBF5F0018177B /* blop.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = blop.mp3; sourceTree = "<group>"; };
 		DDAD7D2E1D5571DE00A8FC7A /* YouthfulDreams.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = YouthfulDreams.mp3; sourceTree = "<group>"; };
 		DDB4DBCC1D3D63E200A113C0 /* IntroLvl1.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = IntroLvl1.sks; sourceTree = "<group>"; };
 		DDC4792E1D3565670036E972 /* CGFloat+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extensions.swift"; sourceTree = "<group>"; };
@@ -112,6 +117,9 @@
 		DDC479391D3565670036E972 /* Vector3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vector3.swift; sourceTree = "<group>"; };
 		DDF3C3E31D5D5EA400FE5E08 /* GameAssets.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = GameAssets.atlas; sourceTree = "<group>"; };
 		DDF3C3E51D5D64AF00FE5E08 /* Averta.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Averta.otf; sourceTree = "<group>"; };
+		DDF3C3E71D5D8CDA00FE5E08 /* tinyButton.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = tinyButton.mp3; sourceTree = "<group>"; };
+		DDF3C3E91D5D8CF300FE5E08 /* failButton.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = failButton.mp3; sourceTree = "<group>"; };
+		DDF3C3EB1D5D99BB00FE5E08 /* switchSound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = switchSound.mp3; sourceTree = "<group>"; };
 		DDF7E35C1D206566005F9A49 /* Aru.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aru.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDF7E35F1D206566005F9A49 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DDF7E3631D206566005F9A49 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -337,6 +345,10 @@
 				DDB308E01D28ADE800FC1FD0 /* Sprites */,
 				DD04935F1D22BF8D00B9D551 /* Levels */,
 				DDF7E3651D206566005F9A49 /* GameViewController.swift */,
+				DDF3C3E91D5D8CF300FE5E08 /* failButton.mp3 */,
+				DDF3C3E71D5D8CDA00FE5E08 /* tinyButton.mp3 */,
+				DD9655771D5EBF5F0018177B /* blop.mp3 */,
+				DDF3C3EB1D5D99BB00FE5E08 /* switchSound.mp3 */,
 				DDAD7D2E1D5571DE00A8FC7A /* YouthfulDreams.mp3 */,
 				DDF3C3E51D5D64AF00FE5E08 /* Averta.otf */,
 				DDF7E3671D206566005F9A49 /* Main.storyboard */,
@@ -453,7 +465,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDF3C3EC1D5D99BB00FE5E08 /* switchSound.mp3 in Resources */,
+				DDF3C3E81D5D8CDA00FE5E08 /* tinyButton.mp3 in Resources */,
 				DD07EFC81D429D33000C0541 /* Level3.sks in Resources */,
+				DDF3C3EA1D5D8CF300FE5E08 /* failButton.mp3 in Resources */,
 				DD8BBA1C1D3E8976006BEF76 /* LevelCompleteScene.sks in Resources */,
 				DD07EFCC1D429D45000C0541 /* Level5.sks in Resources */,
 				DDAD7D2F1D5571DE00A8FC7A /* YouthfulDreams.mp3 in Resources */,
@@ -469,6 +484,7 @@
 				DD07EFCE1D429D4C000C0541 /* Level6.sks in Resources */,
 				DDF7E36E1D206566005F9A49 /* LaunchScreen.storyboard in Resources */,
 				DDF7E3691D206566005F9A49 /* Main.storyboard in Resources */,
+				DD9655781D5EBF5F0018177B /* blop.mp3 in Resources */,
 				DD8BBA271D3E9B18006BEF76 /* ChooseCharacterScene.sks in Resources */,
 				DDB4DBCD1D3D63E200A113C0 /* IntroLvl1.sks in Resources */,
 				DD0493651D22C3C900B9D551 /* Assets.xcassets in Resources */,
