@@ -34,9 +34,4 @@ class LoadingScene: SKScene {
         self.runAction(SKAction.sequence([logoPresent, wait, logoDisappear, changeScene]))
     }
     
-    override func update(currentTime: NSTimeInterval) {
-        
-    }
-
-    
 }

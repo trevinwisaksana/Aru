@@ -9,8 +9,8 @@
 import UIKit
 import SpriteKit
 
-// Used to change the level by changing the indexs
-var levelChanger = 0
+/// Used to keep track and change the level by changing the index of the Level Array.
+var levelNumber = 0
 
 class GameViewController: UIViewController {
     

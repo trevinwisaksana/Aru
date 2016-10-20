@@ -11,7 +11,7 @@ import SpriteKit
 class Checkpoint: SKSpriteNode {
     
     func setup() {
-        // Do not need to declare the position here, but in the Scene Editor instead
+        // NOTE: - Do not declare the position of the checkpoint here, but in the Scene Editor instead
         physicsBody = SKPhysicsBody(circleOfRadius: 11.5)
         physicsBody?.affectedByGravity = false
         physicsBody?.dynamic = false
@@ -19,16 +19,11 @@ class Checkpoint: SKSpriteNode {
         physicsBody?.categoryBitMask = PhysicsCategory.Checkpoint
         physicsBody?.collisionBitMask = PhysicsCategory.None
         physicsBody?.contactTestBitMask = PhysicsCategory.BlueCharacter | PhysicsCategory.PinkCharacter
-        
-        print("Checkpoint setup!")
-        print(physicsBody)
-        print(physicsBody?.categoryBitMask)
     }
     
     // You are required to implement this for your subclass to work
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        print("Init Checkpoint from coder")
         setup()
     }
 }

@@ -38,23 +38,15 @@ class GameOverScene: SKScene {
         // Restart Button
         restartButton.selectedHandler = {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
-            if let scene = GameScene(fileNamed: arrayOfLevels[levelChanger]) {
+            if let scene = GameScene(fileNamed: arrayOfLevels[levelNumber]) {
                 scene.scaleMode = GameScaleMode.AllScenes
                 self.view!.presentScene(scene, transition: reveal)
-            } else {
-                print("Could not load IntroLvl2")
             }
+               
         }
+        
         restartButton.state = .Active
-        
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        
-    }
-    
-    override func update(currentTime: NSTimeInterval) {
-        
-    }
     
 }
