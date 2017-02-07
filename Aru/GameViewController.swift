@@ -9,8 +9,8 @@
 import UIKit
 import SpriteKit
 
-// Used to change the level by changing the indexs
-var levelChanger = 0
+/// Used to keep track and change the level by changing the index of the Level Array.
+var levelNumber = 0
 
 class GameViewController: UIViewController {
     
@@ -23,6 +23,7 @@ class GameViewController: UIViewController {
         // Used only when debugging and testing
         skView.showsFPS = false
         skView.showsNodeCount = false
+        skView.showsDrawCount = false
         skView.showsPhysics = false
         
         /* Sprite Kit applies additional optimizations to improve rendering performance */

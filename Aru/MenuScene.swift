@@ -30,6 +30,7 @@ class MenuScene: SKScene {
     var level6Button: MSButtonNode!
     var level7Button: MSButtonNode!
     // TODO: Create a menu where this will be the parent of all the objects
+
     
     // MARK: - Level List Checker
     var levelListChecker: Int = 0
@@ -37,6 +38,25 @@ class MenuScene: SKScene {
     // MARK: - didMoveToView
     override func didMoveToView(view: SKView) {
         setupButtons()
+        
+        let aruTitle = SKSpriteNode(imageNamed: "aruTitle")
+        aruTitle.position = CGPoint(x: view.frame.width * 0.2, y: view.frame.height * 0.75)
+        aruTitle.zPosition = 20
+        aruTitle.size = CGSize(width: view.frame.size.width / 3, height: view.frame.size.height / 3)
+        self.addChild(aruTitle)
+        
+        let background = SKSpriteNode(imageNamed: "menuBackground")
+        background.position = CGPoint(x: view.frame.width / 2, y: view.frame.height / 2)
+        background.zPosition = -1
+        background.size = CGSize(width: view.frame.size.width * 1, height: view.frame.size.height * 1)
+        self.addChild(background)
+        
+        let cloud = SKSpriteNode(imageNamed: "cloud")
+        cloud.position = CGPoint(x: view.frame.width / 2, y: view.frame.height * 0.6)
+        cloud.zPosition = 1
+        cloud.size = CGSize(width: cloud.size.width / 2, height: cloud.size.height / 2)
+        self.addChild(cloud)
+        
     }
     
     // MARK: - touchesBegan
@@ -66,7 +86,7 @@ class MenuScene: SKScene {
         playButton = MSButtonNode(imageNamed: "playButton")
         playButton.zPosition = 10
         playButton.size = CGSize(width: playButton.size.width / 3, height: playButton.size.height / 3)
-        playButton.position = CGPoint(x: self.frame.width * 0.7, y: self.frame.height / 2)
+        playButton.position = CGPoint(x: frame.width * 0.7, y: frame.height / 2)
         addChild(playButton)
         setupPlayButton()
         playButton.state = .Active
@@ -77,7 +97,7 @@ class MenuScene: SKScene {
         levelsButton = MSButtonNode(imageNamed: "levelsButton")
         levelsButton.zPosition = 10
         levelsButton.size = CGSize(width: levelsButton.size.width / 4, height: levelsButton.size.height / 4)
-        levelsButton.position = CGPoint(x: self.frame.width * 0.4, y: self.frame.height / 2)
+        levelsButton.position = CGPoint(x: frame.width * 0.4, y: frame.height / 2)
         addChild(levelsButton)
         setupLevelButton()
         levelsButton.state = .Active
@@ -88,7 +108,7 @@ class MenuScene: SKScene {
         levelMenu = SKSpriteNode(imageNamed: "levelMenu")
         levelMenu.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
         levelMenu.size = CGSize(width: self.levelMenu.size.width / 3.5, height: self.levelMenu.size.height / 3.5)
-        levelMenu.zPosition = 11
+        levelMenu.zPosition = 21
         levelMenu.alpha = 0
         levelMenu.hidden = true
         addChild(self.levelMenu)
@@ -113,9 +133,6 @@ class MenuScene: SKScene {
         level1Button.size = CGSize(width: self.level1Button.size.width / 3, height: self.level1Button.size.height / 3)
         level1Button.zPosition = 15
         levelMenu.addChild(level1Button)
-        if completedLevel1 == true {
-            level1Button.state = .Active
-        }
         setupLevel1Button()
         
         /////////////////////////////////
@@ -228,8 +245,8 @@ class MenuScene: SKScene {
     func setupPlayButton() {
         playButton.selectedHandler = {
             let reveal = SKTransition.fadeWithColor(UIColor.blackColor(), duration: 1)
-            let scene = GameScene(fileNamed: "IntroLvl1")
-            scene?.scaleMode = .AspectFit
+            let scene = GameScene(fileNamed: "Level0")
+            scene?.scaleMode = GameScaleMode.AllScenes
             self.view!.presentScene(scene!, transition: reveal)
         }
     }
@@ -265,9 +282,9 @@ class MenuScene: SKScene {
         level1Button.selectedHandler = {
             // TODO: Create a NSUserDefault so that the players do not have to restart the game when they've played the level or not 
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
-            levelChanger = 3
+            levelNumber = 3
             if let scene = GameScene(fileNamed: arrayOfLevels[3]) {
-                scene.scaleMode = .AspectFit
+                scene.scaleMode = GameScaleMode.AllScenes
                 self.view!.presentScene(scene, transition: reveal)
             } else {
                 print("Could not load level")
@@ -279,9 +296,9 @@ class MenuScene: SKScene {
     func setupLevel2Button() {
         level2Button.selectedHandler = {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
-            levelChanger = 4
+            levelNumber = 4
             if let scene = GameScene(fileNamed: arrayOfLevels[4]) {
-                scene.scaleMode = .AspectFit
+                scene.scaleMode = GameScaleMode.AllScenes
                 self.view!.presentScene(scene, transition: reveal)
             } else {
                 print("Could not load level")
@@ -293,9 +310,9 @@ class MenuScene: SKScene {
     func setupLevel3Button() {
         level3Button.selectedHandler = {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
-            levelChanger = 5
+            levelNumber = 5
             if let scene = GameScene(fileNamed: arrayOfLevels[5]) {
-                scene.scaleMode = .AspectFit
+                scene.scaleMode = GameScaleMode.AllScenes
                 self.view!.presentScene(scene, transition: reveal)
             } else {
                 print("Could not load level")
@@ -307,9 +324,9 @@ class MenuScene: SKScene {
     func setupLevel4Button() {
         level4Button.selectedHandler = {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
-            levelChanger = 6
+            levelNumber = 6
             if let scene = GameScene(fileNamed: arrayOfLevels[6]) {
-                scene.scaleMode = .AspectFit
+                scene.scaleMode = GameScaleMode.AllScenes
                 self.view!.presentScene(scene, transition: reveal)
             } else {
                 print("Could not load level")
@@ -321,9 +338,9 @@ class MenuScene: SKScene {
     func setupLevel5Button() {
         level5Button.selectedHandler = {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
-            levelChanger = 7
+            levelNumber = 7
             if let scene = GameScene(fileNamed: arrayOfLevels[7]) {
-                scene.scaleMode = .AspectFit
+                scene.scaleMode = GameScaleMode.AllScenes
                 self.view!.presentScene(scene, transition: reveal)
             } else {
                 print("Could not load level")
@@ -335,9 +352,9 @@ class MenuScene: SKScene {
     func setupLevel6Button() {
         level6Button.selectedHandler = {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
-            levelChanger = 8
+            levelNumber = 8
             if let scene = GameScene(fileNamed: arrayOfLevels[8]) {
-                scene.scaleMode = .AspectFit
+                scene.scaleMode = GameScaleMode.AllScenes
                 self.view!.presentScene(scene, transition: reveal)
             } else {
                 print("Could not load level")
@@ -349,9 +366,9 @@ class MenuScene: SKScene {
     func setupLevel7Button() {
         level7Button.selectedHandler = {
             let reveal = SKTransition.fadeWithColor(SKColor.whiteColor(), duration: 0.5)
-            levelChanger = 9
+            levelNumber = 9
             if let scene = GameScene(fileNamed: arrayOfLevels[9]) {
-                scene.scaleMode = .AspectFit
+                scene.scaleMode = GameScaleMode.AllScenes
                 self.view!.presentScene(scene, transition: reveal)
             } else {
                 print("Could not load level")

@@ -9,8 +9,9 @@
 import UIKit
 import SpriteKit
 
+// MARK: - PHYSICS CATEGORIES
 // These are the physics categories which must be set to allow collisions and contacts between objects
-struct PhysicsCategory {
+public struct PhysicsCategory {
     static let None: UInt32             = 0         // 000000
     static let BlueCharacter: UInt32    = 0b1       // 000001
     static let PinkCharacter: UInt32    = 0b10      // 000010
@@ -25,8 +26,21 @@ struct PhysicsCategory {
     static let TriggerSwitchIns: UInt32 = 0b1000000000
 }
 
-struct GameScaleMode {
-    static let AllScenes: SKSceneScaleMode = .AspectFit
+// MARK: - SCREEN SCALE MODE
+public struct GameScaleMode {
+    static let AllScenes: SKSceneScaleMode = .ResizeFill
 }
 
-// GameScaleMode.AllScenes
+// This is a global variable because it will be used at different classes
+// MARK: - ARRAY OF LEVELS
+public let arrayOfLevels: Array = ["Level0",
+                                    "Level1",
+                                    "Level2",
+                                    "Level3",
+                                    "Level4",
+                                    "Level5",
+                                    "Level6",
+                                    "Level7",
+                                    "Level8",
+                                    "Level9",
+                                    "Level10"]
